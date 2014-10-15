@@ -12,6 +12,7 @@ public class ShiftRecordDBHelper extends SQLiteOpenHelper {
 	public static final String CREATE_TABLE_SQL =
 			"create table shift_record(" +
 			"id integer primary key autoincrement, " +
+			"uid char(20)," +
 			"station_id char(20)," +
 			"schedule_type_id char(20)," +
 			"submit_time datetime," +

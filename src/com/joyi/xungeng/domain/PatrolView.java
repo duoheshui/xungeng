@@ -13,6 +13,8 @@ public class PatrolView implements Serializable {
 	private String uid;
 	private Date patrolTime;
 
+
+
 	public int getId() {
 		return id;
 	}

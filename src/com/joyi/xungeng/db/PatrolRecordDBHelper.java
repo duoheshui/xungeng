@@ -14,7 +14,7 @@ public class PatrolRecordDBHelper extends SQLiteOpenHelper {
 	public static final String CREATE_TABLE_SQL =
 			"create table patrol_record(" +
 			"id integer primary key autoincrement, " +
-			"lineNodeId char(20)," +
+			"nodeId char(20)," +
 			"userPatrolId integer," +
 			"patrolTime datetime," +
 			"partolPhoneTime datetime," +

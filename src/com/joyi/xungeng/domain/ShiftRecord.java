@@ -12,9 +12,9 @@ public class ShiftRecord implements Serializable {
 	private String stationId;       // 岗位ID
 	private String scheduleTypeId;  // 巡更班次ID
 	private Date submitTime;      // 交班时间
-	private Date submitAppTime;   // 交班手机时间
+	private Date submitPhoneTime;   // 交班手机时间
 	private Date receiveTime;     // 接班时间
-	private Date reciveAppTime;     // 接班手机时间
+	private Date recivePhoneTime;     // 接班手机时间
 
 
 
@@ -50,12 +50,12 @@ public class ShiftRecord implements Serializable {
 		this.submitTime = submitTime;
 	}
 
-	public Date getSubmitAppTime() {
-		return submitAppTime;
+	public Date getSubmitPhoneTime() {
+		return submitPhoneTime;
 	}
 
-	public void setSubmitAppTime(Date submitAppTime) {
-		this.submitAppTime = submitAppTime;
+	public void setSubmitPhoneTime(Date submitPhoneTime) {
+		this.submitPhoneTime = submitPhoneTime;
 	}
 
 	public Date getReceiveTime() {
@@ -66,11 +66,11 @@ public class ShiftRecord implements Serializable {
 		this.receiveTime = receiveTime;
 	}
 
-	public Date getReciveAppTime() {
-		return reciveAppTime;
+	public Date getRecivePhoneTime() {
+		return recivePhoneTime;
 	}
 
-	public void setReciveAppTime(Date reciveAppTime) {
-		this.reciveAppTime = reciveAppTime;
+	public void setRecivePhoneTime(Date recivePhoneTime) {
+		this.recivePhoneTime = recivePhoneTime;
 	}
 }

@@ -8,14 +8,22 @@
     <application
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="@string/app_name" android:icon="@drawable/ic_launcher">
-        <activity
-                android:name=".MainActivity"
-                android:label="@string/app_name">
+        <activity android:name=".MainActivity" android:label="@string/app_name">
+
+        </activity>
+
+        <activity android:name=".activity.MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.ChaXunDaKaActivity"/>
+        <activity android:name=".activity.JiaoJieBanActivity"/>
+        <activity android:name=".activity.XinXiShangChuanActivity"/>
+        <activity android:name=".activity.XiuGaiMiMaActivity"/>
+        <activity android:name=".activity.XunGengDaKaActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>

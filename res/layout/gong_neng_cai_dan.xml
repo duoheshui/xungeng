@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+<TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <FrameLayout android:id="@android:id/tabcontent"
+                         android:layout_width="fill_parent"
+                         android:layout_height="fill_parent">
+                <include android:id="@+id/view1" layout="@layout/function_menu"/>
+                <include android:id="@+id/view2" layout="@layout/system_menu"/>
+            </FrameLayout>
 
 
-</LinearLayout>
+            <TabWidget
+                    android:textAlignment="center"
+                    android:layout_alignParentBottom="true"
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+        </RelativeLayout>
+</TabHost>

@@ -15,7 +15,7 @@ public class PartolViewDBHelper extends SQLiteOpenHelper {
 			"id integer primary key autoincrement, " +
 			"lineid char(20)," +
 			"userid char(20)," +
-			"clockTime datetime)";
+			"patrolTime datetime)";
 
 	public PartolViewDBHelper(Context context) {
 		super(context, Constants.DATA_BASE_NAME, null, Constants.DATA_BASE_VERSION);

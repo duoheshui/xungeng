@@ -58,4 +58,9 @@ public class LineNodeDao {
 		}
 		return lineNodes;
 	}
+
+	public void deleteAll() {
+		SQLiteDatabase sqLiteDatabase = lineNodeDBHelper.getWritableDatabase();
+		sqLiteDatabase.delete("line_node", null, null);
+	}
 }

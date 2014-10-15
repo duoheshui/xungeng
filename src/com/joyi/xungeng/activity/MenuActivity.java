@@ -100,6 +100,7 @@ public class MenuActivity extends Activity implements AdapterView.OnItemClickLis
 				public void onClick(DialogInterface dialogInterface, int i) {
 					Intent intent = new Intent(MenuActivity.this, MainActivity.class);
 					startActivity(intent);
+					finish();
 				}
 			}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 				@Override

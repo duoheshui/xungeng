@@ -27,8 +27,6 @@ public class Constants {
 		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[2], JiaoJieBanActivity.class);
 		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[3], XinXiShangChuanActivity.class);
 		NAME_ACTIVITY_MAP.put(SYSTEM_MENU_NAME[0], XiuGaiMiMaActivity.class);
-		NAME_ACTIVITY_MAP.put(SYSTEM_MENU_NAME[1], QieHuanZhangHaoActivity.class);
-		NAME_ACTIVITY_MAP.put(SYSTEM_MENU_NAME[2], ExitSystemActivity.class);
 	}
 
 	/**

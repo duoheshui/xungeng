@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import com.joyi.xungeng.SystemVariables;
 
 import java.util.Date;
 import java.util.Timer;
@@ -15,7 +16,6 @@ import java.util.TimerTask;
 public class LoginService {
 	private static LoginService loginService;
 	private Context context;
-	private Date serverDate;
 	private boolean hasSyncServerTime;
 
 
@@ -41,16 +41,16 @@ public class LoginService {
 	 * 本地新建一个TimerTask, 在离线状态下同步服务器时间
 	 */
 	public void serverTimeTask(final Date date) {
-		if (hasSyncServerTime) {
+		if (hasSyncServerTime || date==null) {
 			return;
 		}
 		hasSyncServerTime = true;
-		serverDate = date;
+		SystemVariables.SERVER_TIME.setTime(date.getTime());
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				serverDate.setTime(serverDate.getTime() + 1000);
+				SystemVariables.SERVER_TIME.setTime(SystemVariables.SERVER_TIME.getTime() + 1000);
 			}
 		}, 0, 1000);
 	}
@@ -72,7 +72,4 @@ public class LoginService {
 		}).show();
 	}
 
-	public Date getServerDate() {
-		return serverDate;
-	}
 }

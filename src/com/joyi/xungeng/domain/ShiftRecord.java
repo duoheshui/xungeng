@@ -12,11 +12,20 @@ public class ShiftRecord implements Serializable {
 	private String userId;
 	private String stationId;       // 岗位ID
 	private String scheduleTypeId;  // 巡更班次ID
+	private String lineId;          // 路线ID
 	private Date submitTime;      // 交班时间
 	private Date submitPhoneTime;   // 交班手机时间
 	private Date receiveTime;     // 接班时间
 	private Date recivePhoneTime;     // 接班手机时间
 
+
+	public String getLineId() {
+		return lineId;
+	}
+
+	public void setLineId(String lineId) {
+		this.lineId = lineId;
+	}
 
 	public int getId() {
 		return id;

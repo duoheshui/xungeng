@@ -2,6 +2,7 @@ package com.joyi.xungeng.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by zhangyong on 2014/10/15.
@@ -10,12 +11,21 @@ import java.util.Date;
 public class PatrolLine implements Serializable {
 
 	private String id;
-	private String stationId;   // 岗位ID
-	private int frequency;      // 频次
-	private int exception;         // 偏差(分钟)
+	private String stationId;           // 岗位ID
+	private int frequency;              // 频次
+	private int exception;              // 偏差(分钟)
 	private Date beginTime;
 	private Date endTime;
+	private List<LineNode> lineNodes;   // 路线上的节点
 
+
+	public List<LineNode> getLineNodes() {
+		return lineNodes;
+	}
+
+	public void setLineNodes(List<LineNode> lineNodes) {
+		this.lineNodes = lineNodes;
+	}
 
 	public String getId() {
 		return id;

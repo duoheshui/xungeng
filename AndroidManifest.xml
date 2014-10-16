@@ -20,7 +20,7 @@
         </activity>
 
         <activity android:name=".activity.ChaXunDaKaActivity"/>
-        <activity android:name=".activity.JiaoJieBanActivity"/>
+        <activity android:name=".activity.JiaoJieBanActivity"></activity>
         <activity android:name=".activity.XinXiShangChuanActivity"/>
         <activity android:name=".activity.XiuGaiMiMaActivity"/>
         <activity android:name=".activity.XunGengDaKaActivity"/>

@@ -2,18 +2,20 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:background="#FFF"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <RelativeLayout
             android:background="@drawable/back_gray"
             android:layout_width="match_parent"
             android:layout_height="40dp">
-        <ImageView
+        <ImageButton
+                android:id="@+id/back_button"
                 android:layout_marginLeft="10dp"
                 android:layout_alignParentLeft="true"
-                android:src="@drawable/back"
                 android:layout_width="wrap_content"
+                android:background="#00000000"
+                android:src="@drawable/back"
+                android:onClick="retreat"
                 android:layout_height="wrap_content"/>
     </RelativeLayout>
 
@@ -26,10 +28,10 @@
             android:layout_height="wrap_content">
     <TextView
             android:text="选择巡更岗位："
-            android:textColor="#000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Spinner
+                android:id="@+id/gang_wei_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -44,10 +46,10 @@
             android:layout_height="wrap_content">
         <TextView
                 android:text="选择班次："
-                android:textColor="#000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         <Spinner
+                android:id="@+id/ban_ci_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
         </Spinner>
@@ -60,26 +62,29 @@
             android:layout_height="wrap_content">
         <TextView
                 android:text="选择路线："
-                android:textColor="#000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         <Spinner
+                android:id="@+id/lu_xian_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
         </Spinner>
     </LinearLayout>
 
+
     <LinearLayout
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="80dp"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <Button
                 android:text="接班"
+                android:onClick="jiaoJieBan"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"/>
         <Button
                 android:text="交班"
+                android:onClick="jiaoJieBan"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -13,7 +13,7 @@ public class PatrolRecord implements Serializable {
 	private String nodeId;
 	private String userPatrolId;
 	private Date patrolTime;
-	private Date partolPhoneTime;
+	private Date patrolPhoneTime;
 	private String error;
 
 
@@ -49,12 +49,12 @@ public class PatrolRecord implements Serializable {
 		this.patrolTime = patrolTime;
 	}
 
-	public Date getPartolPhoneTime() {
-		return partolPhoneTime;
+	public Date getPatrolPhoneTime() {
+		return patrolPhoneTime;
 	}
 
-	public void setPartolPhoneTime(Date partolPhoneTime) {
-		this.partolPhoneTime = partolPhoneTime;
+	public void setPatrolPhoneTime(Date patrolPhoneTime) {
+		this.patrolPhoneTime = patrolPhoneTime;
 	}
 
 	public String getError() {

@@ -1,10 +1,9 @@
 package com.joyi.xungeng.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.joyi.xungeng.db.PatrolLineDBHelper;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.PatrolLine;
 import com.joyi.xungeng.util.DateUtil;
 
@@ -16,18 +15,13 @@ import java.util.List;
  * 【巡更路线】dao
  */
 public class PatrolLineDao {
-	private PatrolLineDBHelper patrolLineDBHelper;
-
-	public PatrolLineDao(Context context) {
-		patrolLineDBHelper = new PatrolLineDBHelper(context);
-	}
 
 	/**
 	 * 添加路线
 	 * @param patrolLine
 	 */
 	public void add(PatrolLine patrolLine) {
-		SQLiteDatabase writableDatabase = patrolLineDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id", patrolLine.getId());
 		contentValues.put("postid", patrolLine.getStationId());
@@ -45,7 +39,7 @@ public class PatrolLineDao {
 	 */
 	public List<PatrolLine> getList() {
 		List<PatrolLine> patrolLines = new ArrayList<PatrolLine>();
-		SQLiteDatabase readableDatabase = patrolLineDBHelper.getReadableDatabase();
+		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = readableDatabase.query("partol_line", null, null, null, null, null, null);
 		if (cursor != null) {
 			PatrolLine patrolLine = null;
@@ -65,7 +59,7 @@ public class PatrolLineDao {
 	}
 
 	public void deleteAll() {
-		SQLiteDatabase writableDatabase = patrolLineDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		writableDatabase.delete("partol_line", null, null);
 	}
 }

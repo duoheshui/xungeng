@@ -1,10 +1,9 @@
 package com.joyi.xungeng.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.joyi.xungeng.db.ShiftRecordDBHelper;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.ShiftRecord;
 import com.joyi.xungeng.util.DateUtil;
 
@@ -16,18 +15,13 @@ import java.util.List;
  * 【交接班记录】dao
  */
 public class ShiftRecordDao {
-	private ShiftRecordDBHelper shiftRecordDBHelper;
-
-	public ShiftRecordDao(Context context) {
-		shiftRecordDBHelper = new ShiftRecordDBHelper(context);
-	}
 
 	/**
 	 * 添加记录
 	 * @param shiftRecord
 	 */
 	public void add(ShiftRecord shiftRecord) {
-		SQLiteDatabase writableDatabase = shiftRecordDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("uid", shiftRecord.getUserId());
 		contentValues.put("station_id", shiftRecord.getStationId());
@@ -46,7 +40,7 @@ public class ShiftRecordDao {
 	 */
 	public List<ShiftRecord> getList() {
 		List<ShiftRecord> shiftRecords = new ArrayList<ShiftRecord>();
-		SQLiteDatabase readableDatabase = shiftRecordDBHelper.getReadableDatabase();
+		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = readableDatabase.query("shift_record", null, null, null, null, null, null);
 		if (cursor != null) {
 			ShiftRecord shiftRecord = null;
@@ -71,7 +65,7 @@ public class ShiftRecordDao {
 	 * 删除所有记录
 	 */
 	public void deleteAll() {
-		SQLiteDatabase writableDatabase = shiftRecordDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		writableDatabase.delete("shift_record", null, null);
 	}
 }

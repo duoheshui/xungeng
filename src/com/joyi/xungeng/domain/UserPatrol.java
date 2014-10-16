@@ -1,7 +1,9 @@
 package com.joyi.xungeng.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by zhangyong on 2014/10/15.
@@ -10,17 +12,27 @@ import java.util.Date;
 public class UserPatrol implements Serializable {
 
 	private int id;
-	private String userId;            // 用户ID
-	private String lineId;          // 线路ID
-	private int sequence;              // 轮次
-	private String scheduleTypeId;  // 巡更班次ID
+	private String userId;              // 用户ID
+	private String lineId;              // 线路ID
+	private int sequence;               // 轮次
+	private String scheduleTypeId;      // 巡更班次ID
 	private Date beginTime;
 	private Date endTime;
 	private Date beginPhoneTime;
 	private Date endPhoneTime;
 
+    private List<PatrolRecord> patrolRecords = new ArrayList<>();
 
-	public int getId() {
+
+    public List<PatrolRecord> getPatrolRecords() {
+        return patrolRecords;
+    }
+
+    public void setPatrolRecords(List<PatrolRecord> patrolRecords) {
+        this.patrolRecords = patrolRecords;
+    }
+
+    public int getId() {
 		return id;
 	}
 

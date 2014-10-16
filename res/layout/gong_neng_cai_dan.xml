@@ -18,7 +18,6 @@
 
 
             <TabWidget
-                    android:textAlignment="center"
                     android:layout_alignParentBottom="true"
                     android:id="@android:id/tabs"
                     android:layout_width="match_parent"

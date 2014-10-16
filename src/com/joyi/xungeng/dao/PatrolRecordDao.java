@@ -1,10 +1,9 @@
 package com.joyi.xungeng.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.joyi.xungeng.db.PatrolRecordDBHelper;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.util.DateUtil;
 
@@ -16,23 +15,18 @@ import java.util.List;
  * 【巡更记录】dao
  */
 public class PatrolRecordDao {
-	private PatrolRecordDBHelper patrolRecordDBHelper;
-
-	public PatrolRecordDao(Context context) {
-		patrolRecordDBHelper = new PatrolRecordDBHelper(context);
-	}
 
 	/**
 	 * 添加记录
 	 * @param patrolRecord
 	 */
 	public void add(PatrolRecord patrolRecord) {
-		SQLiteDatabase writableDatabase = patrolRecordDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("nodeId", patrolRecord.getNodeId());
 		contentValues.put("userPatrolId", patrolRecord.getUserPatrolId());
 		contentValues.put("patrolTime", DateUtil.getHumanReadStr(patrolRecord.getPatrolTime()));
-		contentValues.put("partolPhoneTime", DateUtil.getHumanReadStr(patrolRecord.getPartolPhoneTime()));
+		contentValues.put("partolPhoneTime", DateUtil.getHumanReadStr(patrolRecord.getPatrolPhoneTime()));
 		contentValues.put("error", "");
 
 		writableDatabase.insert("patrol_record", null, contentValues);
@@ -45,7 +39,7 @@ public class PatrolRecordDao {
 	 */
 	public List<PatrolRecord> getList() {
 		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
-		SQLiteDatabase readableDatabase = patrolRecordDBHelper.getReadableDatabase();
+		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = readableDatabase.query("patrol_record", null, null, null, null, null, null);
 		if (cursor != null) {
 			PatrolRecord patrolRecord = null;
@@ -55,7 +49,7 @@ public class PatrolRecordDao {
 				patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));
 				patrolRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
-				patrolRecord.setPartolPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("partolPhoneTime"))));
+				patrolRecord.setPatrolPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("partolPhoneTime"))));
 				patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
 				patrolRecords.add(patrolRecord);
 			}
@@ -64,7 +58,7 @@ public class PatrolRecordDao {
 	}
 
 	public void deleteAll() {
-		SQLiteDatabase writableDatabase = patrolRecordDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		writableDatabase.delete("patrol_record", null, null);
 	}
 

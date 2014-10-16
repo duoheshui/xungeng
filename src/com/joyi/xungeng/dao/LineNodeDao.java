@@ -1,10 +1,9 @@
 package com.joyi.xungeng.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.joyi.xungeng.db.LineNodeDBHelper;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.LineNode;
 
 import java.util.ArrayList;
@@ -15,18 +14,13 @@ import java.util.List;
  * 【线路节点】 dao
  */
 public class LineNodeDao {
-	private LineNodeDBHelper lineNodeDBHelper;
-
-	public LineNodeDao(Context context) {
-		this.lineNodeDBHelper = new LineNodeDBHelper(context);
-	}
 
 	/**
 	 * 添加节点
 	 * @param lineNode
 	 */
 	public void add(LineNode lineNode) {
-		SQLiteDatabase writableDatabase = lineNodeDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id", lineNode.getId());
 		contentValues.put("lineid", lineNode.getLineId());
@@ -43,7 +37,7 @@ public class LineNodeDao {
 	public List<LineNode> getListByLineId(String lineid) {
 		List<LineNode> lineNodes = new ArrayList<LineNode>();
 
-		SQLiteDatabase readableDatabase = lineNodeDBHelper.getReadableDatabase();
+		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = readableDatabase.query("line_node", null, "lineid = ?", new String[]{lineid}, null, null, null);
 		if (cursor != null) {
 			LineNode lineNode = null;
@@ -60,7 +54,7 @@ public class LineNodeDao {
 	}
 
 	public void deleteAll() {
-		SQLiteDatabase sqLiteDatabase = lineNodeDBHelper.getWritableDatabase();
+		SQLiteDatabase sqLiteDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		sqLiteDatabase.delete("line_node", null, null);
 	}
 }

@@ -23,10 +23,10 @@ public class Constants {
 	public static final String LOGIN_URL = HTTP_DOMAIN_NAME + "/api?act=login";
 
 
-
-
-
-
+    /**
+     * http请求状态码
+     */
+    public static final String HTTP_SUCCESS_CODE = "200";
 
 	/**
 	 * 菜单

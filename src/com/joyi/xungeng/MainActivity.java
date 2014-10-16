@@ -4,15 +4,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.service.LoginService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.StringUtils;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 /**
  * 应用程序入口Activity
@@ -30,16 +30,18 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		loginService = LoginService.getInstance(this);
-		loginService.serverTimeTask(new Date());
-		username = (EditText) findViewById(R.id.username_edittext);
-		password = (EditText) findViewById(R.id.password_edittext);
 
+        username = (EditText) findViewById(R.id.username_edittext);
+        password = (EditText) findViewById(R.id.password_edittext);
 
-		String newVersionUrl = loginService.getNewVersionUrl();
+        String newVersionUrl = loginService.getNewVersionUrl();
 		if (StringUtils.isNotNull(newVersionUrl)) {
 			loginService.showAlert();
 			return;
 		}
+
+        /* 初始化数据库操作对象 */
+        SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
 
 	}
 
@@ -51,22 +53,50 @@ public class MainActivity extends BaseActivity {
 		String inputUsername = username.getText().toString();
 		String inputPassword = password.getText().toString();
 
-		Log.e("username", inputUsername + ", " + inputPassword);
-
 		try {
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("loginName", inputUsername);
 			requestParams.put("password", inputPassword);
 
 			AsyncHttpClient client = new AsyncHttpClient();
+
+            // 发起请求前的时间戳
+            final long beforeHttp = System.currentTimeMillis();
 			client.post(MainActivity.this, Constants.LOGIN_URL, requestParams, new JsonHttpResponseHandler() {
 				@Override
 				public void onSuccess(JSONObject jsonObject) {
 					super.onSuccess(jsonObject);
-					showToast(String.valueOf(jsonObject));
-					Log.e("onSuccess", String.valueOf(jsonObject));
+                    // 请求响应时的时间戳
+                    long afterHttp = System.currentTimeMillis();
+                    try {
+                        String errorCode = jsonObject.getString("errorCode");
+                        if (!Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
+                            showToast("登录失败, 请稍后再试");
+                            return;
+                        }
+
+                        /* 1, 同步服务器时间 */
+                        long serverTime = Long.parseLong(jsonObject.getString("serverTime")) + (afterHttp-beforeHttp);
+                        loginService.syncServerTime(serverTime);
+
+                        /* 2, 检查上次打卡记录是否已上传 */
+                        loginService.syncPatrolData();
+
+
+
+                        Log.e("onSuccess", String.valueOf(jsonObject));
+                        Log.e("errorCode", errorCode);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 				}
-			});
+
+                @Override
+                public void onFailure(Throwable throwable, String s) {
+                    super.onFailure(throwable, s);
+                    showToast("系统异常, 请稍后再试");
+                }
+            });
 		} catch (Exception e) {
 			showToast("登录失败, 请稍后再试");
 			Log.e(TAG, e.toString());

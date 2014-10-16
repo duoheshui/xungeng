@@ -1,10 +1,9 @@
 package com.joyi.xungeng.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.joyi.xungeng.db.PartolViewDBHelper;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.util.DateUtil;
 
@@ -16,11 +15,6 @@ import java.util.List;
  * 【巡查打卡】 dao
  */
 public class PatrolViewDao {
-	private PartolViewDBHelper partolViewDBHelper;
-
-	public PatrolViewDao(Context context) {
-		partolViewDBHelper = new PartolViewDBHelper(context);
-	}
 
 
 	/**
@@ -28,7 +22,7 @@ public class PatrolViewDao {
 	 * @param patrolView
 	 */
 	public void add(PatrolView patrolView) {
-		SQLiteDatabase writableDatabase = partolViewDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("lineid", patrolView.getNodeId());
 		contentValues.put("userid", patrolView.getUserId());
@@ -42,7 +36,7 @@ public class PatrolViewDao {
 	 */
 	public List<PatrolView> getAll() {
 		List<PatrolView> patrolViews = new ArrayList<PatrolView>();
-		SQLiteDatabase readableDatabase = partolViewDBHelper.getReadableDatabase();
+		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = readableDatabase.query("partol_view", null, null, null, null, null, null);
 		if (cursor != null) {
 			PatrolView patrolView = null;
@@ -60,7 +54,7 @@ public class PatrolViewDao {
 	}
 
 	public void deleteAll() {
-		SQLiteDatabase writableDatabase = partolViewDBHelper.getWritableDatabase();
+		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		writableDatabase.delete("partol_view", null, null);
 	}
 }

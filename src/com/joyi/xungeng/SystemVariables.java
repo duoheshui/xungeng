@@ -1,5 +1,6 @@
 package com.joyi.xungeng;
 
+import android.database.sqlite.SQLiteOpenHelper;
 import com.joyi.xungeng.domain.KeyValuePair;
 import com.joyi.xungeng.domain.PatrolLine;
 import com.joyi.xungeng.domain.Station;
@@ -14,6 +15,12 @@ import java.util.List;
  * 用于保存从服务端读取到的数据, 如:用户下的路线, 岗位, 班次
  */
 public class SystemVariables {
+
+
+    /**
+     * 据数据库操作对象
+     */
+    public static SQLiteOpenHelper sqLiteOpenHelper;
 
 	/**
 	 * 服务器时间

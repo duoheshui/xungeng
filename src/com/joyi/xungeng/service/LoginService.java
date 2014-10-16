@@ -19,6 +19,7 @@ public class LoginService {
 	private boolean hasSyncServerTime;
 
 
+
 	private LoginService(Context context) {this.context = context;}
 
 	public static LoginService getInstance(Context context) {
@@ -40,19 +41,19 @@ public class LoginService {
 	/**
 	 * 本地新建一个TimerTask, 在离线状态下同步服务器时间
 	 */
-	public void serverTimeTask(final Date date) {
-		if (hasSyncServerTime || date==null) {
+	public void syncServerTime(final long serverTime) {
+		if (hasSyncServerTime) {
 			return;
 		}
 		hasSyncServerTime = true;
-		SystemVariables.SERVER_TIME.setTime(date.getTime());
+		SystemVariables.SERVER_TIME.setTime(serverTime);
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				SystemVariables.SERVER_TIME.setTime(SystemVariables.SERVER_TIME.getTime() + 1000);
+				SystemVariables.SERVER_TIME.setTime(SystemVariables.SERVER_TIME.getTime() + 100);
 			}
-		}, 0, 1000);
+		}, 0, 100);
 	}
 
 	/**
@@ -71,5 +72,12 @@ public class LoginService {
 			}
 		}).show();
 	}
+
+    /**
+     * 同步上次巡更信息, 并删除
+     */
+    public void syncPatrolData() {
+
+    }
 
 }

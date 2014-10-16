@@ -13,7 +13,7 @@ public class PartolViewDBHelper extends SQLiteOpenHelper {
 	public static final String CREATE_TABLE_SQL =
 			"create table partol_view(" +
 			"id integer primary key autoincrement, " +
-			"lineid char(20)," +
+			"nodeid char(20)," +
 			"userid char(20)," +
 			"patrolTime datetime)";
 

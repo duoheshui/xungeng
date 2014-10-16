@@ -52,6 +52,7 @@ public class ShiftRecordDao {
 			ShiftRecord shiftRecord = null;
 			while (cursor.moveToNext()) {
 				shiftRecord = new ShiftRecord();
+				shiftRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				shiftRecord.setReceiveTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("receive_time"))));
 				shiftRecord.setRecivePhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("receive_phone_time"))));
 				shiftRecord.setSubmitPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("submit_phone_time"))));

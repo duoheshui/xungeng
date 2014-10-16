@@ -30,7 +30,7 @@ public class PatrolViewDao {
 	public void add(PatrolView patrolView) {
 		SQLiteDatabase writableDatabase = partolViewDBHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
-		contentValues.put("lineid", patrolView.getLineid());
+		contentValues.put("lineid", patrolView.getNodeid());
 		contentValues.put("userid", patrolView.getUid());
 		contentValues.put("patrolTime", DateUtil.getHumanReadStr(patrolView.getPatrolTime()));
 		writableDatabase.insert("partol_view", null, contentValues);
@@ -49,7 +49,7 @@ public class PatrolViewDao {
 			while (cursor.moveToNext()) {
 				patrolView = new PatrolView();
 				patrolView.setId(cursor.getInt(cursor.getColumnIndex("id")));
-				patrolView.setLineid(cursor.getString(cursor.getColumnIndex("lineid")));
+				patrolView.setNodeid(cursor.getString(cursor.getColumnIndex("lineid")));
 				patrolView.setUid(cursor.getString(cursor.getColumnIndex("userid")));
 				patrolView.setPatrolTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("patrolTime"))));
 				patrolViews.add(patrolView);

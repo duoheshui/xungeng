@@ -8,6 +8,7 @@ import java.util.Date;
  * 【交接班记录】实体类
  */
 public class ShiftRecord implements Serializable {
+	private int id;
 	private String uid;
 	private String stationId;       // 岗位ID
 	private String scheduleTypeId;  // 巡更班次ID
@@ -17,6 +18,13 @@ public class ShiftRecord implements Serializable {
 	private Date recivePhoneTime;     // 接班手机时间
 
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getUid() {
 		return uid;

@@ -11,6 +11,23 @@ import java.util.Map;
  * 常量类
  */
 public class Constants {
+
+	/**
+	 * 域名
+	 */
+	public static final String HTTP_DOMAIN_NAME = "http://218.28.243.172:4900";
+
+	/**
+	 * 登录地址
+	 */
+	public static final String LOGIN_URL = HTTP_DOMAIN_NAME + "/api?act=login";
+
+
+
+
+
+
+
 	/**
 	 * 菜单
 	 */

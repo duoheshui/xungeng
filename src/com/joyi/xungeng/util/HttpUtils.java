@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-	static String url = "http://192.16.8.176:8080/wuye/login.jsp";
 
 	public static String post(Map<String, String> params) {
 		String TAG = "HttpUtils";
@@ -35,7 +34,7 @@ public class HttpUtils {
 		}
 
 		try {
-			HttpPost postMethod = new HttpPost(url);
+			HttpPost postMethod = new HttpPost(Constants.LOGIN_URL);
 			postMethod.setEntity(new UrlEncodedFormEntity(paramList, "utf-8")); //将参数填入POST Entity中
 
 			HttpResponse response = httpClient.execute(postMethod); //执行POST方法

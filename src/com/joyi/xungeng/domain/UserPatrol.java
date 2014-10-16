@@ -10,8 +10,8 @@ import java.util.Date;
 public class UserPatrol implements Serializable {
 
 	private int id;
-	private String  uid;            // 用户ID
-	private String lineid;          // 线路ID
+	private String userId;            // 用户ID
+	private String lineId;          // 线路ID
 	private int sequence;              // 轮次
 	private String scheduleTypeId;  // 巡更班次ID
 	private Date beginTime;
@@ -28,20 +28,20 @@ public class UserPatrol implements Serializable {
 		this.id = id;
 	}
 
-	public String getUid() {
-		return uid;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getLineid() {
-		return lineid;
+	public String getLineId() {
+		return lineId;
 	}
 
-	public void setLineid(String lineid) {
-		this.lineid = lineid;
+	public void setLineId(String lineId) {
+		this.lineId = lineId;
 	}
 
 	public int getSequence() {

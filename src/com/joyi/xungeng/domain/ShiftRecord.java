@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class ShiftRecord implements Serializable {
 	private int id;
-	private String uid;
+	private String userId;
 	private String stationId;       // 岗位ID
 	private String scheduleTypeId;  // 巡更班次ID
 	private Date submitTime;      // 交班时间
@@ -26,12 +26,12 @@ public class ShiftRecord implements Serializable {
 		this.id = id;
 	}
 
-	public String getUid() {
-		return uid;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getStationId() {

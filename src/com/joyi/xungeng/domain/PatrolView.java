@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class PatrolView implements Serializable {
 	private int id;
-	private String nodeid;
-	private String uid;
+	private String nodeId;
+	private String userId;
 	private Date patrolTime;
 
 
@@ -23,20 +23,20 @@ public class PatrolView implements Serializable {
 		this.id = id;
 	}
 
-	public String getNodeid() {
-		return nodeid;
+	public String getNodeId() {
+		return nodeId;
 	}
 
-	public void setNodeid(String nodeid) {
-		this.nodeid = nodeid;
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
 	}
 
-	public String getUid() {
-		return uid;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public Date getPatrolTime() {

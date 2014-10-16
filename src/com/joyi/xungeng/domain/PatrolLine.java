@@ -12,7 +12,7 @@ public class PatrolLine implements Serializable {
 	private String id;
 	private String stationId;   // 岗位ID
 	private int frequency;      // 频次
-	private int offset;         // 偏差(分钟)
+	private int exception;         // 偏差(分钟)
 	private Date beginTime;
 	private Date endTime;
 
@@ -41,12 +41,12 @@ public class PatrolLine implements Serializable {
 		this.frequency = frequency;
 	}
 
-	public int getOffset() {
-		return offset;
+	public int getException() {
+		return exception;
 	}
 
-	public void setOffset(int offset) {
-		this.offset = offset;
+	public void setException(int exception) {
+		this.exception = exception;
 	}
 
 	public Date getBeginTime() {

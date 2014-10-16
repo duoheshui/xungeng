@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 	private String id;
-	private String username;
+	private String userName;
 	private String password;
 	private String name;                    // 用户名拼音
 	private String patrolStationTypeId;     // 巡更岗位性质
@@ -24,12 +24,12 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPassword() {

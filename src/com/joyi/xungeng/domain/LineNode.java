@@ -9,8 +9,8 @@ import java.io.Serializable;
 public class LineNode implements Serializable {
 
 	private String id;
-	private String lineid;
-	private String nodename;
+	private String lineId;
+	private String nodeName;
 	private String nfcCode;
 
 
@@ -22,20 +22,20 @@ public class LineNode implements Serializable {
 		this.id = id;
 	}
 
-	public String getLineid() {
-		return lineid;
+	public String getLineId() {
+		return lineId;
 	}
 
-	public void setLineid(String lineid) {
-		this.lineid = lineid;
+	public void setLineId(String lineId) {
+		this.lineId = lineId;
 	}
 
-	public String getNodename() {
-		return nodename;
+	public String getNodeName() {
+		return nodeName;
 	}
 
-	public void setNodename(String nodename) {
-		this.nodename = nodename;
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
 	}
 
 	public String getNfcCode() {

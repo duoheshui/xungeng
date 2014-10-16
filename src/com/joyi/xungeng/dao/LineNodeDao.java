@@ -29,8 +29,8 @@ public class LineNodeDao {
 		SQLiteDatabase writableDatabase = lineNodeDBHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id", lineNode.getId());
-		contentValues.put("lineid", lineNode.getLineid());
-		contentValues.put("nodeName", lineNode.getNodename());
+		contentValues.put("lineid", lineNode.getLineId());
+		contentValues.put("nodeName", lineNode.getNodeName());
 		contentValues.put("nfcCode", lineNode.getNfcCode());
 		writableDatabase.insert("line_node", null, contentValues);
 	}
@@ -50,8 +50,8 @@ public class LineNodeDao {
 			while (cursor.moveToNext()) {
 				lineNode = new LineNode();
 				lineNode.setId(cursor.getString(cursor.getColumnIndex("id")));
-				lineNode.setLineid(cursor.getString(cursor.getColumnIndex("lineid")));
-				lineNode.setNodename(cursor.getString(cursor.getColumnIndex("nodeName")));
+				lineNode.setLineId(cursor.getString(cursor.getColumnIndex("lineid")));
+				lineNode.setNodeName(cursor.getString(cursor.getColumnIndex("nodeName")));
 				lineNode.setNfcCode(cursor.getString(cursor.getColumnIndex("nfcCode")));
 				lineNodes.add(lineNode);
 			}

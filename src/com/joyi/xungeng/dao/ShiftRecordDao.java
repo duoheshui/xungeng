@@ -29,7 +29,7 @@ public class ShiftRecordDao {
 	public void add(ShiftRecord shiftRecord) {
 		SQLiteDatabase writableDatabase = shiftRecordDBHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
-		contentValues.put("uid", shiftRecord.getUid());
+		contentValues.put("uid", shiftRecord.getUserId());
 		contentValues.put("station_id", shiftRecord.getStationId());
 		contentValues.put("schedule_type_id", shiftRecord.getScheduleTypeId());
 		contentValues.put("submit_time", DateUtil.getHumanReadStr(shiftRecord.getSubmitTime()));
@@ -59,7 +59,7 @@ public class ShiftRecordDao {
 				shiftRecord.setSubmitTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("submit_time"))));
 				shiftRecord.setScheduleTypeId(cursor.getString(cursor.getColumnIndex("schedule_type_id")));
 				shiftRecord.setStationId(cursor.getString(cursor.getColumnIndex("station_id")));
-				shiftRecord.setUid(cursor.getString(cursor.getColumnIndex("uid")));
+				shiftRecord.setUserId(cursor.getString(cursor.getColumnIndex("uid")));
 				shiftRecords.add(shiftRecord);
 			}
 		}

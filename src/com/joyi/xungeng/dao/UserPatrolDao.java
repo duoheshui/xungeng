@@ -29,8 +29,8 @@ public class UserPatrolDao {
 	public void add(UserPatrol userPatrol) {
 		SQLiteDatabase writableDatabase = userPatrolDBHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
-		contentValues.put("userid", userPatrol.getUid());
-		contentValues.put("lineid", userPatrol.getLineid());
+		contentValues.put("userid", userPatrol.getUserId());
+		contentValues.put("lineid", userPatrol.getLineId());
 		contentValues.put("sequence", userPatrol.getSequence());
 		contentValues.put("beginTime", DateUtil.getHumanReadStr(userPatrol.getBeginTime()));
 		contentValues.put("endTime", DateUtil.getHumanReadStr(userPatrol.getEndTime()));
@@ -54,8 +54,8 @@ public class UserPatrolDao {
 			while (cursor.moveToNext()) {
 				userPatrol = new UserPatrol();
 				userPatrol.setId(cursor.getInt(cursor.getColumnIndex("id")));
-				userPatrol.setUid(cursor.getString(cursor.getColumnIndex("userid")));
-				userPatrol.setLineid(cursor.getString(cursor.getColumnIndex("lineid")));
+				userPatrol.setUserId(cursor.getString(cursor.getColumnIndex("userid")));
+				userPatrol.setLineId(cursor.getString(cursor.getColumnIndex("lineid")));
 				userPatrol.setSequence(cursor.getInt(cursor.getColumnIndex("sequence")));
 				userPatrol.setBeginTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("beginTime"))));
 				userPatrol.setEndTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("endTime"))));

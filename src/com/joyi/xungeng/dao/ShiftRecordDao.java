@@ -20,7 +20,7 @@ public class ShiftRecordDao {
 	 * 添加记录
 	 * @param shiftRecord
 	 */
-	public void add(ShiftRecord shiftRecord) {
+	public long add(ShiftRecord shiftRecord) {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("uid", shiftRecord.getUserId());
@@ -31,7 +31,7 @@ public class ShiftRecordDao {
 		contentValues.put("receive_time", DateUtil.getHumanReadStr(shiftRecord.getReceiveTime()));
 		contentValues.put("receive_phone_time", DateUtil.getHumanReadStr(shiftRecord.getRecivePhoneTime()));
 
-		writableDatabase.insert("shift_record", null, contentValues);
+		return writableDatabase.insert("shift_record", null, contentValues);
 	}
 
 	/**

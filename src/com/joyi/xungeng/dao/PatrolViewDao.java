@@ -21,13 +21,13 @@ public class PatrolViewDao {
 	 * 添加记录
 	 * @param patrolView
 	 */
-	public void add(PatrolView patrolView) {
+	public long add(PatrolView patrolView) {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("lineid", patrolView.getNodeId());
 		contentValues.put("userid", patrolView.getUserId());
 		contentValues.put("patrolTime", DateUtil.getHumanReadStr(patrolView.getPatrolTime()));
-		writableDatabase.insert("partol_view", null, contentValues);
+		return writableDatabase.insert("partol_view", null, contentValues);
 	}
 
 	/**

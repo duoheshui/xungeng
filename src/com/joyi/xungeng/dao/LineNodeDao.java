@@ -19,15 +19,15 @@ public class LineNodeDao {
 	 * 添加节点
 	 * @param lineNode
 	 */
-	public void add(LineNode lineNode) {
+	public long add(LineNode lineNode) {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id", lineNode.getId());
 		contentValues.put("lineid", lineNode.getLineId());
 		contentValues.put("nodeName", lineNode.getNodeName());
 		contentValues.put("nfcCode", lineNode.getNfcCode());
-		writableDatabase.insert("line_node", null, contentValues);
-	}
+        return writableDatabase.insert("line_node", null, contentValues);
+    }
 
 	/**
 	 * 根据巡更路线获取该路线下的所有节点

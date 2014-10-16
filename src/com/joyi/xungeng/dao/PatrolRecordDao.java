@@ -20,7 +20,7 @@ public class PatrolRecordDao {
 	 * 添加记录
 	 * @param patrolRecord
 	 */
-	public void add(PatrolRecord patrolRecord) {
+	public long add(PatrolRecord patrolRecord) {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("nodeId", patrolRecord.getNodeId());
@@ -29,7 +29,7 @@ public class PatrolRecordDao {
 		contentValues.put("partolPhoneTime", DateUtil.getHumanReadStr(patrolRecord.getPatrolPhoneTime()));
 		contentValues.put("error", "");
 
-		writableDatabase.insert("patrol_record", null, contentValues);
+		return writableDatabase.insert("patrol_record", null, contentValues);
 	}
 
 

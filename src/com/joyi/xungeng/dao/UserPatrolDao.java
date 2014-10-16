@@ -21,7 +21,7 @@ public class UserPatrolDao {
 	 * 添加记录
 	 * @param userPatrol
 	 */
-	public void add(UserPatrol userPatrol) {
+	public long add(UserPatrol userPatrol) {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("userid", userPatrol.getUserId());
@@ -33,7 +33,7 @@ public class UserPatrolDao {
 		contentValues.put("endPhoneTime", DateUtil.getHumanReadStr(userPatrol.getEndPhoneTime()));
 
 
-		writableDatabase.insert("user_patrol", null, contentValues);
+		return writableDatabase.insert("user_patrol", null, contentValues);
 	}
 
 	/**

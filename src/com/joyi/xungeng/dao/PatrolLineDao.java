@@ -20,7 +20,7 @@ public class PatrolLineDao {
 	 * 添加路线
 	 * @param patrolLine
 	 */
-	public void add(PatrolLine patrolLine) {
+	public long add(PatrolLine patrolLine) {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id", patrolLine.getId());
@@ -30,8 +30,8 @@ public class PatrolLineDao {
 		contentValues.put("beginTime", DateUtil.getHumanReadStr(patrolLine.getBeginTime()));
 		contentValues.put("endTime", DateUtil.getHumanReadStr(patrolLine.getEndTime()));
 
-		writableDatabase.insert("partol_line", null, contentValues);
-	}
+        return writableDatabase.insert("partol_line", null, contentValues);
+    }
 
 	/**
 	 * 获取所有路线

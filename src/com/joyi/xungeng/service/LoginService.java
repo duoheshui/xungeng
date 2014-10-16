@@ -5,8 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.PatrolRecordDao;
+import com.joyi.xungeng.dao.PatrolViewDao;
+import com.joyi.xungeng.domain.PatrolRecord;
+import com.joyi.xungeng.domain.PatrolView;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -74,9 +79,15 @@ public class LoginService {
 	}
 
     /**
-     * 同步上次巡更信息, 并删除
+     * 同步上次巡更信息, 同步成功删除本地记录
      */
     public void syncPatrolData() {
+        // TODO
+        PatrolViewDao pvDao = new PatrolViewDao();
+        List<PatrolView> pvList = pvDao.getAll();
+        if (pvList != null && pvList.size() > 0) {
+
+        }
 
     }
 

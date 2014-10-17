@@ -14,8 +14,35 @@ public class PatrolView implements Serializable {
 	private String nodeId;
 	private String userId;
 	private Date patrolTime;
+	private Date patrolPhoneTime;
+	private String nodeName;
+	private String status;
 	private String imei = SystemVariables.IMEI;
 
+
+	public Date getPatrolPhoneTime() {
+		return patrolPhoneTime;
+	}
+
+	public void setPatrolPhoneTime(Date patrolPhoneTime) {
+		this.patrolPhoneTime = patrolPhoneTime;
+	}
+
+	public String getNodeName() {
+		return nodeName;
+	}
+
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getImei() {
 		return imei;

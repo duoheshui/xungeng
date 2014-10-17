@@ -64,32 +64,14 @@ public class Constants {
 
 
 	/**
-	 * 获取是否有新的客户端版本URL
+	 * 请求地址
 	 */
-	public static final String HAS_NEW_VERSION_URL = "";
+	public static final String HAS_NEW_VERSION_URL = "";        // 获取是否有新的客户端版本URL
+	public static final String UPLOAD_PARTOL_RECORD_URL = "";     // 上传打卡信息URL
+	public static final String UPLOAD_SHIFT_INFO_URL = "";      // 上传交接班信息URL
+	public static final String UPLOAD_MOBILE_INFO_URL = "";     // 上传手机硬件信息URL
+	public static final String UPLOAD_PATROL_VIEW_URL = "";     // 上传巡查信息
+	public static final String UPLOAD_NFC_INFO_URL = "";        // 上传NFC卡信息URL
 
-
-	/**
-	 * 上传打卡信息URL
-	 */
-	public static final String UPLOAD_PARTOL_INFO_URL = "";
-
-
-	/**
-	 * 上传交接班信息URL
-	 */
-	public static final String UPLOAD_SHIFT_INFO_URL = "";
-
-
-	/**
-	 * 上传手机硬件信息URL
-	 */
-	public static final String UPLOAD_MOBILE_INFO_URL = "";
-
-
-	/**
-	 * 上传NFC卡信息URL
-	 */
-	public static final String UPLOAD_NFC_INFO_URL = "";
 
 }

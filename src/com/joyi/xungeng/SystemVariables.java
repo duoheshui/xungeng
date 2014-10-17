@@ -44,4 +44,9 @@ public class SystemVariables {
 	 */
 	public static final List<Station> STATION_LIST = new ArrayList<Station>();
 
+	/**
+	 * imei号
+	 */
+	public static final String IMEI = "";
+
 }

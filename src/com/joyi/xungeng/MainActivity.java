@@ -1,9 +1,11 @@
 package com.joyi.xungeng;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import com.joyi.xungeng.activity.MenuActivity;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.service.LoginService;
 import com.joyi.xungeng.util.Constants;
@@ -80,9 +82,11 @@ public class MainActivity extends BaseActivity {
                         loginService.syncServerTime(serverTime);
 
                         /* 2, 检查上次打卡记录是否已上传 */
-                        loginService.syncPatrolData();
+                        loginService.syncPatrolData(MainActivity.this);
 
-
+						/* 3, 跳转至菜单目录页面 */
+	                    Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+	                    startActivity(intent);
 
                         Log.e("onSuccess", String.valueOf(jsonObject));
                         Log.e("errorCode", errorCode);

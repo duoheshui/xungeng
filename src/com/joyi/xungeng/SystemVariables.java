@@ -5,6 +5,7 @@ import android.telephony.TelephonyManager;
 import com.joyi.xungeng.domain.KeyValuePair;
 import com.joyi.xungeng.domain.PatrolLine;
 import com.joyi.xungeng.domain.Station;
+import com.joyi.xungeng.domain.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.List;
  * 用于保存从服务端读取到的数据, 如:用户下的路线, 岗位, 班次
  */
 public class SystemVariables {
-
+	public static final User user = new User();
 
     /**
      * 据数据库操作对象

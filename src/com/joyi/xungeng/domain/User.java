@@ -8,13 +8,29 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 	private String id;
+	private String loginName;               // 登录名
 	private String userName;
 	private String password;
-	private String name;                    // 用户名拼音
+	private String pyShort;                    // 用户名拼音
 	private String patrolStationTypeId;     // 巡更岗位性质
+	private boolean hasPatrolViewPrivilege;
 
 
+	public boolean isHasPatrolViewPrivilege() {
+		return hasPatrolViewPrivilege;
+	}
 
+	public void setHasPatrolViewPrivilege(boolean hasPatrolViewPrivilege) {
+		this.hasPatrolViewPrivilege = hasPatrolViewPrivilege;
+	}
+
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
 
 	public String getId() {
 		return id;
@@ -40,12 +56,12 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public String getName() {
-		return name;
+	public String getPyShort() {
+		return pyShort;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setPyShort(String pyShort) {
+		this.pyShort = pyShort;
 	}
 
 	public String getPatrolStationTypeId() {

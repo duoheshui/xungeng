@@ -12,21 +12,6 @@ import java.util.Map;
  */
 public class Constants {
 
-	/**
-	 * 域名
-	 */
-	public static final String HTTP_DOMAIN_NAME = "http://218.28.243.172:4900";
-
-	/**
-	 * 登录地址
-	 */
-	public static final String LOGIN_URL = HTTP_DOMAIN_NAME + "/api?act=login";
-
-
-    /**
-     * http请求状态码
-     */
-    public static final String HTTP_SUCCESS_CODE = "200";
 
 	/**
 	 * 菜单
@@ -46,16 +31,8 @@ public class Constants {
 		NAME_ACTIVITY_MAP.put(SYSTEM_MENU_NAME[0], XiuGaiMiMaActivity.class);
 	}
 
-	/**
-	 * 数据库名
-	 */
-	public static final String DATA_BASE_NAME = "xinshiji_wuye_xungeng.db";
-
-
-	/**
-	 * 数据库版本号
-	 */
-	public static final int DATA_BASE_VERSION = 1;
+	public static final String DATA_BASE_NAME = "xinshiji_wuye_xungeng.db";     // 数据库名
+	public static final int DATA_BASE_VERSION = 1;                              // 数据库版本号
 
 	/**
 	 * 当前客户端版本号
@@ -66,12 +43,14 @@ public class Constants {
 	/**
 	 * 请求地址
 	 */
-	public static final String HAS_NEW_VERSION_URL = "";        // 获取是否有新的客户端版本URL
-	public static final String UPLOAD_PARTOL_RECORD_URL = "";     // 上传打卡信息URL
-	public static final String UPLOAD_SHIFT_INFO_URL = "";      // 上传交接班信息URL
-	public static final String UPLOAD_MOBILE_INFO_URL = "";     // 上传手机硬件信息URL
-	public static final String UPLOAD_PATROL_VIEW_URL = "";     // 上传巡查信息
-	public static final String UPLOAD_NFC_INFO_URL = "";        // 上传NFC卡信息URL
-
+	public static final String HTTP_SUCCESS_CODE = "200";                                               // http请求成功状态
+	public static final String HTTP_DOMAIN_NAME = "http://218.28.243.172:4900";                         // 域名
+	public static final String LOGIN_URL = HTTP_DOMAIN_NAME + "/api?act=login";                         // 登录地址
+	public static final String CHANGE_PASSWORD_URL = HTTP_DOMAIN_NAME+"/api?act=setpwd";                // 修改密码URL
+	public static final String HAS_NEW_VERSION_URL = HTTP_DOMAIN_NAME+"/api?act=getnewv";               // 获取是否有新的客户端版本URL
+	public static final String UPLOAD_PARTOL_RECORD_URL = HTTP_DOMAIN_NAME+"/api?act=uploadpatrol";     // 上传打卡信息URL
+	public static final String UPLOAD_SHIFT_INFO_URL = HTTP_DOMAIN_NAME+"/api?act=uploadschedule";      // 上传交接班信息URL
+	public static final String UPLOAD_PATROL_VIEW_URL = HTTP_DOMAIN_NAME+"/api?act=uploadpatrolview";   // 上传巡查信息
+	public static final String UPLOAD_NFC_INFO_URL = "";                                                // 上传NFC卡信息URL
 
 }

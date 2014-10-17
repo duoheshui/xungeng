@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import com.joyi.xungeng.activity.MenuActivity;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
+import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.service.LoginService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.StringUtils;
@@ -84,6 +85,14 @@ public class MainActivity extends BaseActivity {
                         loginService.syncServerTime(serverTime);
 
 	                    /* 2, 解析返回数据 */
+	                    User user = SystemVariables.user;
+	                    JSONObject userJson = jsonObject.getJSONObject("userInfo");
+	                    user.setId(userJson.getString("userId"));
+	                    user.setUserName(userJson.getString("userName"));
+	                    user.setLoginName(userJson.getString("loginName"));
+	                    user.setPyShort(userJson.getString("pyShort"));
+	                    user.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));
+	                    user.setHasPatrolViewPrivilege(userJson.getBoolean("hasPatrolViewPrivilege"));
 					// TODO
 
                         /* 3, 检查上次打卡记录是否已上传 */

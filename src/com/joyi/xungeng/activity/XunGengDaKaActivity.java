@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -26,13 +28,13 @@ public class XunGengDaKaActivity extends BaseActivity {
 		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
 
 		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
-		Log.e(TAG, lineNodes == null ? "null": lineNodes.toArray().toString());
 		for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
 			tableRow.setBackgroundColor(Color.WHITE);
 			tableRow.setPadding(1, 1, 1, 1);
 
 			TextView dian = new TextView(this);
+			dian.setGravity(Gravity.CENTER);
 			dian.setText(node.getNodeName());
 			dian.setTextColor(Color.WHITE);
 			dian.setBackgroundColor(Color.BLACK);
@@ -42,25 +44,27 @@ public class XunGengDaKaActivity extends BaseActivity {
 			dian.setLayoutParams(layoutParams);
 
 			TextView status = new TextView(this);
+			status.setGravity(Gravity.CENTER);
 			status.setText(node.getStatus());
 			status.setTextColor(Color.WHITE);
 			status.setBackgroundColor(Color.BLACK);
 			status.setTextSize(20);
-			layoutParams = new TableRow.LayoutParams();
-			dian.setLayoutParams(layoutParams);
+			status.setLayoutParams(layoutParams);
 
 			TextView time = new TextView(this);
+			time.setGravity(Gravity.CENTER);
 			time.setText(node.getTime());
 			time.setTextColor(Color.WHITE);
 			time.setBackgroundColor(Color.BLACK);
 			time.setTextSize(20);
-			layoutParams.setMargins(0, 0, 2, 0);
 			time.setLayoutParams(layoutParams);
 
 			tableRow.addView(dian);
 			tableRow.addView(status);
 			tableRow.addView(time);
+			tableLayout.addView(tableRow);
 		}
+
 	}
 }
 

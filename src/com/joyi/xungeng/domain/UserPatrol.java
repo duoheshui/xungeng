@@ -1,5 +1,7 @@
 package com.joyi.xungeng.domain;
 
+import com.joyi.xungeng.SystemVariables;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,8 +22,14 @@ public class UserPatrol implements Serializable {
 	private Date endTime;
 	private Date beginPhoneTime;
 	private Date endPhoneTime;
+	private String imei = SystemVariables.IMEI;
 
-    private List<PatrolRecord> patrolRecords = new ArrayList<>();
+
+	public String getImei() {
+		return imei;
+	}
+
+	private List<PatrolRecord> patrolRecords = new ArrayList<>();
 
 
     public List<PatrolRecord> getPatrolRecords() {

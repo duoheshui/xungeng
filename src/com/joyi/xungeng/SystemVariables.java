@@ -1,6 +1,7 @@
 package com.joyi.xungeng;
 
 import android.database.sqlite.SQLiteOpenHelper;
+import android.telephony.TelephonyManager;
 import com.joyi.xungeng.domain.KeyValuePair;
 import com.joyi.xungeng.domain.PatrolLine;
 import com.joyi.xungeng.domain.Station;
@@ -47,6 +48,6 @@ public class SystemVariables {
 	/**
 	 * imei号
 	 */
-	public static final String IMEI = "";
+	public static String IMEI = "";
 
 }

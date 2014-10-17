@@ -1,5 +1,7 @@
 package com.joyi.xungeng.domain;
 
+import com.joyi.xungeng.SystemVariables;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,7 +19,11 @@ public class ShiftRecord implements Serializable {
 	private Date submitPhoneTime;   // 交班手机时间
 	private Date receiveTime;     // 接班时间
 	private Date recivePhoneTime;     // 接班手机时间
+	private String imei = SystemVariables.IMEI;
 
+	public String getImei() {
+		return imei;
+	}
 
 	public String getLineId() {
 		return lineId;

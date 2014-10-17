@@ -1,5 +1,7 @@
 package com.joyi.xungeng.domain;
 
+import com.joyi.xungeng.SystemVariables;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,9 +14,12 @@ public class PatrolView implements Serializable {
 	private String nodeId;
 	private String userId;
 	private Date patrolTime;
+	private String imei = SystemVariables.IMEI;
 
 
-
+	public String getImei() {
+		return imei;
+	}
 	public int getId() {
 		return id;
 	}

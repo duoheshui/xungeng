@@ -30,7 +30,7 @@ public class SystemVariables {
 	/**
 	 * 巡更路线
 	 */
-	public static final List<PatrolLine> PATROL_LINES = new ArrayList<PatrolLine>();
+	public static final List<PatrolLine> PATROL_LINES = new ArrayList<>();
 
 
 	/**

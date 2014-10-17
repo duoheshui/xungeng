@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.*;
 import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.R;
+import com.joyi.xungeng.test.Test;
 import com.joyi.xungeng.util.Constants;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class MenuActivity extends Activity implements AdapterView.OnItemClickLis
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// TODO 删除假数据
+Test.test();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gong_neng_cai_dan);
 
@@ -44,10 +47,10 @@ public class MenuActivity extends Activity implements AdapterView.OnItemClickLis
 
 		// 功能菜单
 		functionMenuGridView = (GridView) findViewById(R.id.functionMenuGridView);
-		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+		List<HashMap<String, Object>> data = new ArrayList<>();
 		HashMap<String, Object> map = null;
 		for (int i = 0; i < functionMenuImages.length; ++i) {
-			map = new HashMap<String, Object>();
+			map = new HashMap<>();
 			map.put("image", functionMenuImages[i]);
 			map.put("text", functionMenuNames[i]);
 			data.add(map);
@@ -61,7 +64,7 @@ public class MenuActivity extends Activity implements AdapterView.OnItemClickLis
 		List<HashMap<String, Object>> data2 = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, Object> map2 = null;
 		for (int i = 0; i < systemMenuImages.length; ++i) {
-			map2 = new HashMap<String, Object>();
+			map2 = new HashMap<>();
 			map2.put("image", systemMenuImages[i]);
 			map2.put("text", systemMenuNames[i]);
 			data2.add(map2);
@@ -86,7 +89,6 @@ public class MenuActivity extends Activity implements AdapterView.OnItemClickLis
 				@Override
 				public void onClick(DialogInterface dialogInterface, int i) {
 					finish();
-//					System.exit(1);
 				}
 			}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 				@Override
@@ -108,8 +110,6 @@ public class MenuActivity extends Activity implements AdapterView.OnItemClickLis
 			}).show();
 			return;
 		}
-// TODO 删除调试语句
-Toast.makeText(getApplicationContext(), "name:"+name, Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent(this, Constants.NAME_ACTIVITY_MAP.get(name));
 		startActivity(intent);
 	}

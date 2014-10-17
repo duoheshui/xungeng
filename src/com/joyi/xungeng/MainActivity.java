@@ -81,10 +81,13 @@ public class MainActivity extends BaseActivity {
                         long serverTime = Long.parseLong(jsonObject.getString("serverTime")) + (afterHttp-beforeHttp);
                         loginService.syncServerTime(serverTime);
 
-                        /* 2, 检查上次打卡记录是否已上传 */
-                        loginService.syncPatrolData(MainActivity.this);
+	                    /* 2, 解析返回数据 */
+					// TODO
 
-						/* 3, 跳转至菜单目录页面 */
+                        /* 3, 检查上次打卡记录是否已上传 */
+//                        loginService.syncPatrolData(MainActivity.this);
+
+						/* 4, 跳转至菜单目录页面 */
 	                    Intent intent = new Intent(MainActivity.this, MenuActivity.class);
 	                    startActivity(intent);
 

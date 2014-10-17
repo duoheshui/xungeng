@@ -1,6 +1,7 @@
 package com.joyi.xungeng.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,16 +12,25 @@ import java.util.List;
 public class PatrolLine implements Serializable {
 
 	private String id;
-	private String stationId;           // 岗位ID
-	private int frequency;              // 频次
-	private int exception;              // 偏差(分钟)
+	private String lineName;
+	private String stationId;                           // 岗位ID
+	private int frequency;                              // 频次
+	private int exception;                              // 偏差(分钟)
 	private Date beginTime;
 	private Date endTime;
-	private List<LineNode> lineNodes;   // 路线上的节点
+	private List<LineNode> lineNodes = new ArrayList<>();// 路线上的节点
 
 
 	public List<LineNode> getLineNodes() {
 		return lineNodes;
+	}
+
+	public String getName() {
+		return lineName;
+	}
+
+	public void setName(String lineName) {
+		this.lineName = lineName;
 	}
 
 	public void setLineNodes(List<LineNode> lineNodes) {
@@ -73,5 +83,11 @@ public class PatrolLine implements Serializable {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+
+	@Override
+	public String toString() {
+		return lineName;
 	}
 }

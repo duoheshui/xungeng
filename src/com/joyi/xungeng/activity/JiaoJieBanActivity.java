@@ -32,8 +32,6 @@ public class JiaoJieBanActivity extends Activity implements AdapterView.OnItemSe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.jiao_jie_ban);
-// TODO 删除测试数据
-Test.test();
 
 		// 三个Spinner
 		gangWei = (Spinner) findViewById(R.id.gang_wei_spinner);

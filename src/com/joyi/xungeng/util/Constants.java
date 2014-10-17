@@ -31,7 +31,7 @@ public class Constants {
 	/**
 	 * 菜单
 	 */
-	public static final String[] FUNCTION_MENU_NAME = {"巡更打卡", "巡查打卡", "交接班", "信息上传"};
+	public static final String[] FUNCTION_MENU_NAME = {"巡更路线", "巡查打卡", "交接班", "信息上传"};
 	public static final String[] SYSTEM_MENU_NAME = {"修改密码", "切换帐号", "退出"};
 
 	/**
@@ -39,7 +39,7 @@ public class Constants {
 	 */
 	public static Map<String, Class<? extends Activity>> NAME_ACTIVITY_MAP = new HashMap();
 	static {
-		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[0], XunGengDaKaActivity.class);
+		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[0], XunGengLuXianActivity.class);
 		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[1], ChaXunDaKaActivity.class);
 		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[2], JiaoJieBanActivity.class);
 		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[3], XinXiShangChuanActivity.class);

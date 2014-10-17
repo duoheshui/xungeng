@@ -24,6 +24,7 @@
         <activity android:name=".activity.XinXiShangChuanActivity"/>
         <activity android:name=".activity.XiuGaiMiMaActivity"/>
         <activity android:name=".activity.XunGengDaKaActivity"/>
+        <activity android:name=".activity.XunGengLuXianActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>

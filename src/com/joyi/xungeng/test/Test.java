@@ -2,7 +2,11 @@ package com.joyi.xungeng.test;
 
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.KeyValuePair;
+import com.joyi.xungeng.domain.LineNode;
+import com.joyi.xungeng.domain.PatrolLine;
 import com.joyi.xungeng.domain.Station;
+
+import java.util.Date;
 
 /**
  * Created by zhangyong on 2014/10/16.
@@ -48,5 +52,40 @@ public class Test {
 		SystemVariables.SHIFT_LIST.add(pair4);
 		SystemVariables.SHIFT_LIST.add(pair5);
 		SystemVariables.SHIFT_LIST.add(pair6);
+
+
+		PatrolLine p1 = new PatrolLine();
+		p1.setEndTime(new Date());
+		p1.setId("11111111111111");
+		p1.setBeginTime(new Date());
+		p1.setStationId("S1");
+		p1.setFrequency(10);
+		p1.setException(20);
+		p1.setName("一号线");
+
+		LineNode n1 = new LineNode(); n1.setLineId(p1.getId()); n1.setNodeName("Node1"); n1.setStatus("未巡"); n1.setTime("192423421");
+		LineNode n2 = new LineNode(); n2.setLineId(p1.getId()); n2.setNodeName("Node2"); n2.setStatus("已巡"); n2.setTime("5192423421");
+		p1.getLineNodes().add(n1);
+		p1.getLineNodes().add(n2);
+
+
+		PatrolLine p2 = new PatrolLine();
+		p2.setEndTime(new Date());
+		p2.setId("222222222222222");
+		p2.setBeginTime(new Date());
+		p2.setStationId("S2");
+		p2.setFrequency(30);
+		p2.setException(40);
+		p2.setName("二号线");
+
+
+		LineNode n3 = new LineNode(); n3.setLineId(p1.getId()); n3.setNodeName("Node1"); n3.setStatus("未巡"); n3.setTime("192423421");
+		LineNode n4 = new LineNode(); n4.setLineId(p1.getId()); n4.setNodeName("Node2"); n4.setStatus("已巡"); n4.setTime("5192423421");
+		p2.getLineNodes().add(n3);
+		p2.getLineNodes().add(n4);
+
+		SystemVariables.PATROL_LINES.add(p1);
+		SystemVariables.PATROL_LINES.add(p2);
+
 	}
 }

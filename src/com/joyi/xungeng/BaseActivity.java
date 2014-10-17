@@ -1,6 +1,7 @@
 package com.joyi.xungeng;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -22,4 +23,7 @@ public class BaseActivity extends Activity {
 		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 	}
 
+	public void retreat(View view) {
+		finish();
+	}
 }

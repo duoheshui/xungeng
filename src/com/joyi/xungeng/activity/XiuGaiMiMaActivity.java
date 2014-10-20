@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
@@ -32,6 +33,10 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xiu_gai_mi_ma);
+
+		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		textView.setText(SystemVariables.USER_NAME);
+
 		oldPwd = (EditText) findViewById(R.id.old_pwd);
 		newPwd = (EditText) findViewById(R.id.new_pwd);
 		newPwd2 = (EditText) findViewById(R.id.new_pwd2);

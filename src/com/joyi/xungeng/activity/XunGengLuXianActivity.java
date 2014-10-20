@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
@@ -25,6 +26,10 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xun_geng_lu_xian);
+		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		textView.setText(SystemVariables.USER_NAME);
+
+
 		listView = (ListView) findViewById(R.id.line_list_view);
 		listView.setOnItemClickListener(this);
 		ArrayAdapter<PatrolLine> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, SystemVariables.PATROL_LINES);

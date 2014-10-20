@@ -89,6 +89,7 @@ public class MainActivity extends BaseActivity {
 	                    JSONObject userJson = jsonObject.getJSONObject("userInfo");
 	                    user.setId(userJson.getString("userId"));
 	                    user.setUserName(userJson.getString("userName"));
+	                    SystemVariables.USER_NAME = userJson.getString("userName");
 	                    user.setLoginName(userJson.getString("loginName"));
 	                    user.setPyShort(userJson.getString("pyShort"));
 	                    user.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));

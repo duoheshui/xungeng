@@ -5,8 +5,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.PatrolViewDao;
 import com.joyi.xungeng.dao.ShiftRecordDao;
@@ -46,6 +48,8 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xin_xi_shang_chuan);
+		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		textView.setText(SystemVariables.USER_NAME);
 
 		handler = new Handler(){
 			@Override

@@ -8,6 +8,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolViewDao;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.util.DateUtil;
@@ -26,6 +27,9 @@ public class XunchaDaKaActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xun_cha_da_ka);
+		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		textView.setText(SystemVariables.USER_NAME);
+
 		tableLayout = (TableLayout) findViewById(R.id.patrol_view_record_table);
 		List<PatrolView> patrolViewList = patrolViewDao.getAll();
 

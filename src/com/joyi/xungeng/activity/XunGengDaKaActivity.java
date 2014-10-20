@@ -8,6 +8,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.LineNode;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class XunGengDaKaActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xun_geng_da_ka);
+		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		textView.setText(SystemVariables.USER_NAME);
+
 		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
 
 		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");

@@ -9,6 +9,7 @@ import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -86,4 +87,18 @@ public class UserPatrolDao {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		writableDatabase.delete("user_patrol", null, null);
 	}
+
+    /**
+     * 更新结束时间
+     * @param endServerTime
+     * @param endPhoneTime
+     * @param id
+     */
+    public void updateEndDate(Date endServerTime, Date endPhoneTime, long id) {
+        SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("endTime", DateUtil.getHumanReadStr(endServerTime));
+        contentValues.put("endPhoneTime", DateUtil.getHumanReadStr(endPhoneTime));
+        writableDatabase.update("user_patrol", contentValues, "id = ?", new String[]{String.valueOf(id)});
+    }
 }

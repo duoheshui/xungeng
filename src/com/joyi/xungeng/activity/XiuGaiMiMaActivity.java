@@ -1,6 +1,8 @@
 package com.joyi.xungeng.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.StringUtils;
 import com.loopj.android.http.*;
@@ -16,6 +19,7 @@ import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
@@ -28,6 +32,7 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	private EditText oldPwd;
 	private EditText newPwd;
 	private EditText newPwd2;
+    private Handler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,13 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText(SystemVariables.USER_NAME);
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+            }
+        };
 
 		oldPwd = (EditText) findViewById(R.id.old_pwd);
 		newPwd = (EditText) findViewById(R.id.new_pwd);
@@ -50,34 +62,20 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	 */
 	public void changePassword(View view) {
 
+        XunGengService xgService = new XunGengService();
+        File file = xgService.downLoadFile(this, "http://duoheshui.duapp.com/wtp.apk");
+        xgService.openFile(this, file);
+
+        if (2 > 1) {
+            return;
+        }
 
 
-		final StringBuffer buffer = new StringBuffer("Hello->");
-		SyncHttpClient syncHttpClient = new SyncHttpClient() {
-			@Override
-			public String onRequestFailed(Throwable throwable, String s) {
-				return null;
-			}
 
-		};
-		syncHttpClient.post("http://www.baidu.com", new JsonHttpResponseHandler(){
-			@Override
-			public void onSuccess(String s) {
-				super.onSuccess(s);
-				Log.e(TAG, "onSuccess->" + s);
-				buffer.append("s");
-			}
-		});
-//		httpClient.get("http://www.baidu.com", new AsyncHttpResponseHandler() {
-//			@Override
-//			public void onSuccess(String s) {
-//				super.onSuccess(s);
-//				Log.e(TAG, "onSuccess->" + s);
-//				buffer.append(s);
-//			}
-//		});
 
-		Log.e(TAG, "Response:" + buffer.toString());
+
+
+
 
 
 		String newPassword = newPwd.getText().toString();

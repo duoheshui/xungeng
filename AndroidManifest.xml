@@ -19,7 +19,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ChaXunDaKaActivity"/>
+        <activity android:name=".activity.ChaXunDaKaActivity" android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <action android:name="android.nfc.action.ACTION_TECH_DISCOVERED"/>
+                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.JiaoJieBanActivity"></activity>
         <activity android:name=".activity.XinXiShangChuanActivity"/>
         <activity android:name=".activity.XiuGaiMiMaActivity"/>

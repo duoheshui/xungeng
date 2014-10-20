@@ -64,10 +64,25 @@
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_marginTop="20dp"
+                  android:layout_marginLeft="20dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <Button android:layout_width="80dp" android:id="@+id/start_button"
+                android:background="@drawable/round_green_shape"
+                android:layout_height="30dp" android:textColor="#FFF"
+                android:layout_marginRight="20dp" android:onClick="startPatrol"
+                android:text="开始"/>
+        <Button android:layout_width="80dp" android:onClick="endPatrol"
+                android:layout_height="30dp" android:textColor="#FFF"
+                android:background="@drawable/round_button" android:id="@+id/end_button"
+                android:text="结束"/>
+    </LinearLayout>
 
     <TableLayout
             android:id="@+id/patrol_record_table"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:stretchColumns="*">

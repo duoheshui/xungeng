@@ -41,7 +41,9 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 		PatrolLine patrolLine = (PatrolLine) adapterView.getAdapter().getItem(i);
 		Intent intent = new Intent(this, XunGengDaKaActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("lineNodes", (Serializable) patrolLine.getLineNodes());
+        bundle.putSerializable("patrolLine", patrolLine);
+        bundle.putString("lineName", patrolLine.getName());
+        bundle.putSerializable("lineNodes", (Serializable) patrolLine.getLineNodes());
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}

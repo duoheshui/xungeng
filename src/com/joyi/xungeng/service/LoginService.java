@@ -3,6 +3,7 @@ package com.joyi.xungeng.service;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Message;
 import android.util.Log;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolViewDao;
@@ -32,7 +33,13 @@ public class LoginService {
 	private Context context;
 	private boolean hasSyncServerTime;
 	private AsyncHttpClient httpClient = new AsyncHttpClient();
+    android.os.Handler handler = new android.os.Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
 
+        }
+    };
 
 
 	private LoginService(Context context) {this.context = context;}
@@ -151,20 +158,18 @@ public class LoginService {
 		    httpClient.post(context, Constants.UPLOAD_SHIFT_INFO_URL, requestParams, new JsonHttpResponseHandler(){
 			    @Override
 			    public void onSuccess(JSONObject jsonObject) {
-				    super.onSuccess(jsonObject);
-				    try {
-					    String errorCode = jsonObject.getString("errorCode");
-					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-						    srDao.deleteAll();
-					    }
-				    } catch (JSONException e) {
-					    Log.e(TAG, e.toString());
-					    e.printStackTrace();
-				    }
-			    }
-		    });
+                super.onSuccess(jsonObject);
+                try {
+                    String errorCode = jsonObject.getString("errorCode");
+                    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
+                        srDao.deleteAll();
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, e.toString());
+                    e.printStackTrace();
+                }
+            }
+        });
 	    }
-
     }
-
 }

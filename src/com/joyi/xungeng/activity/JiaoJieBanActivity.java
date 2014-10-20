@@ -1,19 +1,18 @@
 package com.joyi.xungeng.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.ShiftRecordDao;
 import com.joyi.xungeng.domain.KeyValuePair;
 import com.joyi.xungeng.domain.ShiftRecord;
 import com.joyi.xungeng.domain.Station;
-import com.joyi.xungeng.test.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +21,12 @@ import java.util.List;
 /**
  * Created by zhangyong on 2014/10/15.
  */
-public class JiaoJieBanActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
 	private Spinner gangWei;
 	private Spinner banCi;
 	private Spinner luXian;
+    private ShiftRecordDao srDao = new ShiftRecordDao();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +54,6 @@ public class JiaoJieBanActivity extends Activity implements AdapterView.OnItemSe
 		luXian.setAdapter(luXianAdapter);
 	}
 
-
-	public void retreat(View view) {
-		finish();
-	}
-
-
 	/**
 	 * 点击【交班】 【接班】
 	 * @param view
@@ -79,11 +73,13 @@ public class JiaoJieBanActivity extends Activity implements AdapterView.OnItemSe
 		Station selectedGangWei = (Station) gangWei.getSelectedItem();
 		KeyValuePair selectedBanCi = (KeyValuePair) banCi.getSelectedItem();
 		KeyValuePair selectedLuXian = (KeyValuePair) luXian.getSelectedItem();
-
-		Log.e("gangwei", selectedGangWei.getId() + ", " + selectedGangWei.getName());
-		Log.e("banci", selectedBanCi.getKey() + ", " + selectedBanCi.getValue());
-		Log.e("luxian", selectedLuXian.getKey() + ", " + selectedLuXian.getValue());
-	}
+        shiftRecord.setStationId(selectedGangWei.getId());
+        shiftRecord.setScheduleTypeId(selectedBanCi.getKey());
+        shiftRecord.setLineId(selectedLuXian.getKey());
+        srDao.add(shiftRecord);
+        showToast(name + "成功");
+        finish();
+    }
 
 	/**
 	 * 切换岗位时, 联动路线

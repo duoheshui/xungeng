@@ -18,6 +18,13 @@
                 android:src="@drawable/back"
                 android:onClick="retreat"
                 android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/username_edittext"
+                android:text=""
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
     </RelativeLayout>
 
     <TableLayout

@@ -14,6 +14,8 @@ import android.widget.*;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.R;
+import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.test.Test;
 import com.joyi.xungeng.util.Constants;
 import com.loopj.android.http.AsyncHttpClient;
@@ -89,6 +91,8 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 		String name = ((TextView) view.findViewById(R.id.ItemTextView)).getText().toString();
+
+		// 退出系统
 		if (Constants.SYSTEM_MENU_NAME[2].equals(name)) {
 			new AlertDialog.Builder(this).setTitle("").setMessage("确定要退出系统么？").setPositiveButton("退出", new DialogInterface.OnClickListener() {
 				@Override
@@ -101,6 +105,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 			}).show();
 			return;
 		}
+		// 切换帐号
 		if (Constants.SYSTEM_MENU_NAME[1].equals(name)) {
 			new AlertDialog.Builder(this).setTitle("").setMessage("确定要切换帐号么？").setPositiveButton("切换", new DialogInterface.OnClickListener() {
 				@Override
@@ -114,6 +119,15 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 				public void onClick(DialogInterface dialogInterface, int i) { }
 			}).show();
 			return;
+		}
+		// 巡查打卡
+		if (Constants.FUNCTION_MENU_NAME[1].equals(name)) {
+			User user = SystemVariables.user;
+			user.setHasPatrolViewPrivilege(false);
+			if (user == null || !user.isHasPatrolViewPrivilege()) {
+				new AlertDialog.Builder(this).setTitle("").setMessage("您没有巡查权限").show();
+				return;
+			}
 		}
 		Intent intent = new Intent(this, Constants.NAME_ACTIVITY_MAP.get(name));
 		startActivity(intent);

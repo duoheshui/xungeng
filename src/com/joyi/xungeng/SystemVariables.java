@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class SystemVariables {
 	public static final User user = new User();
+	public static String USER_NAME = "";
 
     /**
      * 据数据库操作对象

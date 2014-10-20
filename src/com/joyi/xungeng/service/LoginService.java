@@ -3,27 +3,22 @@ package com.joyi.xungeng.service;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.nfc.Tag;
 import android.util.Log;
 import com.joyi.xungeng.SystemVariables;
-import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.PatrolViewDao;
 import com.joyi.xungeng.dao.ShiftRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
-import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.domain.ShiftRecord;
 import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.util.Constants;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -148,7 +143,7 @@ public class LoginService {
 
 	    // 3, 同步交接班信息
 	    final ShiftRecordDao srDao = new ShiftRecordDao();
-	    List<ShiftRecord> srList = srDao.getList();
+	    List<ShiftRecord> srList = srDao.getAll();
 	    if (srList != null && srList.size() > 0) {
 		    final JSONArray jsonArray = new JSONArray(srList);
 		    RequestParams requestParams = new RequestParams();

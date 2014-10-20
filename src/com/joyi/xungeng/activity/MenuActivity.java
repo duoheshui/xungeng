@@ -5,21 +5,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.Contacts;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.test.Test;
 import com.joyi.xungeng.util.Constants;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MenuActivity extends Activity implements AdapterView.OnItemClickListener {
+public class MenuActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 	private GridView functionMenuGridView;
 	private GridView systemMenuGridView;
 
@@ -33,8 +37,9 @@ public class MenuActivity extends Activity implements AdapterView.OnItemClickLis
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		// TODO 删除假数据
-Test.test();
+		Test.test();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gong_neng_cai_dan);
 

@@ -12,4 +12,8 @@ public class StringUtils {
 	public static final boolean isNotNull(String str) {
 		return str != null;
 	}
+
+	public static boolean isNullOrEmpty(String str) {
+		return str == null || "".equals(str);
+	}
 }

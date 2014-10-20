@@ -37,7 +37,7 @@ public class PatrolRecordDao {
 	 * 获取所有巡更记录
 	 * @return
 	 */
-	public List<PatrolRecord> getList() {
+	public List<PatrolRecord> getAll() {
 		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = readableDatabase.query("patrol_record", null, null, null, null, null, null);

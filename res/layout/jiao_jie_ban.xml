@@ -78,7 +78,7 @@
                 android:text="接班"
                 android:textColor="#FFF"
                 android:textSize="20dp"
-                android:background="@drawable/jie_ban"
+                android:background="@drawable/round_green_shape"
                 android:onClick="jiaoJieBan"
                 android:layout_width="130dp"
                 android:layout_height="60dp"/>

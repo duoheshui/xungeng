@@ -38,7 +38,7 @@ public class ShiftRecordDao {
 	 * 获取所有交接班记录
 	 * @return
 	 */
-	public List<ShiftRecord> getList() {
+	public List<ShiftRecord> getAll() {
 		List<ShiftRecord> shiftRecords = new ArrayList<ShiftRecord>();
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = readableDatabase.query("shift_record", null, null, null, null, null, null);

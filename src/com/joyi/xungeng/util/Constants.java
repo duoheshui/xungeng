@@ -14,6 +14,12 @@ public class Constants {
 
 
 	/**
+	 * 密码最小长度
+	 */
+	public static final int MIN_PASSWORD_LENGTH = 6;
+
+
+	/**
 	 * 菜单
 	 */
 	public static final String[] FUNCTION_MENU_NAME = {"巡更路线", "巡查打卡", "交接班", "信息上传"};
@@ -51,6 +57,12 @@ public class Constants {
 	public static final String UPLOAD_PARTOL_RECORD_URL = HTTP_DOMAIN_NAME+"/api?act=uploadpatrol";     // 上传打卡信息URL
 	public static final String UPLOAD_SHIFT_INFO_URL = HTTP_DOMAIN_NAME+"/api?act=uploadschedule";      // 上传交接班信息URL
 	public static final String UPLOAD_PATROL_VIEW_URL = HTTP_DOMAIN_NAME+"/api?act=uploadpatrolview";   // 上传巡查信息
-	public static final String UPLOAD_NFC_INFO_URL = "";                                                // 上传NFC卡信息URL
+
+	/**
+	 * 上传标识
+	 */
+	public static final int WHAT_PATROL_RECORED = 1;
+	public static final int WHAT_SHIFT_RECORD = 2;
+	public static final int WHAT_PATROL_VIEW = 3;
 
 }

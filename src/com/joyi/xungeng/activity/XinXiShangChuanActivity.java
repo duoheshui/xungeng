@@ -127,23 +127,20 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	 */
 	public void sendAsyncHttpRequest(String requestUrl, RequestParams requestParams, final int what) {
 		httpClient.post(this, requestUrl, requestParams, new JsonHttpResponseHandler(){
-
-
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-				super.onSuccess(statusCode, headers, json);
-					try {
-						String status = json.getString("errorCode");
-						if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
-							Message message = new Message();
-							message.what = what;
-							message.setTarget(handler);
-							message.sendToTarget();
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-
+            super.onSuccess(statusCode, headers, json);
+                try {
+                    String status = json.getString("errorCode");
+                    if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
+                        Message message = new Message();
+                        message.what = what;
+                        message.setTarget(handler);
+                        message.sendToTarget();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 			}
 
 		});

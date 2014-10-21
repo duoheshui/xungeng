@@ -4,9 +4,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.telephony.TelephonyManager;
 import com.joyi.xungeng.domain.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by zhangyong on 2014/10/16.
@@ -22,7 +20,7 @@ public class SystemVariables {
 	 * 所有节点数据
 	 */
 	public static final List<LineNode> ALL_LINE_NODES = new ArrayList<>();
-
+    public static final Map<String, LineNode> ALL_LINE_NODES_MAP = new HashMap<>();
     /**
      * 据数据库操作对象
      */

@@ -140,7 +140,8 @@ public class MainActivity extends BaseActivity {
 			                    lineNode.setNodeName(nodeJson.getString("nodeName"));
 			                    lineNode.setNfcCode(nodeJson.getString("nfcCode"));
 			                    SystemVariables.ALL_LINE_NODES.add(lineNode);
-		                    }
+                                SystemVariables.ALL_LINE_NODES_MAP.put(nodeJson.getString("nfcCode"), lineNode);
+                            }
 	                    }
 
 

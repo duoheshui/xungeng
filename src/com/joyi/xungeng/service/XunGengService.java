@@ -63,7 +63,6 @@ public class XunGengService {
      * @param file
      */
     public void openFile(Context context, File file) {
-Log.e("openfile", "file->" + file.getAbsolutePath());
 	    Intent intent = new Intent();
 	    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    intent.setAction(android.content.Intent.ACTION_VIEW);
@@ -104,4 +103,11 @@ Log.e("openfile", "file->" + file.getAbsolutePath());
 		}
 		return ret;
 	}
+
+    public static String byteArray2HexString(byte[] arr) {
+        String str = null;
+
+
+        return str;
+    }
 }

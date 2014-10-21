@@ -22,6 +22,7 @@ import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
+import com.joyi.xungeng.service.XunGengService;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -173,7 +174,24 @@ SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-		// TODO 读取node查节点名称
+
+        byte[] arr = null;
+        if (tag != null) {
+            arr = tag.getId();
+            String nfcCode = XunGengService.byteArray2HexString(arr);
+            LineNode lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
+            Integer lunCi = lunCiMap.get(lineName);
+            long userPatrolId = lunCiPvidMap.get(lineName).get(lunCi);
+
+            PatrolRecord patrolRecord = new PatrolRecord();
+            Date date = new Date(SystemVariables.SERVER_TIME.getTime());
+            patrolRecord.setPatrolTime(date);
+            patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
+            if (lineNode != null) {
+                patrolRecord.setNodeId(lineNode.getId());
+            }
+            patrolRecord.setPatrolPhoneTime(new Date());
+            // TODO 读取node查节点名称
+        }
 	}
 }
-

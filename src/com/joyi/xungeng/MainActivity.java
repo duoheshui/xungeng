@@ -40,6 +40,7 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		SystemVariables.IMEI = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+
 		loginService = LoginService.getInstance(this);
 
         username = (EditText) findViewById(R.id.username_edittext);
@@ -66,7 +67,6 @@ public class MainActivity extends BaseActivity {
 
         /* 初始化数据库操作对象 */
         SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
-
 	}
 
 	/**

@@ -2,8 +2,12 @@ package com.joyi.xungeng.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +20,7 @@ import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
+import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 
 import java.util.Date;
@@ -31,35 +36,43 @@ public class XunGengDaKaActivity extends BaseActivity {
 	private TableLayout tableLayout;
     private Button startButton;
     private Button endButton;
+	private NfcAdapter nfcAdapter;
 
     private static final Map<String, Integer> lunCiMap = new HashMap<>();                   // 路线名<->轮次映射表
 	private static final Map<String, Map<Integer, Long>> lunCiPvidMap = new HashMap<>();    // 路线<->轮次<->轮软记录ID
-//	private static final Map<Integer, Long> LunCi_PVID = new HashMap<>();                   // 轮次<->轮次记录ID映射表
     private User user = SystemVariables.user;
     private String lineName;
     private PatrolLine patrolLine;
     private UserPatrolDao upDao = new UserPatrolDao();
     private PatrolRecordDao prDao = new PatrolRecordDao();
+	private List<LineNode> lineNodes = SystemVariables.ALL_LINE_NODES;
+
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
+/* 初始化数据库操作对象 TODO 删除测试数据 */
+SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xun_geng_da_ka);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText(SystemVariables.USER_NAME);
         startButton = (Button) findViewById(R.id.start_button);
         endButton = (Button) findViewById(R.id.end_button);
+		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
+		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-
-        tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
 
         patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
-        String lineName = getIntent().getStringExtra("lineName");
-        Integer lunCi = lunCiMap.get(lineName);
+        lineName = getIntent().getStringExtra("lineName");
+		Integer lunCi = lunCiMap.get(lineName);
         if (lunCi == null) {
             lunCiMap.put(lineName, 0);
         }
-        List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
+		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
 		for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
 			tableRow.setBackgroundColor(Color.WHITE);
@@ -98,7 +111,6 @@ public class XunGengDaKaActivity extends BaseActivity {
 		}
 	}
 
-
     /**
      * 开始(本轮)巡更
      * @param view
@@ -122,15 +134,20 @@ public class XunGengDaKaActivity extends BaseActivity {
         userPatrol.setSequence(lunCi);
         userPatrol.setScheduleTypeId(userPatrol.getScheduleTypeId());
         long id = upDao.add(userPatrol);
-	    lunCiPvidMap.get(lineName) .put(lunCi, id);
+	    Map<Integer, Long> lunciIDMap = lunCiPvidMap.get(lineName);
+	    if (lunciIDMap == null) {
+		    lunciIDMap = new HashMap<>();
+		    lunCiPvidMap.put(lineName, lunciIDMap);
+	    }
+	    lunCiPvidMap.get(lineName).put(lunCi, id);
     }
 
     /**
+     *
      * 结束(本轮)巡更
      * @param view
      */
     public void endPatrol(final View view) {
-
 	    new AlertDialog.Builder(XunGengDaKaActivity.this)
 		    .setTitle("确认")
 		    .setIcon(android.R.drawable.ic_dialog_alert).setMessage("确定要结束本轮巡查么？")
@@ -142,7 +159,6 @@ public class XunGengDaKaActivity extends BaseActivity {
 				    Date serverDate = new Date(SystemVariables.SERVER_TIME.getTime());
 				    upDao.updateEndDate(serverDate, new Date(), id);
 
-				    // TODO
 				    Button endBtn = (Button)view;
 				    endBtn.setEnabled(false);
 				    endButton.setBackgroundResource(R.drawable.disable_round_button);
@@ -152,5 +168,12 @@ public class XunGengDaKaActivity extends BaseActivity {
 			    }
 		    }).setNegativeButton("取消", null).show();
     }
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+		// TODO 读取node查节点名称
+	}
 }
 

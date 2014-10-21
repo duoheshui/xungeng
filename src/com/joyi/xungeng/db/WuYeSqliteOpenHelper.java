@@ -3,6 +3,7 @@ package com.joyi.xungeng.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import com.joyi.xungeng.util.Constants;
 
 /**
@@ -33,7 +34,7 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "postid char(20)," +
             "frequency integer," +
             "offset integer," +
-            "beginTime datetime" +
+            "beginTime datetime," +
             "endTime datetime)";
 
     // 打卡记录
@@ -68,6 +69,7 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "beginTime datetime," +
             "endTime datetime," +
             "beginPhoneTime datetime," +
+		    "scheduleTypeId char(20)," +
             "endPhoneTime datetime)";
 
 
@@ -77,19 +79,20 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+	    Log.e("WuYeSqliteOpenHelper", "onCreate-> create table");
 
-        try{
-            db.beginTransaction();
-            db.execSQL(Line_Node_Sql);
-            db.execSQL(Patrol_View_Sql);
-            db.execSQL(Patrol_Line_Sql);
-            db.execSQL(Patrol_Record_Sql);
-            db.execSQL(Shift_Patrol_Sql);
-            db.execSQL(User_Patrol_Sql);
-            db.setTransactionSuccessful();
-        }finally {
-            db.endTransaction();
-        }
+	    try {
+		    db.beginTransaction();
+		    db.execSQL(Line_Node_Sql);
+		    db.execSQL(Patrol_View_Sql);
+		    db.execSQL(Patrol_Line_Sql);
+		    db.execSQL(Patrol_Record_Sql);
+		    db.execSQL(Shift_Patrol_Sql);
+		    db.execSQL(User_Patrol_Sql);
+		    db.setTransactionSuccessful();
+	    } finally {
+		    db.endTransaction();
+	    }
     }
 
     @Override

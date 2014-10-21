@@ -3,6 +3,7 @@ package com.joyi.xungeng.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.domain.UserPatrol;
@@ -23,18 +24,19 @@ public class UserPatrolDao {
 	 * @param userPatrol
 	 */
 	public long add(UserPatrol userPatrol) {
+
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
-		contentValues.put("userid", userPatrol.getUserId());
-		contentValues.put("lineid", userPatrol.getLineId());
+		contentValues.put("userId", userPatrol.getUserId());
+		contentValues.put("lineId", userPatrol.getLineId());
 		contentValues.put("sequence", userPatrol.getSequence());
 		contentValues.put("beginTime", DateUtil.getHumanReadStr(userPatrol.getBeginTime()));
 		contentValues.put("endTime", DateUtil.getHumanReadStr(userPatrol.getEndTime()));
 		contentValues.put("beginPhoneTime", DateUtil.getHumanReadStr(userPatrol.getBeginPhoneTime()));
 		contentValues.put("endPhoneTime", DateUtil.getHumanReadStr(userPatrol.getEndPhoneTime()));
 
-
-		return writableDatabase.insert("user_patrol", null, contentValues);
+		long id = writableDatabase.insert("user_patrol", null, contentValues);
+		return id;
 	}
 
 	/**

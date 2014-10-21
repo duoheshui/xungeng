@@ -1,5 +1,7 @@
 package com.joyi.xungeng.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -9,6 +11,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
+import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolRecordDao;
@@ -29,8 +32,9 @@ public class XunGengDaKaActivity extends BaseActivity {
     private Button startButton;
     private Button endButton;
 
-    private static final Map<String, Integer> lunCiMap = new HashMap<>();   // 路线名<->轮次映射表
-    private static final Map<Integer, Long> LunCi_PVID = new HashMap<>();   // 轮次<->轮次记录ID映射表
+    private static final Map<String, Integer> lunCiMap = new HashMap<>();                   // 路线名<->轮次映射表
+	private static final Map<String, Map<Integer, Long>> lunCiPvidMap = new HashMap<>();    // 路线<->轮次<->轮软记录ID
+//	private static final Map<Integer, Long> LunCi_PVID = new HashMap<>();                   // 轮次<->轮次记录ID映射表
     private User user = SystemVariables.user;
     private String lineName;
     private PatrolLine patrolLine;
@@ -102,15 +106,13 @@ public class XunGengDaKaActivity extends BaseActivity {
     public void startPatrol(View view) {
         Button startBtn = (Button)view;
         startBtn.setEnabled(false);
-        endButton.setEnabled(true);
-        endButton.setBackgroundResource(R.drawable.round_button);
-        startBtn.setBackgroundResource(R.drawable.disable_round_button);
-
+	    startBtn.setBackgroundResource(R.drawable.disable_round_button);
+	    endButton.setEnabled(true);
+	    endButton.setBackgroundResource(R.drawable.round_button);
 
         Integer lunCi = lunCiMap.get(lineName);
         lunCi++;
         lunCiMap.put(lineName, lunCi);
-        // TODO 记录UserPatrol数据
         UserPatrol userPatrol = new UserPatrol();
         userPatrol.setUserId(user.getId());
         userPatrol.setLineId(patrolLine.getId());
@@ -120,25 +122,35 @@ public class XunGengDaKaActivity extends BaseActivity {
         userPatrol.setSequence(lunCi);
         userPatrol.setScheduleTypeId(userPatrol.getScheduleTypeId());
         long id = upDao.add(userPatrol);
-        LunCi_PVID.put(lunCi, id);
+	    lunCiPvidMap.get(lineName) .put(lunCi, id);
     }
 
     /**
      * 结束(本轮)巡更
      * @param view
      */
-    public void endPatrol(View view) {
-        Integer lunCi = lunCiMap.get(lineName);
-        Long id = LunCi_PVID.get(lunCi);
-        Date serverDate = new Date(SystemVariables.SERVER_TIME.getTime());
-        upDao.updateEndDate(serverDate, new Date(), id);
+    public void endPatrol(final View view) {
 
-        // TODO
-        Button endBtn = (Button)view;
-        endBtn.setEnabled(false);
-        endButton.setBackgroundResource(R.drawable.disable_round_button);
-        startButton.setBackgroundResource(R.drawable.round_green_shape);
-        startButton.setEnabled(true);
+	    new AlertDialog.Builder(XunGengDaKaActivity.this)
+		    .setTitle("确认")
+		    .setIcon(android.R.drawable.ic_dialog_alert).setMessage("确定要结束本轮巡查么？")
+		    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			    @Override
+			    public void onClick(DialogInterface dialogInterface, int i) {
+				    Integer lunCi = lunCiMap.get(lineName);
+				    Long id = lunCiPvidMap.get(lineName).get(lunCi);
+				    Date serverDate = new Date(SystemVariables.SERVER_TIME.getTime());
+				    upDao.updateEndDate(serverDate, new Date(), id);
+
+				    // TODO
+				    Button endBtn = (Button)view;
+				    endBtn.setEnabled(false);
+				    endButton.setBackgroundResource(R.drawable.disable_round_button);
+				    startButton.setBackgroundResource(R.drawable.round_green_shape);
+				    startButton.setEnabled(true);
+				    finish();
+			    }
+		    }).setNegativeButton("取消", null).show();
     }
 }
 

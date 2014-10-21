@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.Contacts;
@@ -41,7 +42,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 	public void onCreate(Bundle savedInstanceState) {
 
 		// TODO 删除假数据
-		Test.test();
+Test.test();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gong_neng_cai_dan);
 

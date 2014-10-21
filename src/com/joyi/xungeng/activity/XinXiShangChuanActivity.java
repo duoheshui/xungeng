@@ -20,6 +20,7 @@ import com.joyi.xungeng.util.PhoneUtils;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -126,21 +127,25 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	 */
 	public void sendAsyncHttpRequest(String requestUrl, RequestParams requestParams, final int what) {
 		httpClient.post(this, requestUrl, requestParams, new JsonHttpResponseHandler(){
+
+
 			@Override
-			public void onSuccess(JSONObject json) {
-				super.onSuccess(json);
-				try {
-					String status = json.getString("errorCode");
-					if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
-						Message message = new Message();
-						message.what = what;
-						message.setTarget(handler);
-						message.sendToTarget();
+			public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+				super.onSuccess(statusCode, headers, json);
+					try {
+						String status = json.getString("errorCode");
+						if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
+							Message message = new Message();
+							message.what = what;
+							message.setTarget(handler);
+							message.sendToTarget();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
 					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+
 			}
+
 		});
 	}
 }

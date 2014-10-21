@@ -1,6 +1,7 @@
 package com.joyi.xungeng.activity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -13,15 +14,13 @@ import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.StringUtils;
-import com.loopj.android.http.*;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
+import java.io.*;
+import java.util.Arrays;
 
 /**
  * Created by zhangyong on 2014/10/15.
@@ -33,6 +32,7 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	private EditText newPwd;
 	private EditText newPwd2;
     private Handler handler;
+	XunGengService xgService = new XunGengService();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +41,21 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText(SystemVariables.USER_NAME);
-        handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-
-            }
-        };
 
 		oldPwd = (EditText) findViewById(R.id.old_pwd);
 		newPwd = (EditText) findViewById(R.id.new_pwd);
 		newPwd2 = (EditText) findViewById(R.id.new_pwd2);
+
+		// 安装apk文件
+		handler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				File file = (File) msg.getData().get("file");
+				Log.e("file", file == null ? "null" : file.getAbsolutePath());
+				xgService.openFile(XiuGaiMiMaActivity.this, file);
+			}
+		};
 
 	}
 
@@ -61,21 +65,58 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void changePassword(View view) {
-
-        XunGengService xgService = new XunGengService();
-        File file = xgService.downLoadFile(this, "http://duoheshui.duapp.com/wtp.apk");
-        xgService.openFile(this, file);
-
-        if (2 > 1) {
-            return;
-        }
+//		String path = Environment.getExternalStorageDirectory()+"/update/";
+//						String fileName = "/storage/sdcard/nfc.apk";
+//			xgService.openFile(this, new File(fileName));
 
 
+		AsyncHttpClient httpClient = new AsyncHttpClient();
 
+		String[] mAllowedContentTypes = new String[] {"application/vnd.android.package-archive"};
+		httpClient.get("http://192.16.8.176:8080/wuye/nfc.apk", new BinaryHttpResponseHandler(mAllowedContentTypes){
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
+				Log.e(TAG, "onSuccess->" + Arrays.toString(binaryData));
+				String path = Environment.getExternalStorageDirectory()+"/update/";
+				String fileName = "wuye.apk";
+				File file = XunGengService.getFileFromBytes(binaryData, path, fileName);
+				Message message = new Message();
+				message.what = 100;
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("file", file);
+				message.setData(bundle);
+				message.setTarget(handler);
+				message.sendToTarget();
+			}
 
+			@Override
+			public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
+			}
+		});
 
+//		AsyncHttpClient httpClient = new AsyncHttpClient();
+//		String[] mAllowedContentTypes = new String[] {"application/vnd.android.package-archive"};
+//		httpClient.get("http://192.16.8.176:8080/wuye/nfc.apk", new BinaryHttpResponseHandler(mAllowedContentTypes){
+//			@Override
+//			public void onSuccess(byte[] binaryData) {
+//Log.e(TAG, "onSuccess->" + Arrays.toString(binaryData));
+//				String path = Environment.getExternalStorageDirectory()+"/update/";
+//				String fileName = "wuye.apk";
+//				File file = XunGengService.getFileFromBytes(binaryData, path, fileName);
+//				Message message = new Message();
+//				message.what = 100;
+//				Bundle bundle = new Bundle();
+//				bundle.putSerializable("file", file);
+//				message.setData(bundle);
+//				message.setTarget(handler);
+//				message.sendToTarget();
+//			}
+//		});
 
+		if (2 > 1) {
+			return;
+		}
 
 
 		String newPassword = newPwd.getText().toString();
@@ -98,25 +139,25 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 		}
 
 
-//		RequestParams requestParams = new RequestParams();
-//		requestParams.put("userId", SystemVariables.user.getId());
-//		requestParams.put("oldPassword", oldPwd.getText().toString());
-//		requestParams.put("newPassword", newPassword);
-//		httpClient.post(this, Constants.CHANGE_PASSWORD_URL, requestParams, new JsonHttpResponseHandler(){
-//			@Override
-//			public void onSuccess(JSONObject jsonObject) {
-//				try {
-//					String errorCode = jsonObject.getString("errorCode");
-//					if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-//						showToast("修改成功");
-//						finish();
-//					}else{
-//						showToast("修改失败...");
-//					}
-//				} catch (JSONException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
+		//		RequestParams requestParams = new RequestParams();
+		//		requestParams.put("userId", SystemVariables.user.getId());
+		//		requestParams.put("oldPassword", oldPwd.getText().toString());
+		//		requestParams.put("newPassword", newPassword);
+		//		httpClient.post(this, Constants.CHANGE_PASSWORD_URL, requestParams, new JsonHttpResponseHandler(){
+		//			@Override
+		//			public void onSuccess(JSONObject jsonObject) {
+		//				try {
+		//					String errorCode = jsonObject.getString("errorCode");
+		//					if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
+		//						showToast("修改成功");
+		//						finish();
+		//					}else{
+		//						showToast("修改失败...");
+		//					}
+		//				} catch (JSONException e) {
+		//					e.printStackTrace();
+		//				}
+		//			}
+		//		});
 	}
 }

@@ -38,7 +38,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText(SystemVariables.USER_NAME);
 
-        nfcAdapter = NfcAdapter.getDefaultAdapter();
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 

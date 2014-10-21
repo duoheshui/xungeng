@@ -2,10 +2,7 @@ package com.joyi.xungeng;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.telephony.TelephonyManager;
-import com.joyi.xungeng.domain.KeyValuePair;
-import com.joyi.xungeng.domain.PatrolLine;
-import com.joyi.xungeng.domain.Station;
-import com.joyi.xungeng.domain.User;
+import com.joyi.xungeng.domain.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +16,12 @@ import java.util.List;
 public class SystemVariables {
 	public static final User user = new User();
 	public static String USER_NAME = "";
+
+
+	/**
+	 * 所有节点数据
+	 */
+	public static final List<LineNode> ALL_LINE_NODES = new ArrayList<>();
 
     /**
      * 据数据库操作对象

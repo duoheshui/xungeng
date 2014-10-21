@@ -2,13 +2,12 @@ package com.joyi.xungeng.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Path;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -49,7 +48,6 @@ public class XunGengService {
                     }
                 }
             }
-
             conn.disconnect();
             fos.close();
             is.close();
@@ -65,10 +63,45 @@ public class XunGengService {
      * @param file
      */
     public void openFile(Context context, File file) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(android.content.Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-        context.startActivity(intent);
+Log.e("openfile", "file->" + file.getAbsolutePath());
+	    Intent intent = new Intent();
+	    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    intent.setAction(android.content.Intent.ACTION_VIEW);
+	    intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+	    context.startActivity(intent);
     }
+
+	/**
+	 * 把字节数组保存为一个文件
+	 *
+	 * @param b
+	 * @param outputFile
+	 * @return
+	 */
+	public static File getFileFromBytes(byte[] b, String outputFile, String fileName) {
+		File ret = null;
+		BufferedOutputStream stream = null;
+		try {
+			File file = new File(outputFile);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			ret = new File(outputFile+fileName);
+			FileOutputStream fstream = new FileOutputStream(ret);
+			stream = new BufferedOutputStream(fstream);
+			stream.write(b);
+			stream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ret;
+	}
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Message;
 import android.util.Log;
+import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolViewDao;
 import com.joyi.xungeng.dao.ShiftRecordDao;
@@ -16,6 +17,7 @@ import com.joyi.xungeng.util.Constants;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,21 +32,22 @@ import java.util.TimerTask;
 public class LoginService {
 	private String TAG = "LoginService";
 	private static LoginService loginService;
-	private Context context;
+	private MainActivity context;
 	private boolean hasSyncServerTime;
+	private boolean hasSyncXG;      // 已同步巡更打卡信息
+	private boolean hasSyncXC;      // 已同步巡查信息
+	private boolean hasSyncJJB;      // 已同步交接班信息
+	private static final int SYNC_XG = 1;
+	private static final int SYNC_XC = 2;
+	private static final int SYNC_JJB = 3;
+
+
 	private AsyncHttpClient httpClient = new AsyncHttpClient();
-    android.os.Handler handler = new android.os.Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-        }
-    };
 
 
-	private LoginService(Context context) {this.context = context;}
+	private LoginService(MainActivity context) {this.context = context;}
 
-	public static LoginService getInstance(Context context) {
+	public static LoginService getInstance(MainActivity context) {
 		if (loginService == null) {
 			loginService = new LoginService(context);
 		}
@@ -109,8 +112,7 @@ public class LoginService {
 	        requestParams.put("data", jsonArray.toString());
 	        httpClient.post(context, Constants.UPLOAD_PATROL_VIEW_URL, requestParams, new JsonHttpResponseHandler(){
 		        @Override
-		        public void onSuccess(JSONObject jsonObject) {
-			        super.onSuccess(jsonObject);
+		        public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 			        try {
 				        String errorCode = jsonObject.getString("errorCode");
 				        if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
@@ -133,8 +135,7 @@ public class LoginService {
 		    requestParams.put("data", jsonArray.toString());
 		    httpClient.post(context, Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, new JsonHttpResponseHandler(){
 			    @Override
-			    public void onSuccess(JSONObject jsonObject) {
-				    super.onSuccess(jsonObject);
+			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 				    try {
 					    String errorCode = jsonObject.getString("errorCode");
 					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
@@ -157,8 +158,7 @@ public class LoginService {
 		    requestParams.put("data", jsonArray.toString());
 		    httpClient.post(context, Constants.UPLOAD_SHIFT_INFO_URL, requestParams, new JsonHttpResponseHandler(){
 			    @Override
-			    public void onSuccess(JSONObject jsonObject) {
-                super.onSuccess(jsonObject);
+			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
                 try {
                     String errorCode = jsonObject.getString("errorCode");
                     if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
@@ -167,9 +167,8 @@ public class LoginService {
                 } catch (JSONException e) {
                     Log.e(TAG, e.toString());
                     e.printStackTrace();
-                }
-            }
-        });
+                }}
+            });
 	    }
     }
 }

@@ -1,5 +1,7 @@
 package com.joyi.xungeng;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,8 @@ import com.joyi.xungeng.activity.MenuActivity;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.LoginService;
+import com.joyi.xungeng.service.MobilePhoneService;
+import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.DateUtil;
 import com.joyi.xungeng.util.StringUtils;
@@ -55,6 +59,7 @@ public class MainActivity extends BaseActivity {
 			public void handleMessage(Message msg) {
 				if (msg.what == 1) {
 					/* 跳转至菜单目录页面 */
+					MainActivity.this.finish();
 					Intent intent = new Intent(MainActivity.this, MenuActivity.class);
 					startActivity(intent);
 				}
@@ -85,6 +90,12 @@ public class MainActivity extends BaseActivity {
 			requestParams.put("loginName", inputUsername);
 			requestParams.put("password", inputPassword);
 
+			// 判断网络是否可用
+			boolean isNetworkConnected = XunGengService.isNetworkConnected(this);
+			if (!isNetworkConnected) {
+				showToast("网络不可用...");
+				return;
+			}
 
             // 发起请求前的时间戳
             final long beforeHttp = System.currentTimeMillis();
@@ -95,6 +106,10 @@ public class MainActivity extends BaseActivity {
 					long afterHttp = System.currentTimeMillis();
 					try {
 						String errorCode = jsonObject.getString("errorCode");
+						if ("400".equals(errorCode)) {
+							showToast("用户名或密码错误");
+							return;
+						}
 						if (!Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
 							showToast("登录失败, 请稍后再试");
 							return;
@@ -222,4 +237,5 @@ Log.e("server", String.valueOf(SystemVariables.SERVER_TIME.getTime()));
 	public Handler getLoginHandler() {
 		return loginHandler;
 	}
+
 }

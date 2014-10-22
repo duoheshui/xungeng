@@ -3,6 +3,8 @@ package com.joyi.xungeng.service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Path;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -125,4 +127,21 @@ public class XunGengService {
 
 	    return stringBuilder.toString().toUpperCase();
     }
+
+	/**
+	 * 判断网络是否可用
+	 * @param context
+	 * @return
+	 */
+	public static boolean isNetworkConnected(Context context) {
+		if (context != null) {
+			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+			if (mNetworkInfo != null) {
+				return mNetworkInfo.isAvailable();
+			}
+		}
+		return false;
+	}
 }

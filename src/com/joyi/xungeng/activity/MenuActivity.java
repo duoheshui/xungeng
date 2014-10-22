@@ -133,4 +133,17 @@ Test.test();
 		Intent intent = new Intent(this, Constants.NAME_ACTIVITY_MAP.get(name));
 		startActivity(intent);
 	}
+
+	@Override
+	public void onBackPressed() {
+		new AlertDialog.Builder(this).setTitle("").setMessage("确定要退出么？\n退出系统后需要重新登录").setPositiveButton("退出", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				MenuActivity.this.finish();
+			}
+		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) { }
+		}).show();
+	}
 }

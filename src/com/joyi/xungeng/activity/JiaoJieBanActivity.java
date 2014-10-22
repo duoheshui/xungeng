@@ -2,10 +2,7 @@ package com.joyi.xungeng.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.*;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
@@ -32,6 +29,8 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.jiao_jie_ban);
+		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		textView.setText(SystemVariables.USER_NAME);
 
 		// 三个Spinner
 		gangWei = (Spinner) findViewById(R.id.gang_wei_spinner);

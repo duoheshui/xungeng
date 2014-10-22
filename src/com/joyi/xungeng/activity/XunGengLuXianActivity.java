@@ -36,13 +36,19 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 		listView.setAdapter(arrayAdapter);
 	}
 
+	/**
+	 * 点击路线
+	 * @param adapterView
+	 * @param view
+	 * @param i
+	 * @param l
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 		PatrolLine patrolLine = (PatrolLine) adapterView.getAdapter().getItem(i);
 		Intent intent = new Intent(this, XunGengDaKaActivity.class);
 		Bundle bundle = new Bundle();
         bundle.putSerializable("patrolLine", patrolLine);
-        bundle.putString("lineName", patrolLine.getName());
         bundle.putSerializable("lineNodes", (Serializable) patrolLine.getLineNodes());
 		intent.putExtras(bundle);
 		startActivity(intent);

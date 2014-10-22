@@ -71,7 +71,7 @@ public class UserPatrolDao {
                         patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
                         patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));
                         patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
-                        patrolRecord.setPatrolTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("patrolTime"))));
+                        patrolRecord.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
                         patrolRecord.setPatrolPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("patrolPhoneTime"))));
                         patrolRecords.add(patrolRecord);
                     }

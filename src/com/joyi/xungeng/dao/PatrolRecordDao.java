@@ -25,8 +25,8 @@ public class PatrolRecordDao {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("nodeId", patrolRecord.getNodeId());
 		contentValues.put("userPatrolId", patrolRecord.getUserPatrolId());
-		contentValues.put("patrolTime", DateUtil.getHumanReadStr(patrolRecord.getPatrolTime()));
-		contentValues.put("partolPhoneTime", DateUtil.getHumanReadStr(patrolRecord.getPatrolPhoneTime()));
+		contentValues.put("patrolTime", patrolRecord.getPatrolTime());
+		contentValues.put("partolPhoneTime", patrolRecord.getPatrolPhoneTime());
 		contentValues.put("error", "");
 
 		return writableDatabase.insert("patrol_record", null, contentValues);
@@ -45,7 +45,7 @@ public class PatrolRecordDao {
 			PatrolRecord patrolRecord = null;
 			while (cursor.moveToNext()) {
 				patrolRecord = new PatrolRecord();
-				patrolRecord.setPatrolTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("patrolTime"))));
+				patrolRecord.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
 				patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));
 				patrolRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));

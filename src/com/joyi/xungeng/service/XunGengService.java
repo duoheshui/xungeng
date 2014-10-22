@@ -12,6 +12,7 @@ import android.widget.Toast;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by zhangyong on 2014/10/20 0020.
@@ -143,5 +144,14 @@ public class XunGengService {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 判断集合是否为空
+	 * @param list
+	 * @return
+	 */
+	public static boolean isNullList(List<?> list) {
+		return list==null || list.size()<=0;
 	}
 }

@@ -10,6 +10,7 @@ import com.joyi.xungeng.dao.ShiftRecordDao;
 import com.joyi.xungeng.domain.KeyValuePair;
 import com.joyi.xungeng.domain.ShiftRecord;
 import com.joyi.xungeng.domain.Station;
+import com.joyi.xungeng.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,11 +63,11 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 		ShiftRecord shiftRecord = new ShiftRecord();
 		Date serverTime = new Date(SystemVariables.SERVER_TIME.getTime());
 		if ("交班".equals(name)) {
-			shiftRecord.setSubmitPhoneTime(new Date());
-			shiftRecord.setSubmitTime(serverTime);
+			shiftRecord.setSubmitPhoneTime(DateUtil.getHumanReadStr(new Date()));
+			shiftRecord.setSubmitTime(DateUtil.getHumanReadStr(serverTime));
 		}else if ("接班".equals(name)) {
-			shiftRecord.setRecivePhoneTime(new Date());
-			shiftRecord.setReceiveTime(serverTime);
+			shiftRecord.setRecivePhoneTime(DateUtil.getHumanReadStr(new Date()));
+			shiftRecord.setReceiveTime(DateUtil.getHumanReadStr(serverTime));
 		}
 
 		Station selectedGangWei = (Station) gangWei.getSelectedItem();

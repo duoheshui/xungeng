@@ -1,5 +1,7 @@
 package com.joyi.xungeng.domain;
 
+import com.joyi.xungeng.util.DateUtil;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,7 +14,7 @@ public class PatrolRecord implements Serializable {
 	private int id;
 	private String nodeId;
 	private String userPatrolId;
-	private Date patrolTime;
+	private String patrolTime;
 	private Date patrolPhoneTime;
 	private String error;
 
@@ -41,16 +43,16 @@ public class PatrolRecord implements Serializable {
 		this.userPatrolId = userPatrolId;
 	}
 
-	public Date getPatrolTime() {
+	public String getPatrolTime() {
 		return patrolTime;
 	}
 
-	public void setPatrolTime(Date patrolTime) {
+	public void setPatrolTime(String patrolTime) {
 		this.patrolTime = patrolTime;
 	}
 
-	public Date getPatrolPhoneTime() {
-		return patrolPhoneTime;
+	public String getPatrolPhoneTime() {
+		return DateUtil.getHumanReadStr(patrolPhoneTime);
 	}
 
 	public void setPatrolPhoneTime(Date patrolPhoneTime) {

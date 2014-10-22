@@ -26,10 +26,10 @@ public class ShiftRecordDao {
 		contentValues.put("uid", shiftRecord.getUserId());
 		contentValues.put("station_id", shiftRecord.getStationId());
 		contentValues.put("schedule_type_id", shiftRecord.getScheduleTypeId());
-		contentValues.put("submit_time", DateUtil.getHumanReadStr(shiftRecord.getSubmitTime()));
-		contentValues.put("submit_phone_time", DateUtil.getHumanReadStr(shiftRecord.getSubmitPhoneTime()));
-		contentValues.put("receive_time", DateUtil.getHumanReadStr(shiftRecord.getReceiveTime()));
-		contentValues.put("receive_phone_time", DateUtil.getHumanReadStr(shiftRecord.getRecivePhoneTime()));
+		contentValues.put("submit_time", shiftRecord.getSubmitTime());
+		contentValues.put("submit_phone_time", shiftRecord.getSubmitPhoneTime());
+		contentValues.put("receive_time", shiftRecord.getReceiveTime());
+		contentValues.put("receive_phone_time", shiftRecord.getRecivePhoneTime());
 
 		return writableDatabase.insert("shift_record", null, contentValues);
 	}
@@ -47,10 +47,10 @@ public class ShiftRecordDao {
 			while (cursor.moveToNext()) {
 				shiftRecord = new ShiftRecord();
 				shiftRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
-				shiftRecord.setReceiveTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("receive_time"))));
-				shiftRecord.setRecivePhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("receive_phone_time"))));
-				shiftRecord.setSubmitPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("submit_phone_time"))));
-				shiftRecord.setSubmitTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("submit_time"))));
+				shiftRecord.setReceiveTime(cursor.getString(cursor.getColumnIndex("receive_time")));
+				shiftRecord.setRecivePhoneTime(cursor.getString(cursor.getColumnIndex("receive_phone_time")));
+				shiftRecord.setSubmitPhoneTime(cursor.getString(cursor.getColumnIndex("submit_phone_time")));
+				shiftRecord.setSubmitTime(cursor.getString(cursor.getColumnIndex("submit_time")));
 				shiftRecord.setScheduleTypeId(cursor.getString(cursor.getColumnIndex("schedule_type_id")));
 				shiftRecord.setStationId(cursor.getString(cursor.getColumnIndex("station_id")));
 				shiftRecord.setUserId(cursor.getString(cursor.getColumnIndex("uid")));

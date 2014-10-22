@@ -71,7 +71,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 
 				TextView time = new TextView(this);
 				time.setGravity(Gravity.CENTER);
-				time.setText(DateUtil.getHumanReadStr(pview.getPatrolTime()));
+				time.setText(pview.getPatrolTime());
 				time.setTextColor(Color.WHITE);
 				time.setBackgroundColor(Color.BLACK);
 				time.setTextSize(20);
@@ -94,8 +94,8 @@ public class XunchaDaKaActivity extends BaseActivity {
         if (tag != null) {
             // TODO 获取所有节点 名称, ID, 物理ID对应关系, 打卡时根据物理ID获取节点id
             Date date = new Date(SystemVariables.SERVER_TIME.getTime());
-            patrolView.setPatrolTime(date);
-            patrolView.setPatrolPhoneTime(new Date());
+            patrolView.setPatrolTime(DateUtil.getHumanReadStr(date));
+            patrolView.setPatrolPhoneTime(DateUtil.getHumanReadStr(new Date()));
             patrolView.setStatus("1");
             patrolView.setUserId(user.getId());
         }

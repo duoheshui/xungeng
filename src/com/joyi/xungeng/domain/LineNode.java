@@ -64,4 +64,39 @@ public class LineNode implements Serializable {
 	public void setNfcCode(String nfcCode) {
 		this.nfcCode = nfcCode;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof LineNode)) {
+			return false;
+		}
+
+		LineNode lineNode = (LineNode) o;
+
+		if (!id.equals(lineNode.id)) {
+			return false;
+		}
+		if (!lineId.equals(lineNode.lineId)) {
+			return false;
+		}
+		if (!nfcCode.equals(lineNode.nfcCode)) {
+			return false;
+		}
+		if (!nodeName.equals(lineNode.nodeName)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id.hashCode();
+		result = 31 * result + lineId.hashCode();
+		result = 31 * result + nodeName.hashCode();
+		result = 31 * result + nfcCode.hashCode();
+		return result;
+	}
 }

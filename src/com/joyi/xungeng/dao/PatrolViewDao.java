@@ -26,7 +26,7 @@ public class PatrolViewDao {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("lineid", patrolView.getNodeId());
 		contentValues.put("userid", patrolView.getUserId());
-		contentValues.put("patrolTime", DateUtil.getHumanReadStr(patrolView.getPatrolTime()));
+		contentValues.put("patrolTime", patrolView.getPatrolTime());
 		return writableDatabase.insert("partol_view", null, contentValues);
 	}
 
@@ -45,7 +45,7 @@ public class PatrolViewDao {
 				patrolView.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				patrolView.setNodeId(cursor.getString(cursor.getColumnIndex("lineid")));
 				patrolView.setUserId(cursor.getString(cursor.getColumnIndex("userid")));
-				patrolView.setPatrolTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("patrolTime"))));
+				patrolView.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
 				patrolViews.add(patrolView);
 			}
 		}

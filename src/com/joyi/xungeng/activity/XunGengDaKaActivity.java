@@ -23,6 +23,7 @@ import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
+import com.joyi.xungeng.util.DateUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +38,10 @@ public class XunGengDaKaActivity extends BaseActivity {
 	private TableLayout tableLayout;
     private Button startButton;
     private Button endButton;
+	private TextView yiXunLunCi;            // 已巡轮次
+	private TextView louXunQingKuang;       // 漏巡情况
+
+
 	private NfcAdapter nfcAdapter;
 
     private static final Map<String, Integer> lunCiMap = new HashMap<>();                   // 路线名<->轮次映射表
@@ -49,13 +54,8 @@ public class XunGengDaKaActivity extends BaseActivity {
 	private List<LineNode> lineNodes = SystemVariables.ALL_LINE_NODES;
 
 
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
-/* 初始化数据库操作对象 TODO 删除测试数据 */
-SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xun_geng_da_ka);
@@ -65,14 +65,18 @@ SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
         endButton = (Button) findViewById(R.id.end_button);
 		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		yiXunLunCi = (TextView) findViewById(R.id.yi_xun_lun_ci_tv);
 
-
-        patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
-        lineName = getIntent().getStringExtra("lineName");
+		patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
+        lineName = patrolLine.getName();
 		Integer lunCi = lunCiMap.get(lineName);
         if (lunCi == null) {
             lunCiMap.put(lineName, 0);
         }
+		yiXunLunCi.setText(lunCiMap.get(lineName)+"次");
+
+		// TODO 计算漏巡情况
+
 		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
 		for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
@@ -185,7 +189,7 @@ SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
 
             PatrolRecord patrolRecord = new PatrolRecord();
             Date date = new Date(SystemVariables.SERVER_TIME.getTime());
-            patrolRecord.setPatrolTime(date);
+            patrolRecord.setPatrolTime(DateUtil.getHumanReadStr(date));
             patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
             if (lineNode != null) {
                 patrolRecord.setNodeId(lineNode.getId());

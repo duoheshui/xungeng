@@ -41,8 +41,6 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
-		// TODO 删除假数据
-Test.test();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gong_neng_cai_dan);
 
@@ -136,7 +134,7 @@ Test.test();
 
 	@Override
 	public void onBackPressed() {
-		new AlertDialog.Builder(this).setTitle("").setMessage("确定要退出么？\n退出系统后需要重新登录").setPositiveButton("退出", new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setTitle("").setIcon(android.R.drawable.ic_dialog_alert).setMessage("确定要退出么？\n退出系统后需要重新登录").setPositiveButton("退出", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				MenuActivity.this.finish();

@@ -3,7 +3,6 @@ package com.joyi.xungeng.domain;
 import com.joyi.xungeng.SystemVariables;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by zhangyong on 2014/10/15.
@@ -13,18 +12,18 @@ public class PatrolView implements Serializable {
 	private int id;
 	private String nodeId;
 	private String userId;
-	private Date patrolTime;
-	private Date patrolPhoneTime;
+	private String patrolTime;
+	private String patrolPhoneTime;
 	private String nodeName;
 	private String status;
 	private String imei = SystemVariables.IMEI;
 
 
-	public Date getPatrolPhoneTime() {
+	public String getPatrolPhoneTime() {
 		return patrolPhoneTime;
 	}
 
-	public void setPatrolPhoneTime(Date patrolPhoneTime) {
+	public void setPatrolPhoneTime(String patrolPhoneTime) {
 		this.patrolPhoneTime = patrolPhoneTime;
 	}
 
@@ -71,11 +70,11 @@ public class PatrolView implements Serializable {
 		this.userId = userId;
 	}
 
-	public Date getPatrolTime() {
+	public String getPatrolTime() {
 		return patrolTime;
 	}
 
-	public void setPatrolTime(Date patrolTime) {
+	public void setPatrolTime(String patrolTime) {
 		this.patrolTime = patrolTime;
 	}
 }

@@ -40,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         <TextView
+                android:id="@+id/yi_xun_lun_ci_tv"
                 android:textColor="#FFF"
                 android:text="3次"
                 android:layout_width="wrap_content"
@@ -58,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         <TextView
+                android:id="@+id/lou_xun_qing_kuang_tv"
                 android:textColor="#FFF"
                 android:text="第2轮1号楼8层"
                 android:layout_width="wrap_content"
@@ -76,8 +78,8 @@
                 android:text="开始"/>
         <Button android:layout_width="80dp" android:onClick="endPatrol"
                 android:layout_height="30dp" android:textColor="#FFF"
-                android:background="@drawable/round_button" android:id="@+id/end_button"
-                android:text="结束"/>
+                android:background="@drawable/disable_round_button" android:id="@+id/end_button"
+                android:text="结束" android:enabled="false"/>
     </LinearLayout>
 
     <TableLayout

@@ -1,7 +1,5 @@
 package com.joyi.xungeng;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +12,6 @@ import com.joyi.xungeng.activity.MenuActivity;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.LoginService;
-import com.joyi.xungeng.service.MobilePhoneService;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.DateUtil;
@@ -26,8 +23,6 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 /**
  * 应用程序入口Activity
@@ -119,8 +114,7 @@ public class MainActivity extends BaseActivity {
 						long serverTime = Long.parseLong(jsonObject.getString("serverTime")) + (afterHttp - beforeHttp);
 						loginService.syncServerTime(serverTime);
 
-Log.e("p hone", String.valueOf(new Date().getTime()));
-Log.e("server", String.valueOf(SystemVariables.SERVER_TIME.getTime()));
+						// TODO 测试系统时间和本地时间的差距
 			            /* 2, 解析返回数据 */
 						User user = SystemVariables.user;
 						JSONObject userJson = jsonObject.getJSONObject("userInfo");
@@ -219,10 +213,9 @@ Log.e("server", String.valueOf(SystemVariables.SERVER_TIME.getTime()));
 						message.sendToTarget();
 
 					} catch (JSONException e) {
-						e.printStackTrace();
+						showToast("数据解析异常... 请联系技术人员");
 					}
 				}
-
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 					showToast("系统异常, 请稍后再试");
@@ -233,9 +226,4 @@ Log.e("server", String.valueOf(SystemVariables.SERVER_TIME.getTime()));
 			Log.e(TAG, e.toString());
 		}
 	}
-
-	public Handler getLoginHandler() {
-		return loginHandler;
-	}
-
 }

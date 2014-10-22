@@ -3,9 +3,11 @@ package com.joyi.xungeng.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.google.gson.Gson;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
@@ -15,6 +17,7 @@ import com.joyi.xungeng.dao.ShiftRecordDao;
 import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.domain.ShiftRecord;
+import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.PhoneUtils;
 import com.loopj.android.http.AsyncHttpClient;
@@ -95,26 +98,37 @@ public class XinXiShangChuanActivity extends BaseActivity {
 
 		// 1, 上传巡更
 		List<PatrolRecord> patrolRecords = prDao.getAll();
-		if (patrolRecords != null && patrolRecords.size() > 0) {
-			JSONArray jsonArray = new JSONArray(patrolRecords);
-			RequestParams requestParams = new RequestParams();
-			requestParams.put("data", jsonArray.toString());
-			sendAsyncHttpRequest(Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, Constants.WHAT_PATROL_RECORED);
-		}
 		// 2, 上传巡查
 		List<PatrolView> patrolViews = pvDao.getAll();
-		if (patrolViews != null && patrolViews.size() > 0) {
-			JSONArray jsonArray = new JSONArray(patrolViews);
-			RequestParams requestParams = new RequestParams();
-			requestParams.put("data", jsonArray.toString());
-			sendAsyncHttpRequest(Constants.UPLOAD_PATROL_VIEW_URL, requestParams, Constants.WHAT_PATROL_VIEW);
-		}
 		// 3, 上传交接班
 		List<ShiftRecord> shiftRecords = srDao.getAll();
-		if (shiftRecords != null && shiftRecords.size() > 0) {
-			JSONArray jsonArray = new JSONArray(shiftRecords);
+		if (XunGengService.isNullList(patrolRecords) && XunGengService.isNullList(patrolViews) && XunGengService.isNullList(shiftRecords)) {
+			showToast("上传完成。");
+		}
+
+Log.e("pr", patrolRecords == null ? "null" : String.valueOf(patrolRecords.size()));
+Log.e("pv", patrolViews == null ? "null" : String.valueOf(patrolViews.size()));
+Log.e("sr", shiftRecords == null ? "null" : String.valueOf(shiftRecords.size()));
+
+		Gson gson = new Gson();
+		if (patrolRecords != null && patrolRecords.size() > 0) {
+Log.e("pr_json", gson.toJson(patrolRecords));
 			RequestParams requestParams = new RequestParams();
-			requestParams.put("data", jsonArray.toString());
+			requestParams.put("data", gson.toJson(patrolRecords));
+			sendAsyncHttpRequest(Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, Constants.WHAT_PATROL_RECORED);
+		}
+
+		if (patrolViews != null && patrolViews.size() > 0) {
+Log.e("pv_json", gson.toJson(patrolViews));
+			RequestParams requestParams = new RequestParams();
+			requestParams.put("data", gson.toJson(patrolViews));
+			sendAsyncHttpRequest(Constants.UPLOAD_PATROL_VIEW_URL, requestParams, Constants.WHAT_PATROL_VIEW);
+		}
+
+		if (shiftRecords != null && shiftRecords.size() > 0) {
+Log.e("sr_json", gson.toJson(shiftRecords));
+			RequestParams requestParams = new RequestParams();
+			requestParams.put("data", gson.toJson(shiftRecords));
 			sendAsyncHttpRequest(Constants.UPLOAD_SHIFT_INFO_URL, requestParams, Constants.WHAT_SHIFT_RECORD);
 		}
 	}

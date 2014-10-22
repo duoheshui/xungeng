@@ -13,6 +13,7 @@ import java.util.Date;
 public class DateUtil {
 
 	private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 	public static String getHumanReadStr(Date date) {
 		if (date == null) {
@@ -26,6 +27,17 @@ public class DateUtil {
 		Date date = null;
 		try {
 			date = dateFormat.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			Log.e("DateUtil.getDateFromHumanReadStr", e.toString());
+		}
+		return date;
+	}
+
+	public static Date getDateFromTimerStr(String str) {
+		Date date = null;
+		try {
+			date = timeFormat.parse(str);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			Log.e("DateUtil.getDateFromHumanReadStr", e.toString());

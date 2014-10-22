@@ -61,7 +61,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 					case Constants.WHAT_SHIFT_RECORD: uploadedSR = true; break;
 				}
 				totalRequest++;
-				if (totalRequest == 3 && uploadedSR && uploadedPV && uploadedSR) {
+				if (totalRequest == 3 && uploadedPR && uploadedPV && uploadedSR) {
 					// 删除本地记录
 					prDao.deleteAll();
 					pvDao.deleteAll();

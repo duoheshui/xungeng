@@ -104,10 +104,25 @@ public class XunGengService {
 		return ret;
 	}
 
-    public static String byteArray2HexString(byte[] arr) {
-        String str = null;
+	/**
+	 * 字节数组转16进制字符串
+	 * @param src
+	 * @return
+	 */
+    public static String byteArray2HexString(byte[] src) {
+	    StringBuilder stringBuilder = new StringBuilder("0X");
+	    if (src == null || src.length <= 0) {
+		    return null;
+	    }
 
+	    char[] buffer = new char[2];
+	    for (int i = 0; i < src.length; i++) {
+		    buffer[0] = Character.forDigit((src[i] >>> 4) & 0x0F, 16);
+		    buffer[1] = Character.forDigit(src[i] & 0x0F, 16);
+		    System.out.println(buffer);
+		    stringBuilder.append(buffer);
+	    }
 
-        return str;
+	    return stringBuilder.toString().toUpperCase();
     }
 }

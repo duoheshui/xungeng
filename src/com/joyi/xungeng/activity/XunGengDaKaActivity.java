@@ -191,7 +191,9 @@ SystemVariables.sqLiteOpenHelper = new WuYeSqliteOpenHelper(this);
                 patrolRecord.setNodeId(lineNode.getId());
             }
             patrolRecord.setPatrolPhoneTime(new Date());
-            // TODO 读取node查节点名称
+	        patrolRecord.setNodeId(lineNode.getId());
+	        prDao.add(patrolRecord);
+	        // TODO 读取node查节点名称
         }
 	}
 }

@@ -63,8 +63,8 @@ public class Test {
 		p1.setException(20);
 		p1.setName("一号线");
 
-		LineNode n1 = new LineNode(); n1.setLineId(p1.getId()); n1.setNodeName("Node1"); n1.setStatus("未巡"); n1.setTime("192423421");
-		LineNode n2 = new LineNode(); n2.setLineId(p1.getId()); n2.setNodeName("Node2"); n2.setStatus("已巡"); n2.setTime("5192423421");
+		LineNode n1 = new LineNode(); n1.setLineId(p1.getId()); n1.setNodeName("Node1");
+		LineNode n2 = new LineNode(); n2.setLineId(p1.getId()); n2.setNodeName("Node2");
 		p1.getLineNodes().add(n1);
 		p1.getLineNodes().add(n2);
 
@@ -79,8 +79,8 @@ public class Test {
 		p2.setName("二号线");
 
 
-		LineNode n3 = new LineNode(); n3.setLineId(p1.getId()); n3.setNodeName("Node1"); n3.setStatus("未巡"); n3.setTime("192423421");
-		LineNode n4 = new LineNode(); n4.setLineId(p1.getId()); n4.setNodeName("Node2"); n4.setStatus("已巡"); n4.setTime("5192423421");
+		LineNode n3 = new LineNode(); n3.setLineId(p1.getId()); n3.setNodeName("Node1");
+		LineNode n4 = new LineNode(); n4.setLineId(p1.getId()); n4.setNodeName("Node2");
 		p2.getLineNodes().add(n3);
 		p2.getLineNodes().add(n4);
 

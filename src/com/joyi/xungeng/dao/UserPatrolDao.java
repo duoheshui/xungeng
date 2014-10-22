@@ -54,8 +54,10 @@ public class UserPatrolDao {
                 int id = userPatrolCursor.getInt(userPatrolCursor.getColumnIndex("id"));
 				userPatrol.setId(id);
 				userPatrol.setUserId(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("userid")));
-				userPatrol.setLineId(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("lineid")));
-				userPatrol.setSequence(userPatrolCursor.getInt(userPatrolCursor.getColumnIndex("sequence")));
+                String lineid = userPatrolCursor.getString(userPatrolCursor.getColumnIndex("lineid"));
+				userPatrol.setLineId(lineid);
+                int sequence = userPatrolCursor.getInt(userPatrolCursor.getColumnIndex("sequence"));
+				userPatrol.setSequence(sequence);
 				userPatrol.setBeginTime(DateUtil.getDateFromHumanReadStr(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginTime"))));
 				userPatrol.setEndTime(DateUtil.getDateFromHumanReadStr(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endTime"))));
 				userPatrol.setBeginPhoneTime(DateUtil.getDateFromHumanReadStr(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginPhoneTime"))));
@@ -67,6 +69,7 @@ public class UserPatrolDao {
                     PatrolRecord patrolRecord = null;
                     while (cursor.moveToNext()) {
                         patrolRecord = new PatrolRecord();
+                        patrolRecord.setSequence(sequence);
                         patrolRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
                         patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
                         patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));

@@ -17,9 +17,27 @@ public class PatrolRecord implements Serializable {
 	private String patrolTime;
 	private Date patrolPhoneTime;
 	private String error;
+    private int sequence;              // 轮次
+    private String lineId;
 
 
-	public int getId() {
+    public String getLineId() {
+        return lineId;
+    }
+
+    public void setLineId(String lineId) {
+        this.lineId = lineId;
+    }
+
+    public int getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
+    }
+
+    public int getId() {
 		return id;
 	}
 

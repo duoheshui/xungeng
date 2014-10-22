@@ -46,6 +46,8 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "userPatrolId integer," +
             "patrolTime datetime," +
             "patrolPhoneTime datetime," +
+            "sequence integer,"+
+            "lineId char(20),"+
             "error varchar(200))";
 
     // 交接班记录

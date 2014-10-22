@@ -1,6 +1,7 @@
 package com.joyi.xungeng.activity;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,20 +16,15 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
-import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
-import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangyong on 2014/10/15.
@@ -43,6 +39,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 
 
 	private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
 
     private static final Map<String, Integer> lunCiMap = new HashMap<>();                   // 路线名<->轮次映射表
 	private static final Map<String, Map<Integer, Long>> lunCiPvidMap = new HashMap<>();    // 路线<->轮次<->轮软记录ID
@@ -51,21 +48,21 @@ public class XunGengDaKaActivity extends BaseActivity {
     private PatrolLine patrolLine;
     private UserPatrolDao upDao = new UserPatrolDao();
     private PatrolRecordDao prDao = new PatrolRecordDao();
-	private List<LineNode> lineNodes = SystemVariables.ALL_LINE_NODES;
+	private List<LineNode> allLineNodes = SystemVariables.ALL_LINE_NODES;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.xun_geng_da_ka);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.xun_geng_da_ka);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText(SystemVariables.USER_NAME);
         startButton = (Button) findViewById(R.id.start_button);
         endButton = (Button) findViewById(R.id.end_button);
 		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
-		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-		yiXunLunCi = (TextView) findViewById(R.id.yi_xun_lun_ci_tv);
+        yiXunLunCi = (TextView) findViewById(R.id.yi_xun_lun_ci_tv);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()), 0);
 
 		patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
         lineName = patrolLine.getName();
@@ -78,10 +75,20 @@ public class XunGengDaKaActivity extends BaseActivity {
 		// TODO 计算漏巡情况
 
 		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
-		for (LineNode node : lineNodes) {
+        Map<String, PatrolRecord> map = prDao.getMap(patrolLine.getId(), lunCi);
+
+        for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
 			tableRow.setBackgroundColor(Color.WHITE);
 			tableRow.setPadding(1, 1, 1, 1);
+
+            String statusText = "未巡";
+            String timeText = "--";
+            PatrolRecord record = map.get(node.getId());
+            if (record != null) {
+                statusText = "已巡";
+                timeText = record.getPatrolTime();
+            }
 
 			TextView dian = new TextView(this);
 			dian.setGravity(Gravity.CENTER);
@@ -95,7 +102,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 
 			TextView status = new TextView(this);
 			status.setGravity(Gravity.CENTER);
-			status.setText(node.getStatus());
+			status.setText(statusText);
 			status.setTextColor(Color.WHITE);
 			status.setBackgroundColor(Color.BLACK);
 			status.setTextSize(20);
@@ -103,7 +110,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 
 			TextView time = new TextView(this);
 			time.setGravity(Gravity.CENTER);
-			time.setText(node.getTime());
+			time.setText(timeText);
 			time.setTextColor(Color.WHITE);
 			time.setBackgroundColor(Color.BLACK);
 			time.setTextSize(20);
@@ -114,7 +121,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 			tableRow.addView(time);
 			tableLayout.addView(tableRow);
 		}
-	}
+    }
 
     /**
      * 开始(本轮)巡更
@@ -174,30 +181,71 @@ public class XunGengDaKaActivity extends BaseActivity {
 		    }).setNegativeButton("取消", null).show();
     }
 
+    /**
+     * 打卡触发事件
+     * @param intent
+     */
 	@Override
 	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        super.onNewIntent(intent);
+        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-        byte[] arr = null;
         if (tag != null) {
-            arr = tag.getId();
+            byte[] arr = tag.getId();
             String nfcCode = XunGengService.byteArray2HexString(arr);
             LineNode lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
-            Integer lunCi = lunCiMap.get(lineName);
-            long userPatrolId = lunCiPvidMap.get(lineName).get(lunCi);
-
-            PatrolRecord patrolRecord = new PatrolRecord();
-            Date date = new Date(SystemVariables.SERVER_TIME.getTime());
-            patrolRecord.setPatrolTime(DateUtil.getHumanReadStr(date));
-            patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
-            if (lineNode != null) {
-                patrolRecord.setNodeId(lineNode.getId());
+            if (lineNode == null) {
+                showToast("无效的NFC卡...");
+                return;
             }
-            patrolRecord.setPatrolPhoneTime(new Date());
-	        patrolRecord.setNodeId(lineNode.getId());
-	        prDao.add(patrolRecord);
-	        // TODO 读取node查节点名称
+            List<LineNode> lineNodes = patrolLine.getLineNodes();
+            // 检查此节点是否属于本路线
+            if (lineNodes != null && lineNodes.size() > 0) {
+                boolean rightNode = false;
+                for (LineNode node : lineNodes) {
+                    if (lineNode.getNfcCode().equals(node.getNfcCode())) {
+                        rightNode = true;
+                        break;
+                    }
+                }
+                if(!rightNode) {
+                    showToast("打卡失败, 该节点不属于该路线");
+                    return;
+                }
+                Integer lunCi = lunCiMap.get(lineName);
+                long userPatrolId = lunCiPvidMap.get(lineName).get(lunCi);
+                PatrolRecord patrolRecord = new PatrolRecord();
+                patrolRecord.setPatrolTime(DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME));
+                patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
+                if (lineNode != null) {
+                    patrolRecord.setNodeId(lineNode.getId());
+                }
+                patrolRecord.setPatrolPhoneTime(new Date());
+                patrolRecord.setNodeId(lineNode.getId());
+                patrolRecord.setLineId(patrolLine.getId());
+                patrolRecord.setSequence(lunCiMap.get(lineName));
+                prDao.add(patrolRecord);
+                showToast(lineNode.getNodeName()+"  打卡成功");
+            }
+            // TODO 更新打卡列表
+        }else{
+            showToast("无效的NFC卡...");
         }
-	}
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (nfcAdapter != null) {
+            nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+        }
+    }
 }

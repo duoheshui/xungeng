@@ -8,7 +8,9 @@ import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangyong on 2014/10/15.
@@ -56,6 +58,30 @@ public class PatrolRecordDao {
 		}
 		return patrolRecords;
 	}
+
+    public Map<String, PatrolRecord> getMap(String lineId, int sequence) {
+        Map<String, PatrolRecord> map = new HashMap<>();
+
+        SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
+        Cursor cursor = readableDatabase.query("patrol_record", null, "lineId = ? and sequence = ?", new String[]{lineId, String.valueOf(sequence)}, null, null, null);
+        if (cursor != null) {
+            PatrolRecord patrolRecord = null;
+            while (cursor.moveToNext()) {
+                patrolRecord = new PatrolRecord();
+                patrolRecord.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
+                patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));
+                patrolRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                String nodeid = cursor.getString(cursor.getColumnIndex("nodeId"));
+                patrolRecord.setNodeId(nodeid);
+                patrolRecord.setLineId(cursor.getString(cursor.getColumnIndex("lineId")));
+                patrolRecord.setSequence(cursor.getInt(cursor.getColumnIndex("sequence")));
+                patrolRecord.setPatrolPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("partolPhoneTime"))));
+                patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
+                map.put(nodeid, patrolRecord);
+            }
+        }
+        return map;
+    }
 
 	public void deleteAll() {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();

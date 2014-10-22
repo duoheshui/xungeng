@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -14,10 +15,13 @@ import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolViewDao;
+import com.joyi.xungeng.domain.LineNode;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.domain.User;
+import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +41,6 @@ public class XunchaDaKaActivity extends BaseActivity {
 		setContentView(R.layout.xun_cha_da_ka);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText(SystemVariables.USER_NAME);
-
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
@@ -85,14 +88,26 @@ public class XunchaDaKaActivity extends BaseActivity {
 		}
 	}
 
+    /**
+     * 打卡触发此事件
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         User user = SystemVariables.user;
         PatrolView patrolView = new PatrolView();
+        LineNode lineNode = null;
         if (tag != null) {
-            // TODO 获取所有节点 名称, ID, 物理ID对应关系, 打卡时根据物理ID获取节点id
+            byte[] arr = tag.getId();
+            String nfcCode = XunGengService.byteArray2HexString(arr);
+            lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
+            if (lineNode == null) {
+                showToast("无效的NFC卡...");
+                return;
+            }
+
             Date date = new Date(SystemVariables.SERVER_TIME.getTime());
             patrolView.setPatrolTime(DateUtil.getHumanReadStr(date));
             patrolView.setPatrolPhoneTime(DateUtil.getHumanReadStr(new Date()));
@@ -100,8 +115,7 @@ public class XunchaDaKaActivity extends BaseActivity {
             patrolView.setUserId(user.getId());
         }
         patrolViewDao.add(patrolView);
-        showToast("打卡成功");
-
+        showToast(lineNode.getNodeName()+"  打卡成功");
     }
 
     @Override

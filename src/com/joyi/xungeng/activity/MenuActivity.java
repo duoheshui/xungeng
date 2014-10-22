@@ -1,15 +1,10 @@
 package com.joyi.xungeng.activity;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.provider.Contacts;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.joyi.xungeng.BaseActivity;
@@ -19,8 +14,6 @@ import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.test.Test;
 import com.joyi.xungeng.util.Constants;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +36,8 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gong_neng_cai_dan);
-
+// TODO 删除测试
+Test.test();
 		// 获取TabHost对象
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
 		// 如果没有继承TabActivity时，通过该种方法加载启动tabHost

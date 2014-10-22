@@ -25,7 +25,8 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "id integer primary key autoincrement, " +
             "nodeid char(20)," +
             "userid char(20)," +
-            "patrolTime datetime)";
+            "patrolTime datetime," +
+            "patrolPhoneTime datetime)";
 
     // 路线
     private static final String Patrol_Line_Sql =
@@ -79,7 +80,6 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-	    Log.e("WuYeSqliteOpenHelper", "onCreate-> create table");
 
 	    try {
 		    db.beginTransaction();

@@ -59,6 +59,7 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	 * @param view
 	 */
 	public void jiaoJieBan(View view) {
+		// TODO 删除
 		String name = ((Button) view).getText().toString();
 		ShiftRecord shiftRecord = new ShiftRecord();
 		Date serverTime = new Date(SystemVariables.SERVER_TIME.getTime());
@@ -76,7 +77,8 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
         shiftRecord.setStationId(selectedGangWei.getId());
         shiftRecord.setScheduleTypeId(selectedBanCi.getKey());
         shiftRecord.setLineId(selectedLuXian.getKey());
-        srDao.add(shiftRecord);
+		shiftRecord.setUserId(SystemVariables.user.getId());
+		srDao.add(shiftRecord);
         showToast(name + "成功");
         finish();
     }
@@ -97,7 +99,6 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 
 	@Override
 	public void onNothingSelected(AdapterView<?> adapterView) {
-
 
 	}
 }

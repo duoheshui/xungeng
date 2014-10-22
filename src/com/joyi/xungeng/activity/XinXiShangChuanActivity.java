@@ -46,7 +46,6 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	private boolean uploadedPR; // 巡更记录
 	private boolean uploadedPV; // 巡查记录
 	private boolean uploadedSR; // 交接班记录
-	private int totalRequest;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +58,13 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-					case Constants.WHAT_PATROL_RECORED: uploadedPR = true; break;
-					case Constants.WHAT_PATROL_VIEW: uploadedPV = true; break;
-					case Constants.WHAT_SHIFT_RECORD: uploadedSR = true; break;
+					case Constants.WHAT_PATROL_RECORED: uploadedPR = true;  prDao.deleteAll();  break;
+					case Constants.WHAT_PATROL_VIEW: uploadedPV = true; pvDao.deleteAll();      break;
+					case Constants.WHAT_SHIFT_RECORD: uploadedSR = true;    srDao.deleteAll();  break;
 				}
-				totalRequest++;
-				if (totalRequest == 3 && uploadedPR && uploadedPV && uploadedSR) {
+				if (uploadedPR && uploadedPV && uploadedSR) {
 					// 删除本地记录
-					prDao.deleteAll();
-					pvDao.deleteAll();
-					srDao.deleteAll();
-					uploadButton.setText("上传完成");
+					uploadButton.setText("上传");
 					showToast("上传完成");
 				}else{
 					uploadButton.setClickable(true);
@@ -85,6 +80,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void uploadInfo(View view) {
+
 		// 判断网络是否可用
 		boolean networkConnected = PhoneUtils.isNetworkConnected(this);
 		if (!networkConnected) {
@@ -104,32 +100,33 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		List<ShiftRecord> shiftRecords = srDao.getAll();
 		if (XunGengService.isNullList(patrolRecords) && XunGengService.isNullList(patrolViews) && XunGengService.isNullList(shiftRecords)) {
 			showToast("上传完成。");
+			uploadButton.setText("上传");
 		}
-
-Log.e("pr", patrolRecords == null ? "null" : String.valueOf(patrolRecords.size()));
-Log.e("pv", patrolViews == null ? "null" : String.valueOf(patrolViews.size()));
-Log.e("sr", shiftRecords == null ? "null" : String.valueOf(shiftRecords.size()));
 
 		Gson gson = new Gson();
 		if (patrolRecords != null && patrolRecords.size() > 0) {
-Log.e("pr_json", gson.toJson(patrolRecords));
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("data", gson.toJson(patrolRecords));
 			sendAsyncHttpRequest(Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, Constants.WHAT_PATROL_RECORED);
+		}else{
+			uploadedPR = true;
 		}
 
 		if (patrolViews != null && patrolViews.size() > 0) {
-Log.e("pv_json", gson.toJson(patrolViews));
 			RequestParams requestParams = new RequestParams();
+Log.e("pv", gson.toJson(patrolViews));
 			requestParams.put("data", gson.toJson(patrolViews));
 			sendAsyncHttpRequest(Constants.UPLOAD_PATROL_VIEW_URL, requestParams, Constants.WHAT_PATROL_VIEW);
+		}else{
+			uploadedPV = true;
 		}
 
 		if (shiftRecords != null && shiftRecords.size() > 0) {
-Log.e("sr_json", gson.toJson(shiftRecords));
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("data", gson.toJson(shiftRecords));
 			sendAsyncHttpRequest(Constants.UPLOAD_SHIFT_INFO_URL, requestParams, Constants.WHAT_SHIFT_RECORD);
+		}else{
+			uploadedSR = true;
 		}
 	}
 
@@ -140,23 +137,23 @@ Log.e("sr_json", gson.toJson(shiftRecords));
 	 * @param what
 	 */
 	public void sendAsyncHttpRequest(String requestUrl, RequestParams requestParams, final int what) {
-		httpClient.post(this, requestUrl, requestParams, new JsonHttpResponseHandler(){
+Log.e("send", "beforePost");
+		httpClient.post(this, requestUrl, requestParams, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-            super.onSuccess(statusCode, headers, json);
-                try {
-                    String status = json.getString("errorCode");
-                    if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
-                        Message message = new Message();
-                        message.what = what;
-                        message.setTarget(handler);
-                        message.sendToTarget();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+				try {
+					String status = json.getString("errorCode");
+Log.e("status", status + ", " + json.getString("errorMsg"));
+					if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
+						Message message = new Message();
+						message.what = what;
+						message.setTarget(handler);
+						message.sendToTarget();
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
-
 		});
 	}
 }

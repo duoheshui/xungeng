@@ -14,9 +14,11 @@ import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.PatrolViewDao;
 import com.joyi.xungeng.dao.ShiftRecordDao;
+import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.domain.ShiftRecord;
+import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.PhoneUtils;
@@ -40,6 +42,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	private PatrolRecordDao prDao = new PatrolRecordDao();
 	private PatrolViewDao pvDao = new PatrolViewDao();
 	private ShiftRecordDao srDao = new ShiftRecordDao();
+	private UserPatrolDao upDao = new UserPatrolDao();
 	private Handler handler;
 
 	private boolean uploadedPR; // 巡更记录
@@ -57,7 +60,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-					case Constants.WHAT_PATROL_RECORED: uploadedPR = true;  prDao.deleteAll();  break;
+					case Constants.WHAT_PATROL_RECORED: uploadedPR = true;  upDao.deleteAll(); prDao.deleteAll(); break;
 					case Constants.WHAT_PATROL_VIEW: uploadedPV = true; pvDao.deleteAll();      break;
 					case Constants.WHAT_SHIFT_RECORD: uploadedSR = true;    srDao.deleteAll();  break;
 				}
@@ -92,7 +95,8 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		uploadButton.setText("请在上传, 请稍等");
 
 		// 1, 上传巡更
-		List<PatrolRecord> patrolRecords = prDao.getAll();
+		List<UserPatrol> patrolRecords = upDao.getAll();
+
 		// 2, 上传巡查
 		List<PatrolView> patrolViews = pvDao.getAll();
 		// 3, 上传交接班
@@ -101,8 +105,8 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			showToast("上传完成。");
 			uploadButton.setText("上传");
 		}
-
 		Gson gson = new Gson();
+Log.e("pr", gson.toJson(patrolRecords));
 		if (patrolRecords != null && patrolRecords.size() > 0) {
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("data", gson.toJson(patrolRecords));
@@ -113,7 +117,6 @@ public class XinXiShangChuanActivity extends BaseActivity {
 
 		if (patrolViews != null && patrolViews.size() > 0) {
 			RequestParams requestParams = new RequestParams();
-Log.e("pv", gson.toJson(patrolViews));
 			requestParams.put("data", gson.toJson(patrolViews));
 			sendAsyncHttpRequest(Constants.UPLOAD_PATROL_VIEW_URL, requestParams, Constants.WHAT_PATROL_VIEW);
 		}else{

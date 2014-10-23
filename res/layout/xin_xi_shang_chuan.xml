@@ -26,23 +26,6 @@
                 android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <!--<LinearLayout-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-        <!--<TextView-->
-                <!--android:text="已巡轮次："-->
-                <!--android:textSize="20dp"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-        <!--<TextView-->
-                <!--android:text="5次/共5次"-->
-                <!--android:textSize="20dp"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-    <!--</LinearLayout>-->
-
-
     <ScrollView
             android:layout_weight="1"
             android:layout_width="wrap_content"
@@ -60,23 +43,21 @@
                         android:gravity="center_horizontal"
                         android:text="巡更点"
                         android:textColor="#FFF"
-                        android:textSize="20dip"
-                        android:textStyle="bold"
+                        android:textSize="18dip"
                         android:background="#333333"
                         android:layout_margin="1dp"/>
                 <TextView
                         android:gravity="center_horizontal"
                         android:textColor="#FFF"
                         android:text="巡更状态"
-                        android:textSize="20dip"
-                        android:textStyle="bold"
+                        android:textSize="18dip"
                         android:background="#333333"
                         android:layout_margin="1dp"/>
                 <TextView
                         android:gravity="center_horizontal"
                         android:text="巡更时间"
                         android:textColor="#FFF"
-                        android:textSize="20dip"
+                        android:textSize="18dip"
                         android:background="#333333"
                         android:layout_margin="1dp"/>
             </TableRow>

@@ -1,5 +1,6 @@
 package com.joyi.xungeng.domain;
 
+import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.util.DateUtil;
 
 import java.io.Serializable;
@@ -15,13 +16,22 @@ public class PatrolRecord implements Serializable {
 	private String nodeId;
 	private String userPatrolId;
 	private String patrolTime;
-	private Date patrolPhoneTime;
+	private String patrolPhoneTime;
 	private String error;
     private int sequence;              // 轮次
     private String lineId;
+	private String imei = SystemVariables.IMEI;
 
 
-    public String getLineId() {
+	public String getImei() {
+		return imei;
+	}
+
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
+	public String getLineId() {
         return lineId;
     }
 
@@ -70,10 +80,10 @@ public class PatrolRecord implements Serializable {
 	}
 
 	public String getPatrolPhoneTime() {
-		return DateUtil.getHumanReadStr(patrolPhoneTime);
+		return patrolPhoneTime;
 	}
 
-	public void setPatrolPhoneTime(Date patrolPhoneTime) {
+	public void setPatrolPhoneTime(String patrolPhoneTime) {
 		this.patrolPhoneTime = patrolPhoneTime;
 	}
 

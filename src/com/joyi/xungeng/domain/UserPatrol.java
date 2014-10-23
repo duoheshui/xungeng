@@ -13,15 +13,15 @@ import java.util.List;
  */
 public class UserPatrol implements Serializable {
 
-	private int id;
+	private long id;
 	private String userId;              // 用户ID
 	private String lineId;              // 线路ID
 	private int sequence;               // 轮次
 	private String scheduleTypeId;      // 巡更班次ID
-	private Date beginTime;
-	private Date endTime;
-	private Date beginPhoneTime;
-	private Date endPhoneTime;
+	private String beginTime;
+	private String endTime;
+	private String beginPhoneTime;
+	private String endPhoneTime;
 	private String imei = SystemVariables.IMEI;
 
 
@@ -40,11 +40,11 @@ public class UserPatrol implements Serializable {
         this.patrolRecords = patrolRecords;
     }
 
-    public int getId() {
+    public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -80,35 +80,35 @@ public class UserPatrol implements Serializable {
 		this.scheduleTypeId = scheduleTypeId;
 	}
 
-	public Date getBeginTime() {
+	public String getBeginTime() {
 		return beginTime;
 	}
 
-	public void setBeginTime(Date beginTime) {
+	public void setBeginTime(String beginTime) {
 		this.beginTime = beginTime;
 	}
 
-	public Date getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
-	public Date getBeginPhoneTime() {
+	public String getBeginPhoneTime() {
 		return beginPhoneTime;
 	}
 
-	public void setBeginPhoneTime(Date beginPhoneTime) {
+	public void setBeginPhoneTime(String beginPhoneTime) {
 		this.beginPhoneTime = beginPhoneTime;
 	}
 
-	public Date getEndPhoneTime() {
+	public String getEndPhoneTime() {
 		return endPhoneTime;
 	}
 
-	public void setEndPhoneTime(Date endPhoneTime) {
+	public void setEndPhoneTime(String endPhoneTime) {
 		this.endPhoneTime = endPhoneTime;
 	}
 }

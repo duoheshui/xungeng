@@ -3,9 +3,11 @@ package com.joyi.xungeng.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.print.PrintJob;
 import android.util.Log;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.PatrolRecord;
+import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.util.DateUtil;
 
@@ -30,12 +32,12 @@ public class UserPatrolDao {
 		contentValues.put("userId", userPatrol.getUserId());
 		contentValues.put("lineId", userPatrol.getLineId());
 		contentValues.put("sequence", userPatrol.getSequence());
-		contentValues.put("beginTime", DateUtil.getHumanReadStr(userPatrol.getBeginTime()));
-		contentValues.put("endTime", DateUtil.getHumanReadStr(userPatrol.getEndTime()));
-		contentValues.put("beginPhoneTime", DateUtil.getHumanReadStr(userPatrol.getBeginPhoneTime()));
-		contentValues.put("endPhoneTime", DateUtil.getHumanReadStr(userPatrol.getEndPhoneTime()));
+		contentValues.put("beginTime", userPatrol.getBeginTime());
+		contentValues.put("endTime", userPatrol.getEndTime());
+		contentValues.put("beginPhoneTime", userPatrol.getBeginPhoneTime());
+		contentValues.put("endPhoneTime", userPatrol.getEndPhoneTime());
 
-		long id = writableDatabase.insert("user_patrol", null, contentValues);
+		long id = writableDatabase.insert("user_patrol", "", contentValues);
 		return id;
 	}
 
@@ -55,35 +57,60 @@ public class UserPatrolDao {
 				userPatrol.setId(id);
 				userPatrol.setUserId(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("userid")));
                 String lineid = userPatrolCursor.getString(userPatrolCursor.getColumnIndex("lineid"));
+				int sequence = userPatrolCursor.getInt(userPatrolCursor.getColumnIndex("sequence"));
 				userPatrol.setLineId(lineid);
-                int sequence = userPatrolCursor.getInt(userPatrolCursor.getColumnIndex("sequence"));
 				userPatrol.setSequence(sequence);
-				userPatrol.setBeginTime(DateUtil.getDateFromHumanReadStr(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginTime"))));
-				userPatrol.setEndTime(DateUtil.getDateFromHumanReadStr(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endTime"))));
-				userPatrol.setBeginPhoneTime(DateUtil.getDateFromHumanReadStr(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginPhoneTime"))));
-				userPatrol.setEndPhoneTime(DateUtil.getDateFromHumanReadStr(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endPhoneTime"))));
+				userPatrol.setBeginTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginTime")));
+				userPatrol.setEndTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endTime")));
+				userPatrol.setBeginPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginPhoneTime")));
+				userPatrol.setEndPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endPhoneTime")));
 
                 List<PatrolRecord> patrolRecords = userPatrol.getPatrolRecords();
                 Cursor cursor = readableDatabase.query("patrol_record", null, "userPatrolId = ?", new String[]{String.valueOf(id)}, null, null, null);
                 if (cursor != null) {
                     PatrolRecord patrolRecord = null;
                     while (cursor.moveToNext()) {
-                        patrolRecord = new PatrolRecord();
-                        patrolRecord.setSequence(sequence);
+	                    patrolRecord = new PatrolRecord();
+	                    patrolRecord.setLineId(lineid);
+	                    patrolRecord.setSequence(sequence);
                         patrolRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
                         patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
                         patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));
                         patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
                         patrolRecord.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
-                        patrolRecord.setPatrolPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("patrolPhoneTime"))));
+                        patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
                         patrolRecords.add(patrolRecord);
                     }
                 }
+				userPatrols.add(userPatrol);
             }
 		}
 		return userPatrols;
 	}
 
+
+	public UserPatrol getById(Long id) {
+		if (id == null) {
+			return null;
+		}
+		UserPatrol userPatrol = null;
+		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
+		Cursor userPatrolCursor = readableDatabase.query("user_patrol", null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+		if (userPatrolCursor != null && userPatrolCursor.moveToFirst()) {
+			userPatrol = new UserPatrol();
+			userPatrol.setId(id);
+			userPatrol.setUserId(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("userid")));
+			String lineid = userPatrolCursor.getString(userPatrolCursor.getColumnIndex("lineid"));
+			userPatrol.setLineId(lineid);
+			int sequence = userPatrolCursor.getInt(userPatrolCursor.getColumnIndex("sequence"));
+			userPatrol.setSequence(sequence);
+			userPatrol.setBeginTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginTime")));
+			userPatrol.setEndTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endTime")));
+			userPatrol.setBeginPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginPhoneTime")));
+			userPatrol.setEndPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endPhoneTime")));
+		}
+		return userPatrol;
+	}
 
 	/**
 	 * 删除所有记录
@@ -92,6 +119,7 @@ public class UserPatrolDao {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		writableDatabase.delete("user_patrol", null, null);
 	}
+
 
     /**
      * 更新结束时间

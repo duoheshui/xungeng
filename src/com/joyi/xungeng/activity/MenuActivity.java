@@ -36,8 +36,6 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gong_neng_cai_dan);
-// TODO 删除测试
-Test.test();
 		// 获取TabHost对象
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
 		// 如果没有继承TabActivity时，通过该种方法加载启动tabHost

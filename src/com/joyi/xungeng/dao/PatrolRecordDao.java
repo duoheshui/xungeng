@@ -28,7 +28,9 @@ public class PatrolRecordDao {
 		contentValues.put("nodeId", patrolRecord.getNodeId());
 		contentValues.put("userPatrolId", patrolRecord.getUserPatrolId());
 		contentValues.put("patrolTime", patrolRecord.getPatrolTime());
-		contentValues.put("partolPhoneTime", patrolRecord.getPatrolPhoneTime());
+		contentValues.put("patrolPhoneTime", patrolRecord.getPatrolPhoneTime());
+		contentValues.put("sequence", patrolRecord.getSequence());
+		contentValues.put("lineId", patrolRecord.getLineId());
 		contentValues.put("error", "");
 
 		return writableDatabase.insert("patrol_record", null, contentValues);
@@ -47,11 +49,13 @@ public class PatrolRecordDao {
 			PatrolRecord patrolRecord = null;
 			while (cursor.moveToNext()) {
 				patrolRecord = new PatrolRecord();
+				patrolRecord.setLineId(cursor.getString(cursor.getColumnIndex("lineId")));
+				patrolRecord.setSequence(cursor.getInt(cursor.getColumnIndex("sequence")));
 				patrolRecord.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
 				patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));
 				patrolRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
-				patrolRecord.setPatrolPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("partolPhoneTime"))));
+				patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
 				patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
 				patrolRecords.add(patrolRecord);
 			}
@@ -61,8 +65,8 @@ public class PatrolRecordDao {
 
     public Map<String, PatrolRecord> getMap(String lineId, int sequence) {
         Map<String, PatrolRecord> map = new HashMap<>();
-
         SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
+
         Cursor cursor = readableDatabase.query("patrol_record", null, "lineId = ? and sequence = ?", new String[]{lineId, String.valueOf(sequence)}, null, null, null);
         if (cursor != null) {
             PatrolRecord patrolRecord = null;
@@ -75,7 +79,7 @@ public class PatrolRecordDao {
                 patrolRecord.setNodeId(nodeid);
                 patrolRecord.setLineId(cursor.getString(cursor.getColumnIndex("lineId")));
                 patrolRecord.setSequence(cursor.getInt(cursor.getColumnIndex("sequence")));
-                patrolRecord.setPatrolPhoneTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("partolPhoneTime"))));
+                patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
                 patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
                 map.put(nodeid, patrolRecord);
             }

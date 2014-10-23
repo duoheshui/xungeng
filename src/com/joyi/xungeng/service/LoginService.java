@@ -3,8 +3,10 @@ package com.joyi.xungeng.service;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import com.google.gson.Gson;
 import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolViewDao;
@@ -18,10 +20,10 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,12 +36,15 @@ public class LoginService {
 	private static LoginService loginService;
 	private MainActivity context;
 	private boolean hasSyncServerTime;
-	private boolean hasSyncXG;      // 已同步巡更打卡信息
-	private boolean hasSyncXC;      // 已同步巡查信息
-	private boolean hasSyncJJB;      // 已同步交接班信息
-	private static final int SYNC_XG = 1;
-	private static final int SYNC_XC = 2;
-	private static final int SYNC_JJB = 3;
+
+	private Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 100) {
+				System.exit(0);
+			}
+		}
+	};
 
 
 	private AsyncHttpClient httpClient = new AsyncHttpClient();
@@ -72,14 +77,32 @@ public class LoginService {
 		}
 		hasSyncServerTime = true;
 		SystemVariables.SERVER_TIME.setTime(serverTime);
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
+		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				SystemVariables.SERVER_TIME.setTime(SystemVariables.SERVER_TIME.getTime() + 100);
 			}
-		}, 0, 100);
+		}, 0, 50);
 	}
+
+	/**
+	 * 登录时间记时器
+	 */
+	public void loginTimeCounter() {
+		long now = System.currentTimeMillis();
+		long stopTime = now + 2*24*60*60*1000;  // 2天后的毫秒数
+//		long stopTime = now + 5*1000;
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				Message message = new Message();
+				message.what = 100;
+				message.setTarget(handler);
+				message.sendToTarget();
+			}
+		}, new Date(stopTime));
+	}
+
 
 	/**
 	 * 新版本弹出层
@@ -93,23 +116,24 @@ public class LoginService {
 		}).setNegativeButton("退出", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-
+				context.finish();
+				System.exit(1);
 			}
 		}).show();
 	}
 
     /**
      * 同步上次巡更信息, 同步成功删除本地记录
-     * TODO
      */
     public void syncPatrolData(Context context) {
+
+	    Gson gson = new Gson();
 	    // 1, 同步巡查信息
 	    final PatrolViewDao pvDao = new PatrolViewDao();
 	    List<PatrolView> pvList = pvDao.getAll();
         if (pvList != null && pvList.size() > 0) {
-	        final JSONArray jsonArray = new JSONArray(pvList);
 	        RequestParams requestParams = new RequestParams();
-	        requestParams.put("data", jsonArray.toString());
+	        requestParams.put("data", gson.toJson(pvList));
 	        httpClient.post(context, Constants.UPLOAD_PATROL_VIEW_URL, requestParams, new JsonHttpResponseHandler(){
 		        @Override
 		        public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
@@ -130,9 +154,8 @@ public class LoginService {
 	    final UserPatrolDao upDao = new UserPatrolDao();
 	    List<UserPatrol> upList = upDao.getAll();
 	    if (pvList != null && pvList.size() > 0) {
-		    final JSONArray jsonArray = new JSONArray(upList);
 		    RequestParams requestParams = new RequestParams();
-		    requestParams.put("data", jsonArray.toString());
+		    requestParams.put("data", gson.toJson(upList));
 		    httpClient.post(context, Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, new JsonHttpResponseHandler(){
 			    @Override
 			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
@@ -153,9 +176,8 @@ public class LoginService {
 	    final ShiftRecordDao srDao = new ShiftRecordDao();
 	    List<ShiftRecord> srList = srDao.getAll();
 	    if (srList != null && srList.size() > 0) {
-		    final JSONArray jsonArray = new JSONArray(srList);
 		    RequestParams requestParams = new RequestParams();
-		    requestParams.put("data", jsonArray.toString());
+		    requestParams.put("data", gson.toJson(srList));
 		    httpClient.post(context, Constants.UPLOAD_SHIFT_INFO_URL, requestParams, new JsonHttpResponseHandler(){
 			    @Override
 			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {

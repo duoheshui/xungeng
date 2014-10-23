@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 /**
  * 应用程序入口Activity
  */
@@ -92,9 +94,10 @@ public class MainActivity extends BaseActivity {
 				return;
 			}
 
-            // 发起请求前的时间戳
-            final long beforeHttp = System.currentTimeMillis();
+			// 发起请求前的时间戳
+			final long beforeHttp = System.currentTimeMillis();
 			client.post(MainActivity.this, Constants.LOGIN_URL, requestParams, new JsonHttpResponseHandler() {
+
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 					// 请求响应时的时间戳
@@ -113,9 +116,10 @@ public class MainActivity extends BaseActivity {
                         /* 1, 同步服务器时间 */
 						long serverTime = Long.parseLong(jsonObject.getString("serverTime")) + (afterHttp - beforeHttp);
 						loginService.syncServerTime(serverTime);
+						loginService.loginTimeCounter();
 
 						// TODO 测试系统时间和本地时间的差距
-			            /* 2, 解析返回数据 */
+				        /* 2, 解析返回数据 */
 						User user = SystemVariables.user;
 						JSONObject userJson = jsonObject.getJSONObject("userInfo");
 						user.setId(userJson.getString("userId"));
@@ -183,9 +187,10 @@ public class MainActivity extends BaseActivity {
 								patrolLine.setFrequency(patrolLineJson.getInt("frequency"));
 								patrolLine.setException(patrolLineJson.getInt("exception"));
 
-								// TODO 时间判断 如果结束时间 跨天
-								patrolLine.setBeginTime(DateUtil.getDateFromTimerStr(patrolLineJson.getString("beginTime")));
-								patrolLine.setEndTime(DateUtil.getDateFromTimerStr(patrolLineJson.getString("endTime")));
+								Date beginDate = DateUtil.getDateFromTimerStr(patrolLineJson.getString("beginTime"));
+								patrolLine.setBeginTime(beginDate);
+								Date endDate = DateUtil.getDateFromTimerStr(patrolLineJson.getString("endTime"));
+								patrolLine.setEndTime(endDate);
 
 								JSONArray lineNodes = patrolLineJson.getJSONArray("nodes");
 								if (lineNodes != null && lineNodes.length() > 0) {
@@ -216,11 +221,12 @@ public class MainActivity extends BaseActivity {
 						showToast("数据解析异常... 请联系技术人员");
 					}
 				}
+
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 					showToast("系统异常, 请稍后再试");
 				}
-            });
+			});
 		} catch (Exception e) {
 			showToast("登录失败, 请稍后再试");
 			Log.e(TAG, e.toString());

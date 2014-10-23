@@ -16,8 +16,8 @@ public class PatrolLine implements Serializable {
 	private String stationId;                           // 岗位ID
 	private int frequency;                              // 频次
 	private int exception;                              // 偏差(分钟)
-	private Date beginTime;
-	private Date endTime;
+	private String beginTime;
+	private String endTime;
 	private List<LineNode> lineNodes = new ArrayList<>();// 路线上的节点
 
 
@@ -69,25 +69,25 @@ public class PatrolLine implements Serializable {
 		this.exception = exception;
 	}
 
-	public Date getBeginTime() {
+	public String getBeginTime() {
 		return beginTime;
 	}
 
-	public void setBeginTime(Date beginTime) {
+	public void setBeginTime(String beginTime) {
 		this.beginTime = beginTime;
 	}
 
-	public Date getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
 
 	@Override
 	public String toString() {
-		return lineName;
+		return lineName+"  "+beginTime+"~"+endTime;
 	}
 }

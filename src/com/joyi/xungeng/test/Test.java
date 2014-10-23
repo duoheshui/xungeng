@@ -55,9 +55,9 @@ public class Test {
 
 
 		PatrolLine p1 = new PatrolLine();
-		p1.setEndTime(new Date());
+		p1.setEndTime("09:11:38");
 		p1.setId("11111111111111");
-		p1.setBeginTime(new Date());
+		p1.setBeginTime("12:25:29");
 		p1.setStationId("S1");
 		p1.setFrequency(10);
 		p1.setException(20);
@@ -70,9 +70,9 @@ public class Test {
 
 
 		PatrolLine p2 = new PatrolLine();
-		p2.setEndTime(new Date());
+		p2.setEndTime("01:10:35");
 		p2.setId("222222222222222");
-		p2.setBeginTime(new Date());
+		p2.setBeginTime("08:39:50");
 		p2.setStationId("S2");
 		p2.setFrequency(30);
 		p2.setException(40);

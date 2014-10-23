@@ -187,10 +187,8 @@ public class MainActivity extends BaseActivity {
 								patrolLine.setFrequency(patrolLineJson.getInt("frequency"));
 								patrolLine.setException(patrolLineJson.getInt("exception"));
 
-								Date beginDate = DateUtil.getDateFromTimerStr(patrolLineJson.getString("beginTime"));
-								patrolLine.setBeginTime(beginDate);
-								Date endDate = DateUtil.getDateFromTimerStr(patrolLineJson.getString("endTime"));
-								patrolLine.setEndTime(endDate);
+								patrolLine.setBeginTime(patrolLineJson.getString("beginTime"));
+								patrolLine.setEndTime(patrolLineJson.getString("endTime"));
 
 								JSONArray lineNodes = patrolLineJson.getJSONArray("nodes");
 								if (lineNodes != null && lineNodes.length() > 0) {

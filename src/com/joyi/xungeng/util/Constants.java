@@ -12,15 +12,11 @@ import java.util.Map;
  */
 public class Constants {
 
-
-	/**
-	 * 密码最小长度
-	 */
-	public static final int MIN_PASSWORD_LENGTH = 6;
+	public static final int MIN_PASSWORD_LENGTH = 6;                        // 密码最小长度
 
 
 	/**
-	 * 菜单
+	 * 菜单名称
 	 */
 	public static final String[] FUNCTION_MENU_NAME = {"巡更路线", "巡查打卡", "交接班", "信息上传"};
 	public static final String[] SYSTEM_MENU_NAME = {"修改密码", "切换帐号", "退出"};
@@ -40,15 +36,9 @@ public class Constants {
 	public static final String DATA_BASE_NAME = "xinshiji_wuye_xungeng.db";     // 数据库名
 	public static final int DATA_BASE_VERSION = 1;                              // 数据库版本号
 
-	/**
-	 * 当前客户端版本号
-	 */
-	public static final String APP_VERSION = "1.0";
+	public static final String APP_VERSION = "1.0";                             //  当前客户端版本号
 
 
-	/**
-	 * 请求地址
-	 */
 	public static final String HTTP_SUCCESS_CODE = "200";                                               // http请求成功状态
 	public static final String HTTP_DOMAIN_NAME = "http://218.28.243.172:4900";                         // 域名
 	public static final String LOGIN_URL = HTTP_DOMAIN_NAME + "/api?act=login";                         // 登录地址
@@ -58,11 +48,8 @@ public class Constants {
 	public static final String UPLOAD_SHIFT_INFO_URL = HTTP_DOMAIN_NAME+"/api?act=uploadschedule";      // 上传交接班信息URL
 	public static final String UPLOAD_PATROL_VIEW_URL = HTTP_DOMAIN_NAME+"/api?act=uploadpatrolview";   // 上传巡查信息
 
-	/**
-	 * 上传标识
-	 */
-	public static final int WHAT_PATROL_RECORED = 1;
-	public static final int WHAT_SHIFT_RECORD = 2;
-	public static final int WHAT_PATROL_VIEW = 3;
+	public static final int WHAT_PATROL_RECORED = 1;                            // 上传标识:巡更记录
+	public static final int WHAT_SHIFT_RECORD = 2;                              // 上传标识:交接班记录
+	public static final int WHAT_PATROL_VIEW = 3;                               // 上传标识:巡查记录
 
 }

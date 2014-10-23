@@ -25,6 +25,7 @@ import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
 
+import java.text.DateFormat;
 import java.util.*;
 
 /**
@@ -86,7 +87,6 @@ public class XunGengDaKaActivity extends BaseActivity {
 		// 初始化 开始, 结束按钮状态
 		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
 		if (integerLongMap == null || integerLongMap.size() == 0) {
-			// 还未开始第一轮
 		}else {
 			Long lunciId = integerLongMap.get(lunCi);
 			UserPatrol byId = upDao.getById(lunciId);
@@ -106,7 +106,25 @@ public class XunGengDaKaActivity extends BaseActivity {
 				XunGengService.getLouXunList(patrolLine.getLineNodes(), hasPatrol, i, buffer);
 			}
 		}
+		// 第一次开始判断是否已到该线路开始时间 TODO
+		if (lunCi == 1) {
+			String dateStr = patrolLine.getBeginTime();
+			String[] hms = dateStr.split(":");
+			Calendar begin = Calendar.getInstance();
+			begin.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hms[0]));
+			begin.set(Calendar.MINUTE, Integer.valueOf(hms[1]));
+			begin.set(Calendar.SECOND, Integer.valueOf(hms[2]));
+
+			Calendar now = Calendar.getInstance();
+			now.setTime(SystemVariables.SERVER_TIME);
+			int exception = patrolLine.getException();
+			if ((now.getTimeInMillis() + exception * 1000) < begin.getTimeInMillis()) {
+				showToast("还没有到开始时间("+dateStr+")");
+				return;
+			}
+		}
 		louXunQingKuang.setText(buffer.toString());
+
 
 		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
 		Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));

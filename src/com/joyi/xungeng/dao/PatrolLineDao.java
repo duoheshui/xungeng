@@ -27,8 +27,8 @@ public class PatrolLineDao {
 		contentValues.put("postid", patrolLine.getStationId());
 		contentValues.put("frequency", patrolLine.getFrequency());
 		contentValues.put("offset", patrolLine.getException());
-		contentValues.put("beginTime", DateUtil.getHumanReadStr(patrolLine.getBeginTime()));
-		contentValues.put("endTime", DateUtil.getHumanReadStr(patrolLine.getEndTime()));
+		contentValues.put("beginTime", patrolLine.getBeginTime());
+		contentValues.put("endTime", patrolLine.getEndTime());
 
         return writableDatabase.insert("partol_line", null, contentValues);
     }
@@ -49,8 +49,8 @@ public class PatrolLineDao {
 				patrolLine.setStationId(cursor.getString(cursor.getColumnIndex("postid")));
 				patrolLine.setFrequency(cursor.getInt(cursor.getColumnIndex("frequency")));
 				patrolLine.setException(cursor.getInt(cursor.getColumnIndex("offset")));
-				patrolLine.setBeginTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("beginTime"))));
-				patrolLine.setEndTime(DateUtil.getDateFromHumanReadStr(cursor.getString(cursor.getColumnIndex("endTime"))));
+				patrolLine.setBeginTime(cursor.getString(cursor.getColumnIndex("beginTime")));
+				patrolLine.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));
 				patrolLines.add(patrolLine);
 			}
 		}

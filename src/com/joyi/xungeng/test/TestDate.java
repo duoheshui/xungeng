@@ -1,17 +1,12 @@
 package com.joyi.xungeng.test;
 
-import javax.xml.transform.Source;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import android.graphics.Color;
 
 /**
  * Created by zhangyong on 2014/10/22.
  */
 public class TestDate {
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args){
 		//		String datestr = "08:25:39";
 		//		DateFormat format = new SimpleDateFormat("HH:mm:ss");
 		//		Date date = format.parse(datestr);
@@ -23,8 +18,11 @@ public class TestDate {
 		//		begin.setTime(date);
 		//		begin.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 		//		System.out.println(dateFormat.format(begin.getTime()));
-		Integer integer = new Integer(0);
-		System.out.println(integer == 0);
+		//		Integer integer = new Integer(0);
+		//		System.out.println(integer == 0);
+
+		int i = Color.parseColor("#00AABBCC");
+		System.out.println("I:" + i);
 
 	}
 }

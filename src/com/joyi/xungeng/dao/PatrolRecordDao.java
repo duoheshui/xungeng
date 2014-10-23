@@ -63,6 +63,33 @@ public class PatrolRecordDao {
 		return patrolRecords;
 	}
 
+	/**
+	 * 根据轮次获取该轮次的记录
+	 * @param sequence
+	 * @return
+	 */
+	public List<PatrolRecord> getBySequence(int sequence) {
+		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
+		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
+		Cursor cursor = readableDatabase.query("patrol_record", null, "sequence = ?", new String[]{String.valueOf(sequence)}, null, null, null);
+		if (cursor != null) {
+			PatrolRecord patrolRecord = null;
+			while (cursor.moveToNext()) {
+				patrolRecord = new PatrolRecord();
+				patrolRecord.setLineId(cursor.getString(cursor.getColumnIndex("lineId")));
+				patrolRecord.setSequence(cursor.getInt(cursor.getColumnIndex("sequence")));
+				patrolRecord.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
+				patrolRecord.setError(cursor.getString(cursor.getColumnIndex("error")));
+				patrolRecord.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
+				patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
+				patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
+				patrolRecords.add(patrolRecord);
+			}
+		}
+		return patrolRecords;
+	}
+
     public Map<String, PatrolRecord> getMap(String lineId, int sequence) {
         Map<String, PatrolRecord> map = new HashMap<>();
         SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();

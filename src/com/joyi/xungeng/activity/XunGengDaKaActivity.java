@@ -22,6 +22,7 @@ import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.*;
+import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
 
 import java.util.*;
@@ -48,7 +49,6 @@ public class XunGengDaKaActivity extends BaseActivity {
     private PatrolLine patrolLine;
     private UserPatrolDao upDao = new UserPatrolDao();
     private PatrolRecordDao prDao = new PatrolRecordDao();
-	private List<LineNode> allLineNodes = SystemVariables.ALL_LINE_NODES;
 
 
 	@Override
@@ -62,6 +62,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		endButton = (Button) findViewById(R.id.end_button);
 		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
 		yiXunLunCi = (TextView) findViewById(R.id.yi_xun_lun_ci_tv);
+		louXunQingKuang = (TextView) findViewById(R.id.lou_xun_qing_kuang_tv);
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()), 0);
 
@@ -73,8 +74,16 @@ public class XunGengDaKaActivity extends BaseActivity {
 		}
 		yiXunLunCi.setText((luXianLunCiMap.get(lineId) - 1) + "次");
 
-		// 初始化开始, 结束状态
+
+		// 判断巡更次数是否达到系统配置
 		lunCi = luXianLunCiMap.get(lineId);
+		int frequency = patrolLine.getFrequency();
+		if (lunCi >= frequency) {
+			showToast("共" + frequency + "轮已完部巡更完, 无法再继续巡更");
+			return;
+		}
+
+		// 初始化 开始, 结束按钮状态
 		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
 		if (integerLongMap == null || integerLongMap.size() == 0) {
 			// 还未开始第一轮
@@ -88,14 +97,19 @@ public class XunGengDaKaActivity extends BaseActivity {
 				endButton.setEnabled(true);
 				endButton.setBackgroundResource(R.drawable.round_button);
 			}
-
 		}
-
-		// TODO 计算漏巡情况
+		// 漏巡情况
+		StringBuffer buffer = new StringBuffer();
+		if (lunCi > 1) {
+			for (int i = 1; i < lunCi; ++i) {
+				List<PatrolRecord> hasPatrol = prDao.getBySequence(lunCi);
+				XunGengService.getLouXunList(patrolLine.getLineNodes(), hasPatrol, i, buffer);
+			}
+		}
+		louXunQingKuang.setText(buffer.toString());
 
 		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
 		Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
-		Gson gson = new Gson();
 
 		for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
@@ -114,26 +128,26 @@ public class XunGengDaKaActivity extends BaseActivity {
 			dian.setGravity(Gravity.CENTER);
 			dian.setText(node.getNodeName());
 			dian.setTextColor(Color.WHITE);
-			dian.setBackgroundColor(Color.BLACK);
-			dian.setTextSize(20);
+			dian.setBackgroundColor(Color.parseColor("#333333"));
+			dian.setTextSize(18);
 			TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
-			layoutParams.setMargins(0, 0, 2, 0);
+			layoutParams.setMargins(0, 0, 1, 0);
 			dian.setLayoutParams(layoutParams);
 
 			TextView status = new TextView(this);
 			status.setGravity(Gravity.CENTER);
 			status.setText(statusText);
 			status.setTextColor(Color.WHITE);
-			status.setBackgroundColor(Color.BLACK);
-			status.setTextSize(20);
+			status.setBackgroundColor(Color.parseColor("#333333"));
+			status.setTextSize(18);
 			status.setLayoutParams(layoutParams);
 
 			TextView time = new TextView(this);
 			time.setGravity(Gravity.CENTER);
 			time.setText(timeText);
 			time.setTextColor(Color.WHITE);
-			time.setBackgroundColor(Color.BLACK);
-			time.setTextSize(20);
+			time.setBackgroundColor(Color.parseColor("#333333"));
+			time.setTextSize(18);
 			time.setLayoutParams(layoutParams);
 
 			tableRow.addView(dian);
@@ -150,7 +164,6 @@ public class XunGengDaKaActivity extends BaseActivity {
      */
     public void startPatrol(View view) {
 
-upDao.deleteAll(); prDao.deleteAll();
         Button startBtn = (Button)view;
         startBtn.setEnabled(false);
 	    startBtn.setBackgroundResource(R.drawable.disable_round_button);
@@ -166,7 +179,7 @@ upDao.deleteAll(); prDao.deleteAll();
         Date date = new Date(SystemVariables.SERVER_TIME.getTime());
         userPatrol.setBeginTime(DateUtil.getHumanReadStr(date));
         userPatrol.setSequence(lunCi);
-//        userPatrol.setScheduleTypeId(patrolLine.g);
+//        userPatrol.setScheduleTypeId(patrolLine.g);   // TODO 无处获取
         long id = upDao.add(userPatrol);
 	    Map<Integer, Long> lunciIDMap = luXianLunCiIdMap.get(patrolLine.getId());
 	    if (lunciIDMap == null) {
@@ -174,8 +187,6 @@ upDao.deleteAll(); prDao.deleteAll();
 		    luXianLunCiIdMap.put(lineId, lunciIDMap);
 	    }
 	    luXianLunCiIdMap.get(lineId).put(lunCi, id);
-Gson gson = new Gson();
-Log.e("up:"+id, gson.toJson(upDao.getAll()));
     }
 
     /**

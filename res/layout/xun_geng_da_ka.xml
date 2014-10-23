@@ -47,24 +47,28 @@
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <LinearLayout
-            android:layout_marginLeft="20dp"
-            android:orientation="horizontal"
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="80dp">
+        <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-                android:textColor="#FFF"
-                android:text="漏巡情况："
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <TextView
-                android:id="@+id/lou_xun_qing_kuang_tv"
-                android:textColor="#FFF"
-                android:text="第2轮1号楼8层"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-    </LinearLayout>
+            <TextView
+                    android:textColor="#FFF"
+                    android:text="漏巡情况："
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/lou_xun_qing_kuang_tv"
+                    android:textColor="#FFF"
+                    android:text="第2轮1号楼8层"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout android:orientation="horizontal"
                   android:layout_marginTop="20dp"
@@ -82,37 +86,39 @@
                 android:text="结束" android:enabled="false"/>
     </LinearLayout>
 
-    <TableLayout
-            android:id="@+id/patrol_record_table"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*">
-        <TableRow android:background="#FFF" android:padding="1dp">
-            <TextView
-                    android:gravity="center"
-                    android:layout_marginRight="2dp"
-                    android:text="巡更点"
-                    android:textColor="#FFF"
-                    android:textSize="20dip"
-                    android:textStyle="bold"
-                    android:background="#000"/>
-            <TextView
-                    android:gravity="center"
-                    android:layout_marginRight="2dp"
-                    android:textColor="#FFF"
-                    android:text="巡更状态"
-                    android:textSize="20dip"
-                    android:textStyle="bold"
-                    android:background="#000"/>
-            <TextView
-                    android:layout_marginRight="2dp"
-                    android:gravity="center"
-                    android:text="巡更时间"
-                    android:textColor="#FFF"
-                    android:textSize="20dip"
-                    android:background="#000"/>
-        </TableRow>
-    </TableLayout>
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TableLayout
+                android:id="@+id/patrol_record_table"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*">
+            <TableRow android:background="#FFF" android:padding="1px">
+                <TextView
+                        android:gravity="center"
+                        android:layout_marginRight="1px"
+                        android:text="巡更点"
+                        android:textColor="#FFF"
+                        android:textSize="18dip"
+                        android:background="#333333"/>
+                <TextView
+                        android:gravity="center"
+                        android:layout_marginRight="1px"
+                        android:textColor="#FFF"
+                        android:text="巡更状态"
+                        android:textSize="18dip"
+                        android:background="#333333"/>
+                <TextView
+                        android:layout_marginRight="1px"
+                        android:gravity="center"
+                        android:text="巡更时间"
+                        android:textColor="#FFF"
+                        android:textSize="18dip"
+                        android:background="#333333"/>
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
 
 </LinearLayout>

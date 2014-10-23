@@ -6,13 +6,19 @@ import android.graphics.Path;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.text.BidiFormatter;
 import android.util.Log;
 import android.widget.Toast;
+import com.joyi.xungeng.domain.LineNode;
+import com.joyi.xungeng.domain.PatrolRecord;
 
+import javax.crypto.ShortBufferException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangyong on 2014/10/20 0020.
@@ -154,4 +160,32 @@ public class XunGengService {
 	public static boolean isNullList(List<?> list) {
 		return list==null || list.size()<=0;
 	}
+
+
+	/**
+	 * 获取漏巡情况
+	 * @param shouldPatrols 需要打卡的节点
+	 * @param records   该轮次的打卡记录
+	 * @param sequence  轮次
+	 * @param buffer    结果保存在此StringBuffer中
+	 * @return
+	 */
+	public static StringBuffer getLouXunList(List<LineNode> shouldPatrols, List<PatrolRecord> records, int sequence, StringBuffer buffer) {
+
+		if (shouldPatrols==null || shouldPatrols.size()==0) {
+			return buffer;
+		}
+		Map<String, PatrolRecord> nodeIdRecordMap = new HashMap<>();
+		for (PatrolRecord record : records) {
+			nodeIdRecordMap.put(record.getNodeId(), record);
+		}
+		for (LineNode node : shouldPatrols) {
+			String nodeid = node.getId();
+			if (nodeIdRecordMap.get(nodeid) == null) {
+				buffer.append("第" + sequence + "轮" + node.getNodeName()+"\n");
+			}
+		}
+		return buffer;
+	}
+
 }

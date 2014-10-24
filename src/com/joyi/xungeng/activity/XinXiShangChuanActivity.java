@@ -57,6 +57,8 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	private boolean uploadedPV;     // 巡查记录
 	private boolean uploadedSR;     // 交接班记录
 
+	private boolean allUPloaded;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -120,6 +122,8 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		if (pvList != null && pvList.size() > 0) {
 			for (PatrolView view : pvList) {
 				TableRow tableRow = new TableRow(this);
+				tableRow.setBackgroundColor(Color.WHITE);
+				tableRow.setPadding(1,1,1,1);
 
 				TextView name = new TextView(this);
 				name.setText(view.getNodeName());
@@ -210,7 +214,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		// 3, 上传交接班
 		List<ShiftRecord> shiftRecords = srDao.getAll();
 		if (XunGengService.isNullList(patrolRecords) && XunGengService.isNullList(patrolViews) && XunGengService.isNullList(shiftRecords)) {
-			showToast("上传完成。");
+			showToast("没有需要上传的信息.");
 			uploadButton.setText("上传");
 		}
 		Gson gson = new Gson();

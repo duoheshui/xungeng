@@ -40,7 +40,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
 		// 如果没有继承TabActivity时，通过该种方法加载启动tabHost
 		tabHost.setup();
-		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("功能菜单", getResources().getDrawable(R.drawable.icon_1)).setContent(R.id.view1));
+		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("功能菜单").setContent(R.id.view1));
 		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("系统设置").setContent(R.id.view2));
 
 		// 功能菜单
@@ -114,7 +114,6 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		// 巡查打卡
 		if (Constants.FUNCTION_MENU_NAME[1].equals(name)) {
 			User user = SystemVariables.user;
-			user.setHasPatrolViewPrivilege(false);
 			if (user == null || !user.isHasPatrolViewPrivilege()) {
 				new AlertDialog.Builder(this).setTitle("").setMessage("您没有巡查权限").show();
 				return;

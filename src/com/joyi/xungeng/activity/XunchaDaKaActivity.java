@@ -47,41 +47,30 @@ public class XunchaDaKaActivity extends BaseActivity {
 
 		tableLayout = (TableLayout) findViewById(R.id.patrol_view_record_table);
 		List<PatrolView> patrolViewList = patrolViewDao.getAll();
+		int bgColor = Color.parseColor("#333333");
+		TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
 
 		if (patrolViewList != null) {
 			for (PatrolView pview : patrolViewList) {
 				TableRow tableRow = new TableRow(this);
 				tableRow.setBackgroundColor(Color.WHITE);
-				tableRow.setPadding(1, 1, 1, 1);
 
 				TextView dian = new TextView(this);
 				dian.setGravity(Gravity.CENTER);
 				dian.setText(pview.getNodeName());
-				dian.setTextColor(Color.WHITE);
-				dian.setBackgroundColor(Color.BLACK);
-				dian.setTextSize(20);
-				TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
-				layoutParams.setMargins(0, 0, 2, 0);
+				dian.setBackgroundColor(bgColor);
+				dian.setTextSize(18);
+				layoutParams.setMargins(1, 0, 1, 1);
 				dian.setLayoutParams(layoutParams);
-
-				TextView status = new TextView(this);
-				status.setGravity(Gravity.CENTER);
-				status.setText(pview.getStatus());
-				status.setTextColor(Color.WHITE);
-				status.setBackgroundColor(Color.BLACK);
-				status.setTextSize(20);
-				status.setLayoutParams(layoutParams);
 
 				TextView time = new TextView(this);
 				time.setGravity(Gravity.CENTER);
 				time.setText(pview.getPatrolTime());
-				time.setTextColor(Color.WHITE);
-				time.setBackgroundColor(Color.BLACK);
-				time.setTextSize(20);
+				time.setBackgroundColor(bgColor);
+				time.setTextSize(18);
 				time.setLayoutParams(layoutParams);
 
 				tableRow.addView(dian);
-				tableRow.addView(status);
 				tableRow.addView(time);
 				tableLayout.addView(tableRow);
 			}
@@ -108,14 +97,16 @@ public class XunchaDaKaActivity extends BaseActivity {
                 return;
             }
 
-            Date date = new Date(SystemVariables.SERVER_TIME.getTime());
-            patrolView.setPatrolTime(DateUtil.getHumanReadStr(date));
+            patrolView.setPatrolTime(DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME));
             patrolView.setPatrolPhoneTime(DateUtil.getHumanReadStr(new Date()));
             patrolView.setStatus("1");
-            patrolView.setUserId(user.getId());
+	        patrolView.setNodeName(lineNode.getNodeName());
+	        patrolView.setNodeId(lineNode.getId());
+	        patrolView.setUserId(user.getId());
         }
         patrolViewDao.add(patrolView);
         showToast(lineNode.getNodeName()+"  打卡成功");
+	    finish();
     }
 
     @Override

@@ -28,6 +28,7 @@ public class PatrolViewDao {
 		contentValues.put("nodeid", patrolView.getNodeId());
 		contentValues.put("patrolTime", patrolView.getPatrolTime());
 		contentValues.put("patrolPhoneTime", patrolView.getPatrolPhoneTime());
+		contentValues.put("nodeName", patrolView.getNodeName());
 		return writableDatabase.insert("partol_view", null, contentValues);
 	}
 
@@ -47,6 +48,7 @@ public class PatrolViewDao {
 				patrolView.setNodeId(cursor.getString(cursor.getColumnIndex("nodeid")));
 				patrolView.setUserId(cursor.getString(cursor.getColumnIndex("userid")));
 				patrolView.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
+				patrolView.setNodeName(cursor.getString(cursor.getColumnIndex("nodeName")));
 				patrolView.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
 				patrolViews.add(patrolView);
 			}

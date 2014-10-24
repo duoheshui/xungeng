@@ -26,6 +26,7 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "nodeid char(20)," +
             "userid char(20)," +
             "patrolTime datetime," +
+		    "nodeName varchar(50),"+
             "patrolPhoneTime datetime)";
 
     // 路线

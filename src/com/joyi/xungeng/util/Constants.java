@@ -40,7 +40,7 @@ public class Constants {
 
 
 	public static final String HTTP_SUCCESS_CODE = "200";                                               // http请求成功状态
-	public static final String HTTP_DOMAIN_NAME = "http://218.28.243.172:4900";                         // 域名
+	public static final String HTTP_DOMAIN_NAME = "http://116.255.255.131:4901";                         // 域名
 	public static final String LOGIN_URL = HTTP_DOMAIN_NAME + "/api?act=login";                         // 登录地址
 	public static final String CHANGE_PASSWORD_URL = HTTP_DOMAIN_NAME+"/api?act=setpwd";                // 修改密码URL
 	public static final String HAS_NEW_VERSION_URL = HTTP_DOMAIN_NAME+"/api?act=getnewv";               // 获取是否有新的客户端版本URL

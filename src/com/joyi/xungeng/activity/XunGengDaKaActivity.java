@@ -95,8 +95,9 @@ public class XunGengDaKaActivity extends BaseActivity {
 		// 判断巡更次数是否达到系统配置
 		lunCi = luXianLunCiMap.get(lineId);
 		int frequency = patrolLine.getFrequency();
-		if (lunCi >= frequency) {
+		if (lunCi > frequency) {
 			showToast("共" + frequency + "轮已完部巡更完, 无法再继续巡更");
+			finish();
 			return;
 		}
 
@@ -181,13 +182,33 @@ public class XunGengDaKaActivity extends BaseActivity {
      */
     public void startPatrol(View view) {
 
+	    Integer lunCi = luXianLunCiMap.get(lineId);
+	    if (lunCi == 1) {
+		    try {
+			    String dateStr = patrolLine.getBeginTime();
+			    String[] hms = dateStr.split(":");
+			    Calendar begin = Calendar.getInstance();
+			    begin.setTime(SystemVariables.SERVER_TIME);
+			    begin.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hms[0]));
+			    begin.set(Calendar.MINUTE, Integer.valueOf(hms[1]));
+			    begin.set(Calendar.SECOND, Integer.valueOf(hms[2]));
+
+			    Calendar now = Calendar.getInstance();
+			    now.setTime(SystemVariables.SERVER_TIME);
+			    int exception = patrolLine.getException();
+			    if(begin.getTimeInMillis() < (now.getTimeInMillis() + exception * 60 * 1000)){
+				    showToast("还没有到开始时间,当前时间:" + DateUtil.getHumanReadStr(now.getTime()));
+				    return;
+			    }
+		    } catch (Exception e) { }
+	    }
+
         Button startBtn = (Button)view;
         startBtn.setEnabled(false);
 	    startBtn.setBackgroundResource(R.drawable.disable_round_button);
 	    endButton.setEnabled(true);
 	    endButton.setBackgroundResource(R.drawable.round_button);
 
-	    Integer lunCi = luXianLunCiMap.get(lineId);
 	    luXianLunCiMap.put(lineId, lunCi);
         UserPatrol userPatrol = new UserPatrol();
         userPatrol.setUserId(user.getId());
@@ -245,23 +266,6 @@ public class XunGengDaKaActivity extends BaseActivity {
         super.onNewIntent(intent);
 
 		Integer lunCi = luXianLunCiMap.get(lineId);
-		if (lunCi == 1) {
-			String dateStr = patrolLine.getBeginTime();
-			String[] hms = dateStr.split(":");
-			Calendar begin = Calendar.getInstance();
-			begin.setTime(SystemVariables.SERVER_TIME);
-			begin.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hms[0]));
-			begin.set(Calendar.MINUTE, Integer.valueOf(hms[1]));
-			begin.set(Calendar.SECOND, Integer.valueOf(hms[2]));
-
-			Calendar now = Calendar.getInstance();
-			now.setTime(SystemVariables.SERVER_TIME);
-			int exception = patrolLine.getException();
-			if ((now.getTimeInMillis() + exception * 60 * 1000) < begin.getTimeInMillis()) {
-				showToast("还没有到开始时间,当前时间("+dateStr+")");
-				return;
-			}
-		}
 
 		// 初始化开始, 结束状态
 

@@ -7,6 +7,7 @@ import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import com.joyi.xungeng.activity.MenuActivity;
 import com.joyi.xungeng.activity.XunGengDaKaActivity;
@@ -25,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MulticastSocket;
 import java.util.Date;
 
 /**
@@ -34,7 +36,9 @@ public class MainActivity extends BaseActivity {
 	private LoginService loginService;
 	private EditText username;
 	private EditText password;
+	private Button loginButton;
 	private Handler loginHandler;
+
 	private AsyncHttpClient client = new AsyncHttpClient();
 
 	/**
@@ -55,7 +59,7 @@ public class MainActivity extends BaseActivity {
 		XunGengDaKaActivity.luXianLunCiMap.clear();
 		XunGengDaKaActivity.luXianLunCiIdMap.clear();
 
-
+		loginButton = (Button) findViewById(R.id.login_button);
 		loginService = LoginService.getInstance(this);
 
         username = (EditText) findViewById(R.id.username_edittext);
@@ -69,6 +73,10 @@ public class MainActivity extends BaseActivity {
 					MainActivity.this.finish();
 					Intent intent = new Intent(MainActivity.this, MenuActivity.class);
 					startActivity(intent);
+				}
+				if (msg.what == 2) {
+					loginButton.setEnabled(true);
+					loginButton.setText("登录");
 				}
 			}
 		};
@@ -103,6 +111,9 @@ public class MainActivity extends BaseActivity {
 				return;
 			}
 
+			Button loginButton = (Button)view;
+			loginButton.setEnabled(false);
+			loginButton.setText("正在登录...");
 			// 发起请求前的时间戳
 			final long beforeHttp = System.currentTimeMillis();
 			client.post(MainActivity.this, Constants.LOGIN_URL, requestParams, new JsonHttpResponseHandler() {
@@ -113,12 +124,18 @@ public class MainActivity extends BaseActivity {
 					long afterHttp = System.currentTimeMillis();
 					try {
 						String errorCode = jsonObject.getString("errorCode");
+						Message failMsg = new Message();
+						failMsg.what = 2;
+						failMsg.setTarget(loginHandler);
+
 						if ("400".equals(errorCode)) {
 							showToast("用户名或密码错误");
+							failMsg.sendToTarget();
 							return;
 						}
 						if (!Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
 							showToast("登录失败, 请稍后再试");
+							failMsg.sendToTarget();
 							return;
 						}
 

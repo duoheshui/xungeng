@@ -7,10 +7,14 @@ import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.ShiftRecordDao;
+import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.KeyValuePair;
 import com.joyi.xungeng.domain.ShiftRecord;
 import com.joyi.xungeng.domain.Station;
+import com.joyi.xungeng.domain.UserPatrol;
+import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
+import com.joyi.xungeng.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,14 +44,14 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 		luXian = (Spinner) findViewById(R.id.lu_xian_spinner);
 
 		// 装入数据
-		ArrayAdapter<Station> gangWeiAdapter = new ArrayAdapter<Station>(this, android.R.layout.simple_list_item_1, SystemVariables.STATION_LIST);
-		ArrayAdapter<KeyValuePair> banCiAdapter = new ArrayAdapter<KeyValuePair>(this, android.R.layout.simple_list_item_1, SystemVariables.SHIFT_LIST);
+		ArrayAdapter<Station> gangWeiAdapter = new ArrayAdapter<Station>(this, android.R.layout.select_dialog_item, SystemVariables.STATION_LIST);
+		ArrayAdapter<KeyValuePair> banCiAdapter = new ArrayAdapter<KeyValuePair>(this, android.R.layout.select_dialog_item, SystemVariables.SHIFT_LIST);
 
 		List<KeyValuePair> lines = new ArrayList<KeyValuePair>();
 		if (SystemVariables.STATION_LIST.size() > 0) {
 			lines = SystemVariables.STATION_LIST.get(0).getLines();
 		}
-		ArrayAdapter<KeyValuePair> luXianAdapter = new ArrayAdapter<KeyValuePair>(this, android.R.layout.simple_list_item_1, lines);
+		ArrayAdapter<KeyValuePair> luXianAdapter = new ArrayAdapter<KeyValuePair>(this, android.R.layout.select_dialog_item, lines);
 
 		gangWei.setAdapter(gangWeiAdapter);
 		banCi.setAdapter(banCiAdapter);
@@ -63,6 +67,20 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 		ShiftRecord shiftRecord = new ShiftRecord();
 		Date serverTime = new Date(SystemVariables.SERVER_TIME.getTime());
 		if ("交班".equals(name)) {
+			// 检查巡更是否有未结束的
+			UserPatrolDao upDao = new UserPatrolDao();
+			List<UserPatrol> upList = upDao.getAll();
+			if (upList != null && upList.size() > 0) {
+				for (UserPatrol patrol : upList) {
+					String endTime = patrol.getEndTime();
+					if (StringUtils.isNullOrEmpty(endTime)) {
+						String lineName = XunGengService.getLineName(patrol.getLineId(), SystemVariables.PATROL_LINES);
+						showToast(lineName+" 第"+patrol.getSequence()+" 轮还未结束");
+						return;
+					}
+				}
+			}
+
 			shiftRecord.setSubmitPhoneTime(DateUtil.getHumanReadStr(new Date()));
 			shiftRecord.setSubmitTime(DateUtil.getHumanReadStr(serverTime));
 		}else if ("接班".equals(name)) {

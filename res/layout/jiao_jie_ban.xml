@@ -46,7 +46,7 @@
                     android:layout_height="50dp">
             </Spinner>
         </TableRow>
-        <TableRow>
+        <TableRow android:layout_marginTop="10dp">
             <TextView
                     android:text="选择班次："
                     android:textSize="18dp"
@@ -59,7 +59,7 @@
             </Spinner>
         </TableRow>
 
-        <TableRow>
+        <TableRow android:layout_marginTop="10dp">
             <TextView
                     android:text="选择路线："
                     android:textSize="18dp"

@@ -10,6 +10,7 @@ import android.text.BidiFormatter;
 import android.util.Log;
 import android.widget.Toast;
 import com.joyi.xungeng.domain.LineNode;
+import com.joyi.xungeng.domain.PatrolLine;
 import com.joyi.xungeng.domain.PatrolRecord;
 
 import javax.crypto.ShortBufferException;
@@ -186,6 +187,24 @@ public class XunGengService {
 			}
 		}
 		return buffer;
+	}
+
+	/**
+	 * 根据线路id获取线咱名称
+	 * @param lineid
+	 * @param allLines
+	 * @return
+	 */
+	public static String getLineName(String lineid, List<PatrolLine> allLines) {
+		if (allLines == null || allLines.size() == 0) {
+			return "";
+		}
+		for (PatrolLine line : allLines) {
+			if (line.getId().equals(lineid)) {
+				return line.getName();
+			}
+		}
+		return "";
 	}
 
 }

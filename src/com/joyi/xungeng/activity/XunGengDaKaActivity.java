@@ -196,7 +196,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 			    Calendar now = Calendar.getInstance();
 			    now.setTime(SystemVariables.SERVER_TIME);
 			    int exception = patrolLine.getException();
-			    if(begin.getTimeInMillis() < (now.getTimeInMillis() + exception * 60 * 1000)){
+			    if(begin.getTimeInMillis() > (now.getTimeInMillis() + exception * 60 * 1000)){
 				    showToast("还没有到开始时间,当前时间:" + DateUtil.getHumanReadStr(now.getTime()));
 				    return;
 			    }

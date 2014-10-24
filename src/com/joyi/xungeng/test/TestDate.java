@@ -2,15 +2,19 @@ package com.joyi.xungeng.test;
 
 import android.graphics.Color;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by zhangyong on 2014/10/22.
  */
 public class TestDate {
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		//		String datestr = "08:25:39";
 		//		DateFormat format = new SimpleDateFormat("HH:mm:ss");
 		//		Date date = format.parse(datestr);
-		//		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//		System.out.println(dateFormat.format(date));
 		//		Calendar calendar = Calendar.getInstance();
 		//
@@ -21,8 +25,14 @@ public class TestDate {
 		//		Integer integer = new Integer(0);
 		//		System.out.println(integer == 0);
 
-		int i = Color.parseColor("#00AABBCC");
-		System.out.println("I:" + i);
+		//		int i = Color.parseColor("#00AABBCC");
+		//		System.out.println("I:" + i);
 
+		String str = "fdsaf";
+		try {
+			dateFormat.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 }

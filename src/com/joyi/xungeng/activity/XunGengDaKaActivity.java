@@ -43,8 +43,8 @@ public class XunGengDaKaActivity extends BaseActivity {
 	private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 
-    private static final Map<String, Integer> luXianLunCiMap = new HashMap<>();                   // 路线ID<->轮次映射表
-	private static final Map<String, Map<Integer, Long>> luXianLunCiIdMap = new HashMap<>();    // 路线ID<->轮次<->轮软记录ID
+    public static final Map<String, Integer> luXianLunCiMap = new HashMap<>();                   // 路线ID<->轮次映射表
+	public static final Map<String, Map<Integer, Long>> luXianLunCiIdMap = new HashMap<>();    // 路线ID<->轮次<->轮软记录ID
     private User user = SystemVariables.user;
 	private String lineId;
     private PatrolLine patrolLine;
@@ -266,10 +266,8 @@ public class XunGengDaKaActivity extends BaseActivity {
 
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (tag != null) {
-// TODO 删除假数据
-	        //            byte[] arr = tag.getId();
-	        //            String nfcCode = XunGengService.byteArray2HexString(arr);
-	        String nfcCode = "123";
+            byte[] arr = tag.getId();
+            String nfcCode = XunGengService.byteArray2HexString(arr);
 	        LineNode lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
 	        if (lineNode == null) {
 		        showToast("无效的NFC卡...");

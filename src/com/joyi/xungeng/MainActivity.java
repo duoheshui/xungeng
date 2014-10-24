@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import com.joyi.xungeng.activity.MenuActivity;
+import com.joyi.xungeng.activity.XunGengDaKaActivity;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.LoginService;
@@ -45,11 +46,20 @@ public class MainActivity extends BaseActivity {
 		setContentView(R.layout.login);
 		SystemVariables.IMEI = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
 
+		SystemVariables.STATION_LIST.clear();
+		SystemVariables.PATROL_LINES.clear();
+		SystemVariables.SHIFT_LIST.clear();
+		SystemVariables.ALL_LINE_NODES.clear();
+		SystemVariables.ALL_LINE_NODES_MAP.clear();
+		SystemVariables.NODEID_NODE_MAP.clear();
+		XunGengDaKaActivity.luXianLunCiMap.clear();
+		XunGengDaKaActivity.luXianLunCiIdMap.clear();
+
+
 		loginService = LoginService.getInstance(this);
 
         username = (EditText) findViewById(R.id.username_edittext);
         password = (EditText) findViewById(R.id.password_edittext);
-
 
 		loginHandler = new Handler(){
 			@Override
@@ -62,7 +72,6 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		};
-
 
         String newVersionUrl = loginService.getNewVersionUrl();
 		if (StringUtils.isNotNull(newVersionUrl)) {
@@ -119,7 +128,7 @@ public class MainActivity extends BaseActivity {
 						loginService.loginTimeCounter();
 
 						// TODO 测试系统时间和本地时间的差距
-				        /* 2, 解析返回数据 */
+					    /* 2, 解析返回数据 */
 						User user = SystemVariables.user;
 						JSONObject userJson = jsonObject.getJSONObject("userInfo");
 						user.setId(userJson.getString("userId"));
@@ -160,6 +169,7 @@ public class MainActivity extends BaseActivity {
 								lineNode.setNfcCode(nodeJson.getString("nfcCode"));
 								SystemVariables.ALL_LINE_NODES.add(lineNode);
 								SystemVariables.ALL_LINE_NODES_MAP.put(nodeJson.getString("nfcCode"), lineNode);
+								SystemVariables.NODEID_NODE_MAP.put(nodeJson.getString("nodeId"), lineNode);
 							}
 						}
 

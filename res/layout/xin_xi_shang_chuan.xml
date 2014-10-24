@@ -30,13 +30,12 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-
         <TableLayout
+                android:id="@+id/xin_xi_table_layout"
                 android:layout_marginTop="30dp"
                 android:background="#333333"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:stretchColumns="*">
             <TableRow android:background="#FFF">
                 <TextView
@@ -45,21 +44,14 @@
                         android:textColor="#FFF"
                         android:textSize="18dip"
                         android:background="#333333"
-                        android:layout_margin="1dp"/>
-                <TextView
-                        android:gravity="center_horizontal"
-                        android:textColor="#FFF"
-                        android:text="巡更状态"
-                        android:textSize="18dip"
-                        android:background="#333333"
-                        android:layout_margin="1dp"/>
+                        android:layout_margin="1px"/>
                 <TextView
                         android:gravity="center_horizontal"
                         android:text="巡更时间"
                         android:textColor="#FFF"
                         android:textSize="18dip"
                         android:background="#333333"
-                        android:layout_margin="1dp"/>
+                        android:layout_margin="1px"/>
             </TableRow>
         </TableLayout>
     </ScrollView>

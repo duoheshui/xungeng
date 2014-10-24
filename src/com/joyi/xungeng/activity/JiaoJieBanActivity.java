@@ -59,7 +59,6 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	 * @param view
 	 */
 	public void jiaoJieBan(View view) {
-		// TODO 删除
 		String name = ((Button) view).getText().toString();
 		ShiftRecord shiftRecord = new ShiftRecord();
 		Date serverTime = new Date(SystemVariables.SERVER_TIME.getTime());

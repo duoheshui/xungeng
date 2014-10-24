@@ -9,9 +9,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.PatrolViewDao;
 import com.joyi.xungeng.dao.ShiftRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
+import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.domain.ShiftRecord;
 import com.joyi.xungeng.domain.UserPatrol;
@@ -27,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by zhangyong on 2014/10/14.
@@ -126,43 +129,50 @@ public class LoginService {
      * 同步上次巡更信息, 同步成功删除本地记录
      */
     public void syncPatrolData(Context context) {
+Log.e("login", "syncPatrolData");
+Gson gson = new Gson();
 
-	    Gson gson = new Gson();
 	    // 1, 同步巡查信息
 	    final PatrolViewDao pvDao = new PatrolViewDao();
 	    List<PatrolView> pvList = pvDao.getAll();
-        if (pvList != null && pvList.size() > 0) {
-	        RequestParams requestParams = new RequestParams();
-	        requestParams.put("data", gson.toJson(pvList));
-	        httpClient.post(context, Constants.UPLOAD_PATROL_VIEW_URL, requestParams, new JsonHttpResponseHandler(){
-		        @Override
-		        public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-			        try {
-				        String errorCode = jsonObject.getString("errorCode");
-				        if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-					        pvDao.deleteAll();
-				        }
-			        } catch (JSONException e) {
-				        Log.e(TAG, e.toString());
-				        e.printStackTrace();
-			        }
-		        }
-	        });
-        }
-
-		// 2, 同步巡更打卡信息
-	    final UserPatrolDao upDao = new UserPatrolDao();
-	    List<UserPatrol> upList = upDao.getAll();
+Log.e("pv", gson.toJson(pvList));
 	    if (pvList != null && pvList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
-		    requestParams.put("data", gson.toJson(upList));
-		    httpClient.post(context, Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, new JsonHttpResponseHandler(){
+		    requestParams.put("data", gson.toJson(pvList));
+		    httpClient.post(context, Constants.UPLOAD_PATROL_VIEW_URL, requestParams, new JsonHttpResponseHandler() {
 			    @Override
 			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 				    try {
 					    String errorCode = jsonObject.getString("errorCode");
+Log.e("pvcode", errorCode);
+					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
+						    pvDao.deleteAll();
+					    }
+				    } catch (JSONException e) {
+					    Log.e(TAG, e.toString());
+					    e.printStackTrace();
+				    }
+			    }
+		    });
+	    }
+
+	    // 2, 同步巡更打卡信息
+	    final UserPatrolDao upDao = new UserPatrolDao();
+	    List<UserPatrol> upList = upDao.getAll();
+Log.e("up", gson.toJson(upList));
+	    if (upList != null && upList.size() > 0) {
+		    RequestParams requestParams = new RequestParams();
+		    requestParams.put("data", gson.toJson(upList));
+		    httpClient.post(context, Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, new JsonHttpResponseHandler() {
+			    @Override
+			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+				    try {
+					    String errorCode = jsonObject.getString("errorCode");
+Log.e("upcode", errorCode);
 					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
 						    upDao.deleteAll();
+						    PatrolRecordDao prDao = new PatrolRecordDao();
+						    prDao.deleteAll();
 					    }
 				    } catch (JSONException e) {
 					    Log.e(TAG, e.toString());
@@ -175,22 +185,25 @@ public class LoginService {
 	    // 3, 同步交接班信息
 	    final ShiftRecordDao srDao = new ShiftRecordDao();
 	    List<ShiftRecord> srList = srDao.getAll();
+Log.e("sr", gson.toJson(srList));
 	    if (srList != null && srList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
 		    requestParams.put("data", gson.toJson(srList));
-		    httpClient.post(context, Constants.UPLOAD_SHIFT_INFO_URL, requestParams, new JsonHttpResponseHandler(){
+		    httpClient.post(context, Constants.UPLOAD_SHIFT_INFO_URL, requestParams, new JsonHttpResponseHandler() {
 			    @Override
 			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-                try {
-                    String errorCode = jsonObject.getString("errorCode");
-                    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-                        srDao.deleteAll();
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, e.toString());
-                    e.printStackTrace();
-                }}
-            });
+				    try {
+					    String errorCode = jsonObject.getString("errorCode");
+Log.e("srcode", errorCode);
+					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
+						    srDao.deleteAll();
+					    }
+				    } catch (JSONException e) {
+					    Log.e(TAG, e.toString());
+					    e.printStackTrace();
+				    }
+			    }
+		    });
 	    }
     }
 }

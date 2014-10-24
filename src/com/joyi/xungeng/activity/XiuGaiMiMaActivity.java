@@ -8,6 +8,11 @@ import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.PatrolRecordDao;
+import com.joyi.xungeng.dao.PatrolViewDao;
+import com.joyi.xungeng.dao.ShiftRecordDao;
+import com.joyi.xungeng.dao.UserPatrolDao;
+import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.StringUtils;
@@ -91,9 +96,17 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 //			}
 //		});
 
-//		if (2 > 1) {
-//			return;
-//		}
+		PatrolRecordDao prDao = new PatrolRecordDao();
+		UserPatrolDao upDao = new UserPatrolDao();
+		ShiftRecordDao srDao = new ShiftRecordDao();
+		PatrolViewDao pvDao = new PatrolViewDao();
+		upDao.deleteAll();
+		srDao.deleteAll();
+		pvDao.deleteAll();
+		prDao.deleteAll();
+		if (2 > 1) {
+			return;
+		}
 
 		String newPassword = newPwd.getText().toString();
 		String newPassword2 = newPwd2.getText().toString();

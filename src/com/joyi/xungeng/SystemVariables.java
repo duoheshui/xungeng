@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.telephony.TelephonyManager;
 import com.joyi.xungeng.domain.*;
 
+import java.nio.channels.NonWritableChannelException;
 import java.util.*;
 
 /**
@@ -21,7 +22,8 @@ public class SystemVariables {
 	 */
 	public static final List<LineNode> ALL_LINE_NODES = new ArrayList<>();
     public static final Map<String, LineNode> ALL_LINE_NODES_MAP = new HashMap<>();
-    /**
+	public static final Map<String, LineNode> NODEID_NODE_MAP = new HashMap<>();
+	/**
      * 据数据库操作对象
      */
     public static SQLiteOpenHelper sqLiteOpenHelper;

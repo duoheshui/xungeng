@@ -119,7 +119,7 @@ public class XunGengService {
 	 * @return
 	 */
     public static String byteArray2HexString(byte[] src) {
-	    StringBuilder stringBuilder = new StringBuilder("0X");
+	    StringBuilder stringBuilder = new StringBuilder("");
 	    if (src == null || src.length <= 0) {
 		    return null;
 	    }

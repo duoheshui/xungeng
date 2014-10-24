@@ -4,6 +4,7 @@ package com.joyi.xungeng.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -12,7 +13,6 @@ import com.joyi.xungeng.MainActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.User;
-import com.joyi.xungeng.test.Test;
 import com.joyi.xungeng.util.Constants;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
 		// 如果没有继承TabActivity时，通过该种方法加载启动tabHost
 		tabHost.setup();
-		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("功能菜单").setContent(R.id.view1));
+		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("功能菜单", getResources().getDrawable(R.drawable.icon_1)).setContent(R.id.view1));
 		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("系统设置").setContent(R.id.view2));
 
 		// 功能菜单

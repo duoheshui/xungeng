@@ -44,4 +44,23 @@ public class DateUtil {
 		}
 		return date;
 	}
+
+	/**
+	 * 判断是否是时间 字符串
+	 * @param dateStr
+	 * @return
+	 */
+	public static boolean isValidDate(String dateStr) {
+		boolean currect = true;
+		if (StringUtils.isNullOrEmpty(dateStr)) {
+			return false;
+		}
+		try {
+			dateFormat.parse(dateStr);
+		} catch (ParseException e) {
+			currect = false;
+			e.printStackTrace();
+		}
+		return currect;
+	}
 }

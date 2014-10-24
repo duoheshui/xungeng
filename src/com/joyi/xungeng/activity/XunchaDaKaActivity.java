@@ -1,11 +1,14 @@
 package com.joyi.xungeng.activity;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.TableLayout;
@@ -44,6 +47,19 @@ public class XunchaDaKaActivity extends BaseActivity {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
+		// 判断NFC是否已开启
+		if (!nfcAdapter.isEnabled()) {
+			new AlertDialog.Builder(this)
+					.setTitle("")
+					.setMessage("检测到您还未开启NFC功能, 立即开启？")
+					.setPositiveButton("取消",null).setNegativeButton("开启", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					Intent intent =  new Intent(Settings.ACTION_NFC_SETTINGS);
+					startActivity(intent);
+				}}).show();
+			return;
+		}
 
 		tableLayout = (TableLayout) findViewById(R.id.patrol_view_record_table);
 		List<PatrolView> patrolViewList = patrolViewDao.getAll();

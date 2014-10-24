@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -67,6 +68,21 @@ public class XunGengDaKaActivity extends BaseActivity {
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()), 0);
 
+		// 判断NFC是否已开启
+		if (!nfcAdapter.isEnabled()) {
+			new AlertDialog.Builder(this)
+					.setTitle("")
+					.setMessage("检测到您还未开启NFC功能, 立即开启？")
+					.setPositiveButton("取消",null).setNegativeButton("开启", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					Intent intent =  new Intent(Settings.ACTION_NFC_SETTINGS);
+					startActivity(intent);
+				}}).show();
+			return;
+		}
+
+
 		patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
 		lineId = patrolLine.getId();
 		Integer lunCi = luXianLunCiMap.get(lineId);
@@ -106,25 +122,8 @@ public class XunGengDaKaActivity extends BaseActivity {
 				XunGengService.getLouXunList(patrolLine.getLineNodes(), hasPatrol, i, buffer);
 			}
 		}
-		// 第一次开始判断是否已到该线路开始时间 TODO
-		if (lunCi == 1) {
-			String dateStr = patrolLine.getBeginTime();
-			String[] hms = dateStr.split(":");
-			Calendar begin = Calendar.getInstance();
-			begin.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hms[0]));
-			begin.set(Calendar.MINUTE, Integer.valueOf(hms[1]));
-			begin.set(Calendar.SECOND, Integer.valueOf(hms[2]));
 
-			Calendar now = Calendar.getInstance();
-			now.setTime(SystemVariables.SERVER_TIME);
-			int exception = patrolLine.getException();
-			if ((now.getTimeInMillis() + exception * 1000) < begin.getTimeInMillis()) {
-				showToast("还没有到开始时间("+dateStr+")");
-				return;
-			}
-		}
 		louXunQingKuang.setText(buffer.toString());
-
 
 		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
 		Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
@@ -245,9 +244,27 @@ public class XunGengDaKaActivity extends BaseActivity {
 	protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+		Integer lunCi = luXianLunCiMap.get(lineId);
+		if (lunCi == 1) {
+			String dateStr = patrolLine.getBeginTime();
+			String[] hms = dateStr.split(":");
+			Calendar begin = Calendar.getInstance();
+			begin.setTime(SystemVariables.SERVER_TIME);
+			begin.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hms[0]));
+			begin.set(Calendar.MINUTE, Integer.valueOf(hms[1]));
+			begin.set(Calendar.SECOND, Integer.valueOf(hms[2]));
+
+			Calendar now = Calendar.getInstance();
+			now.setTime(SystemVariables.SERVER_TIME);
+			int exception = patrolLine.getException();
+			if ((now.getTimeInMillis() + exception * 60 * 1000) < begin.getTimeInMillis()) {
+				showToast("还没有到开始时间,当前时间("+dateStr+")");
+				return;
+			}
+		}
 
 		// 初始化开始, 结束状态
-		Integer lunCi = luXianLunCiMap.get(lineId);
+
 		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
 		if (integerLongMap == null || integerLongMap.size() == 0) {
 			// 还未开始第一轮

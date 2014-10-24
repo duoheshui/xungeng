@@ -57,8 +57,6 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	private boolean uploadedPV;     // 巡查记录
 	private boolean uploadedSR;     // 交接班记录
 
-	private boolean allUPloaded;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,6 +79,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 					// 删除本地记录
 					uploadButton.setText("上传");
 					showToast("上传完成");
+					finish();
 				}
 			}
 		};

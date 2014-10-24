@@ -18,8 +18,10 @@
         </activity>
 
         <activity android:name=".activity.MenuActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activity.XunchaDaKaActivity" android:launchMode="singleTop" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activity.XunGengDaKaActivity" android:launchMode="singleTop" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.XunchaDaKaActivity" android:launchMode="singleTop" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activity.XunGengDaKaActivity" android:launchMode="singleTop" android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".activity.JiaoJieBanActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.XinXiShangChuanActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.XiuGaiMiMaActivity" android:screenOrientation="portrait"/>

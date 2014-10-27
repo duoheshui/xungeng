@@ -25,6 +25,7 @@ import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
+import com.joyi.xungeng.util.VibratorUtil;
 
 import java.text.DateFormat;
 import java.util.*;
@@ -219,12 +220,14 @@ public class XunGengDaKaActivity extends BaseActivity {
 		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
 		if (integerLongMap == null || integerLongMap.size() == 0) {
 			// 还未开始第一轮
+			VibratorUtil.vibrate(this);
 			showToast("请先点击开始再打卡");
 			return;
 		}else {
 			Long lunciId = integerLongMap.get(lunCi);
 			UserPatrol byId = upDao.getById(lunciId);
 			if (byId == null) {
+				VibratorUtil.vibrate(this);
 				showToast("请先点击开始再打卡");
 				return;
 			}
@@ -236,6 +239,7 @@ public class XunGengDaKaActivity extends BaseActivity {
             String nfcCode = XunGengService.byteArray2HexString(arr);
 	        LineNode lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
 	        if (lineNode == null) {
+		        VibratorUtil.vibrate(this);
 		        showToast("无效的NFC卡...");
 		        return;
 	        }
@@ -250,6 +254,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 			        }
 		        }
 		        if (!rightNode) {
+			        VibratorUtil.vibrate(this);
 			        showToast("打卡失败, 该节点不属于该路线");
 			        return;
 		        }
@@ -257,6 +262,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		        Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
 		        PatrolRecord record = map.get(lineNode.getId());
 		        if (record != null && record.getPatrolTime()!=null && record.getPatrolTime().length()>10) {
+			        VibratorUtil.vibrate(this);
 			        showLongToast("该地点已经在 " + record.getPatrolTime().substring(11)+ "打过, 本次打卡无效");
 			        return;
 		        }
@@ -277,6 +283,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		        freshPage();
 	        }
         }else{
+	        VibratorUtil.vibrate(this);
             showToast("无效的NFC卡...");
         }
     }

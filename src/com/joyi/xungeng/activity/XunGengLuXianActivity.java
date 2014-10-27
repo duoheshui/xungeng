@@ -70,6 +70,7 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 		startActivity(intent);
 	}
 
+
 	@Override
 	protected void onPostResume() {
 		super.onPostResume();

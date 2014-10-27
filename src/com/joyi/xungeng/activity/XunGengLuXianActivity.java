@@ -1,22 +1,20 @@
 package com.joyi.xungeng.activity;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.google.gson.Gson;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
-import com.joyi.xungeng.domain.LineNode;
 import com.joyi.xungeng.domain.PatrolLine;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by zhangyong on 2014/10/17.
@@ -24,6 +22,8 @@ import java.util.List;
  */
 public class XunGengLuXianActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 	private ListView listView;
+	private NfcAdapter nfcAdapter;
+	private PendingIntent pendingIntent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,9 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 		setContentView(R.layout.xun_geng_lu_xian);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText("巡更路线");
+
+		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 		freshList();
 	}
@@ -65,5 +68,21 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
         bundle.putSerializable("lineNodes", (Serializable) patrolLine.getLineNodes());
 		intent.putExtras(bundle);
 		startActivity(intent);
+	}
+
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		if (nfcAdapter != null) {
+			nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (nfcAdapter != null) {
+			nfcAdapter.disableForegroundDispatch(this);
+		}
 	}
 }

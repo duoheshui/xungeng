@@ -48,12 +48,12 @@
         </TableRow>
         <TableRow android:layout_marginTop="10dp">
             <TextView
-                    android:text="选择班次："
+                    android:text="选择路线："
                     android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             <Spinner
-                    android:id="@+id/ban_ci_spinner"
+                    android:id="@+id/lu_xian_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp">
             </Spinner>
@@ -61,12 +61,12 @@
 
         <TableRow android:layout_marginTop="10dp">
             <TextView
-                    android:text="选择路线："
+                    android:text="选择班次："
                     android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             <Spinner
-                    android:id="@+id/lu_xian_spinner"
+                    android:id="@+id/ban_ci_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp">
             </Spinner>

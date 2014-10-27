@@ -1,6 +1,7 @@
 package com.joyi.xungeng.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.joyi.xungeng.BaseActivity;
@@ -35,7 +36,7 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.jiao_jie_ban);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
-		textView.setText(SystemVariables.USER_NAME);
+		textView.setText("交接班");
 
 		// 三个Spinner
 		gangWei = (Spinner) findViewById(R.id.gang_wei_spinner);
@@ -88,10 +89,19 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 			shiftRecord.setReceiveTime(DateUtil.getHumanReadStr(serverTime));
 		}
 
+
 		Station selectedGangWei = (Station) gangWei.getSelectedItem();
+		if (selectedGangWei == null) {
+			showToast("岗位为空, 无法完成交接班");
+			return;
+		}
 		KeyValuePair selectedBanCi = (KeyValuePair) banCi.getSelectedItem();
 		KeyValuePair selectedLuXian = (KeyValuePair) luXian.getSelectedItem();
-        shiftRecord.setStationId(selectedGangWei.getId());
+		if (selectedLuXian == null) {
+			showToast("路线为空, 无法完成交接班");
+			return;
+		}
+		shiftRecord.setStationId(selectedGangWei.getId());
         shiftRecord.setScheduleTypeId(selectedBanCi.getKey());
         shiftRecord.setLineId(selectedLuXian.getKey());
 		shiftRecord.setUserId(SystemVariables.user.getId());

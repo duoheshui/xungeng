@@ -62,7 +62,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xin_xi_shang_chuan);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
-		textView.setText(SystemVariables.USER_NAME);
+		textView.setText("信息上传");
 		xinxiLayout = (TableLayout) findViewById(R.id.xin_xi_table_layout);
 
 		// 上传回调

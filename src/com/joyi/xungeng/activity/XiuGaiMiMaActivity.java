@@ -41,7 +41,7 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 		setContentView(R.layout.xiu_gai_mi_ma);
 
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
-		textView.setText(SystemVariables.USER_NAME);
+		textView.setText("修改密码");
 
 		oldPwd = (EditText) findViewById(R.id.old_pwd);
 		newPwd = (EditText) findViewById(R.id.new_pwd);
@@ -96,17 +96,14 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 //			}
 //		});
 
-		PatrolRecordDao prDao = new PatrolRecordDao();
-		UserPatrolDao upDao = new UserPatrolDao();
-		ShiftRecordDao srDao = new ShiftRecordDao();
-		PatrolViewDao pvDao = new PatrolViewDao();
-		upDao.deleteAll();
-		srDao.deleteAll();
-		pvDao.deleteAll();
-		prDao.deleteAll();
-		if (2 > 1) {
-			return;
-		}
+//		PatrolRecordDao prDao = new PatrolRecordDao();
+//		UserPatrolDao upDao = new UserPatrolDao();
+//		ShiftRecordDao srDao = new ShiftRecordDao();
+//		PatrolViewDao pvDao = new PatrolViewDao();
+//		upDao.deleteAll();
+//		srDao.deleteAll();
+//		pvDao.deleteAll();
+//		prDao.deleteAll();
 
 		String newPassword = newPwd.getText().toString();
 		String newPassword2 = newPwd2.getText().toString();

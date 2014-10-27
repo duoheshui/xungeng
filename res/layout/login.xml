@@ -28,7 +28,7 @@
 
 <!-- TODO 删除用户名 -->
             <EditText
-android:text="cgl"
+android:text="zhangw"
                     android:maxLength="20"
                     android:id="@+id/username_edittext"
                     android:layout_weight="0.6"

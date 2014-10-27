@@ -203,6 +203,8 @@ public class MainActivity extends BaseActivity {
 						}
 						// 巡查路线
 						JSONArray patrolLines = jsonObject.getJSONArray("patrolLine");
+Log.e("length", patrolLines.length()+"");
+Log.e("lines", patrolLines.toString());
 						if (patrolLines != null && patrolLines.length() > 0) {
 							PatrolLine patrolLine = null;
 							for (int i = 0; i < patrolLines.length(); ++i) {
@@ -230,8 +232,8 @@ public class MainActivity extends BaseActivity {
 										patrolLine.getLineNodes().add(node);
 									}
 								}
+								SystemVariables.PATROL_LINES.add(patrolLine);
 							}
-							SystemVariables.PATROL_LINES.add(patrolLine);
 						}
 
                         /* 3, 检查上次打卡记录是否已上传 */

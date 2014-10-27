@@ -88,6 +88,6 @@ public class PatrolLine implements Serializable {
 
 	@Override
 	public String toString() {
-		return lineName+"  "+beginTime+"~"+endTime;
+		return lineName+"\n"+beginTime+"~"+endTime;
 	}
 }

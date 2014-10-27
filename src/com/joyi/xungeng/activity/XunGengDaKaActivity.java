@@ -49,6 +49,7 @@ public class XunGengDaKaActivity extends BaseActivity {
     private User user = SystemVariables.user;
 	private String lineId;
     private PatrolLine patrolLine;
+	private List<LineNode> lineNodes;
     private UserPatrolDao upDao = new UserPatrolDao();
     private PatrolRecordDao prDao = new PatrolRecordDao();
 
@@ -59,7 +60,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 
 		setContentView(R.layout.xun_geng_da_ka);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
-		textView.setText(SystemVariables.USER_NAME);
+		textView.setText("巡更打卡");
 		startButton = (Button) findViewById(R.id.start_button);
 		endButton = (Button) findViewById(R.id.end_button);
 		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
@@ -67,6 +68,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		louXunQingKuang = (TextView) findViewById(R.id.lou_xun_qing_kuang_tv);
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()), 0);
+		lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
 
 		// 判断NFC是否已开启
 		if (!nfcAdapter.isEnabled()) {
@@ -84,6 +86,9 @@ public class XunGengDaKaActivity extends BaseActivity {
 
 
 		patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
+		if (patrolLine != null) {
+			textView.setText("巡更打卡:"+patrolLine.getName());
+		}
 		lineId = patrolLine.getId();
 		Integer lunCi = luXianLunCiMap.get(lineId);
 		if (lunCi==null || lunCi==0) {
@@ -94,12 +99,12 @@ public class XunGengDaKaActivity extends BaseActivity {
 
 		// 判断巡更次数是否达到系统配置
 		lunCi = luXianLunCiMap.get(lineId);
-		int frequency = patrolLine.getFrequency();
-		if (lunCi > frequency) {
-			showToast("共" + frequency + "轮已完部巡更完, 无法再继续巡更");
-			finish();
-			return;
-		}
+//		int frequency = patrolLine.getFrequency();
+//		if (lunCi > frequency) {
+//			showToast("共" + frequency + "轮已完部巡更完, 无法再继续巡更");
+//			finish();
+//			return;
+//		}
 
 		// 初始化 开始, 结束按钮状态
 		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
@@ -119,16 +124,164 @@ public class XunGengDaKaActivity extends BaseActivity {
 		StringBuffer buffer = new StringBuffer();
 		if (lunCi > 1) {
 			for (int i = 1; i < lunCi; ++i) {
-				List<PatrolRecord> hasPatrol = prDao.getBySequence(lunCi);
+				List<PatrolRecord> hasPatrol = prDao.getBySequence(i);
 				XunGengService.getLouXunList(patrolLine.getLineNodes(), hasPatrol, i, buffer);
 			}
 		}
 
 		louXunQingKuang.setText(buffer.toString());
+		freshPage();
+	}
 
-		List<LineNode> lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
+
+    /**
+     * 开始(本轮)巡更
+     * @param view
+     */
+    public void startPatrol(View view) {
+
+	    Integer lunCi = luXianLunCiMap.get(lineId);
+
+        Button startBtn = (Button)view;
+        startBtn.setEnabled(false);
+	    startBtn.setBackgroundResource(R.drawable.disable_round_button);
+	    endButton.setEnabled(true);
+	    endButton.setBackgroundResource(R.drawable.round_button);
+
+	    luXianLunCiMap.put(lineId, lunCi);
+        UserPatrol userPatrol = new UserPatrol();
+        userPatrol.setUserId(user.getId());
+        userPatrol.setLineId(lineId);
+        userPatrol.setBeginPhoneTime(DateUtil.getHumanReadStr(new Date()));
+        Date date = new Date(SystemVariables.SERVER_TIME.getTime());
+        userPatrol.setBeginTime(DateUtil.getHumanReadStr(date));
+        userPatrol.setSequence(lunCi);
+//        userPatrol.setScheduleTypeId(patrolLine.g);   // TODO 无处获取
+        long id = upDao.add(userPatrol);
+	    Map<Integer, Long> lunciIDMap = luXianLunCiIdMap.get(patrolLine.getId());
+	    if (lunciIDMap == null) {
+		    lunciIDMap = new HashMap<>();
+		    luXianLunCiIdMap.put(lineId, lunciIDMap);
+	    }
+	    luXianLunCiIdMap.get(lineId).put(lunCi, id);
+    }
+
+    /**
+     *
+     * 结束(本轮)巡更
+     * @param view
+     */
+    public void endPatrol(final View view) {
+	    String str = "确定要结束本轮巡查么？";
+	    Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
+	    try {
+		    int hasPatrol = map.entrySet().size();
+		    int totalPatrol = lineNodes.size();
+		    if (totalPatrol > hasPatrol) {
+				str = "您还有 "+(totalPatrol-hasPatrol) +" 处未打卡, 确定要结束本轮巡查么？";
+		    }
+	    } catch (Exception e) { }
+	    new AlertDialog.Builder(XunGengDaKaActivity.this)
+		    .setTitle("确认")
+		    .setIcon(android.R.drawable.ic_dialog_alert).setMessage(str)
+		    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			    @Override
+			    public void onClick(DialogInterface dialogInterface, int i) {
+				    Integer lunCi = luXianLunCiMap.get(lineId);
+				    Long id = luXianLunCiIdMap.get(lineId).get(lunCi);
+				    Date serverDate = new Date(SystemVariables.SERVER_TIME.getTime());
+				    upDao.updateEndDate(serverDate, new Date(), id);
+
+				    lunCi++;
+				    luXianLunCiMap.put(lineId, lunCi);
+
+				    Button endBtn = (Button)view;
+				    endBtn.setEnabled(false);
+				    endButton.setBackgroundResource(R.drawable.disable_round_button);
+				    startButton.setBackgroundResource(R.drawable.round_green_shape);
+				    startButton.setEnabled(true);
+				    finish();
+			    }
+		    }).setNegativeButton("取消", null).show();
+    }
+
+    /**
+     * 打卡触发事件
+     * @param intent
+     */
+	@Override
+	protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+		Integer lunCi = luXianLunCiMap.get(lineId);
+		// 初始化开始, 结束状态
+		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
+		if (integerLongMap == null || integerLongMap.size() == 0) {
+			// 还未开始第一轮
+			showToast("请先点击开始再打卡");
+			return;
+		}else {
+			Long lunciId = integerLongMap.get(lunCi);
+			UserPatrol byId = upDao.getById(lunciId);
+			if (byId == null) {
+				showToast("请先点击开始再打卡");
+				return;
+			}
+		}
+
+        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        if (tag != null) {
+            byte[] arr = tag.getId();
+            String nfcCode = XunGengService.byteArray2HexString(arr);
+	        LineNode lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
+	        if (lineNode == null) {
+		        showToast("无效的NFC卡...");
+		        return;
+	        }
+	        List<LineNode> lineNodes = patrolLine.getLineNodes();
+	        // 检查此节点是否属于本路线
+	        if (lineNodes != null && lineNodes.size() > 0) {
+		        boolean rightNode = false;
+		        for (LineNode node : lineNodes) {
+			        if (lineNode.getNfcCode().equals(node.getNfcCode())) {
+				        rightNode = true;
+				        break;
+			        }
+		        }
+		        if (!rightNode) {
+			        showToast("打卡失败, 该节点不属于该路线");
+			        return;
+		        }
+		        long userPatrolId = luXianLunCiIdMap.get(lineId).get(lunCi);
+		        PatrolRecord patrolRecord = new PatrolRecord();
+		        patrolRecord.setPatrolTime(DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME));
+		        patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
+		        if (lineNode != null) {
+			        patrolRecord.setNodeId(lineNode.getId());
+		        }
+		        patrolRecord.setPatrolPhoneTime(DateUtil.getHumanReadStr(new Date()));
+		        patrolRecord.setNodeId(lineNode.getId());
+		        patrolRecord.setLineId(lineId);
+		        patrolRecord.setSequence(lunCi);
+		        prDao.add(patrolRecord);
+
+		        showLongToast(lineNode.getNodeName() + "  打卡成功");
+		        freshPage();
+	        }
+        }else{
+            showToast("无效的NFC卡...");
+        }
+    }
+
+	/**
+	 * 刷新页面
+	 */
+	private void freshPage() {
+
+		int childCount = tableLayout.getChildCount();
+		tableLayout.removeViews(1, childCount-1);
+
 		Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
-
 		for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
 			tableRow.setBackgroundColor(Color.WHITE);
@@ -175,161 +328,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		}
 	}
 
-
-    /**
-     * 开始(本轮)巡更
-     * @param view
-     */
-    public void startPatrol(View view) {
-
-	    Integer lunCi = luXianLunCiMap.get(lineId);
-	    if (lunCi == 1) {
-		    try {
-			    String dateStr = patrolLine.getBeginTime();
-			    String[] hms = dateStr.split(":");
-			    Calendar begin = Calendar.getInstance();
-			    begin.setTime(SystemVariables.SERVER_TIME);
-			    begin.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hms[0]));
-			    begin.set(Calendar.MINUTE, Integer.valueOf(hms[1]));
-			    begin.set(Calendar.SECOND, Integer.valueOf(hms[2]));
-
-			    Calendar now = Calendar.getInstance();
-			    now.setTime(SystemVariables.SERVER_TIME);
-			    int exception = patrolLine.getException();
-			    if(begin.getTimeInMillis() > (now.getTimeInMillis() + exception * 60 * 1000)){
-				    showToast("还没有到开始时间,当前时间:" + DateUtil.getHumanReadStr(now.getTime()));
-				    return;
-			    }
-		    } catch (Exception e) { }
-	    }
-
-        Button startBtn = (Button)view;
-        startBtn.setEnabled(false);
-	    startBtn.setBackgroundResource(R.drawable.disable_round_button);
-	    endButton.setEnabled(true);
-	    endButton.setBackgroundResource(R.drawable.round_button);
-
-	    luXianLunCiMap.put(lineId, lunCi);
-        UserPatrol userPatrol = new UserPatrol();
-        userPatrol.setUserId(user.getId());
-        userPatrol.setLineId(lineId);
-        userPatrol.setBeginPhoneTime(DateUtil.getHumanReadStr(new Date()));
-        Date date = new Date(SystemVariables.SERVER_TIME.getTime());
-        userPatrol.setBeginTime(DateUtil.getHumanReadStr(date));
-        userPatrol.setSequence(lunCi);
-//        userPatrol.setScheduleTypeId(patrolLine.g);   // TODO 无处获取
-        long id = upDao.add(userPatrol);
-	    Map<Integer, Long> lunciIDMap = luXianLunCiIdMap.get(patrolLine.getId());
-	    if (lunciIDMap == null) {
-		    lunciIDMap = new HashMap<>();
-		    luXianLunCiIdMap.put(lineId, lunciIDMap);
-	    }
-	    luXianLunCiIdMap.get(lineId).put(lunCi, id);
-    }
-
-    /**
-     *
-     * 结束(本轮)巡更
-     * @param view
-     */
-    public void endPatrol(final View view) {
-	    new AlertDialog.Builder(XunGengDaKaActivity.this)
-		    .setTitle("确认")
-		    .setIcon(android.R.drawable.ic_dialog_alert).setMessage("确定要结束本轮巡查么？")
-		    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-			    @Override
-			    public void onClick(DialogInterface dialogInterface, int i) {
-				    Integer lunCi = luXianLunCiMap.get(lineId);
-				    Long id = luXianLunCiIdMap.get(lineId).get(lunCi);
-				    Date serverDate = new Date(SystemVariables.SERVER_TIME.getTime());
-				    upDao.updateEndDate(serverDate, new Date(), id);
-
-				    lunCi++;
-				    luXianLunCiMap.put(lineId, lunCi);
-
-				    Button endBtn = (Button)view;
-				    endBtn.setEnabled(false);
-				    endButton.setBackgroundResource(R.drawable.disable_round_button);
-				    startButton.setBackgroundResource(R.drawable.round_green_shape);
-				    startButton.setEnabled(true);
-				    finish();
-			    }
-		    }).setNegativeButton("取消", null).show();
-    }
-
-    /**
-     * 打卡触发事件
-     * @param intent
-     */
 	@Override
-	protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-		Integer lunCi = luXianLunCiMap.get(lineId);
-
-		// 初始化开始, 结束状态
-
-		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
-		if (integerLongMap == null || integerLongMap.size() == 0) {
-			// 还未开始第一轮
-			showToast("请先点击开始再打卡");
-			return;
-		}else {
-			Long lunciId = integerLongMap.get(lunCi);
-			UserPatrol byId = upDao.getById(lunciId);
-			if (byId == null) {
-				showToast("请先点击开始再打卡");
-				return;
-			}
-
-		}
-
-
-        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if (tag != null) {
-            byte[] arr = tag.getId();
-            String nfcCode = XunGengService.byteArray2HexString(arr);
-	        LineNode lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
-	        if (lineNode == null) {
-		        showToast("无效的NFC卡...");
-		        return;
-	        }
-	        List<LineNode> lineNodes = patrolLine.getLineNodes();
-	        // 检查此节点是否属于本路线
-	        if (lineNodes != null && lineNodes.size() > 0) {
-		        boolean rightNode = false;
-		        for (LineNode node : lineNodes) {
-			        if (lineNode.getNfcCode().equals(node.getNfcCode())) {
-				        rightNode = true;
-				        break;
-			        }
-		        }
-		        if (!rightNode) {
-			        showToast("打卡失败, 该节点不属于该路线");
-			        return;
-		        }
-		        long userPatrolId = luXianLunCiIdMap.get(lineId).get(lunCi);
-		        PatrolRecord patrolRecord = new PatrolRecord();
-		        patrolRecord.setPatrolTime(DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME));
-		        patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
-		        if (lineNode != null) {
-			        patrolRecord.setNodeId(lineNode.getId());
-		        }
-		        patrolRecord.setPatrolPhoneTime(DateUtil.getHumanReadStr(new Date()));
-		        patrolRecord.setNodeId(lineNode.getId());
-		        patrolRecord.setLineId(lineId);
-		        patrolRecord.setSequence(lunCi);
-		        prDao.add(patrolRecord);
-
-		        showLongToast(lineNode.getNodeName() + "  打卡成功");
-		        finish();
-	        }
-        }else{
-            showToast("无效的NFC卡...");
-        }
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         if (nfcAdapter != null) {

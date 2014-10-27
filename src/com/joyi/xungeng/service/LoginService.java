@@ -83,7 +83,7 @@ public class LoginService {
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				SystemVariables.SERVER_TIME.setTime(SystemVariables.SERVER_TIME.getTime() + 100);
+				SystemVariables.SERVER_TIME.setTime(SystemVariables.SERVER_TIME.getTime() + 50);
 			}
 		}, 0, 50);
 	}
@@ -129,13 +129,11 @@ public class LoginService {
      * 同步上次巡更信息, 同步成功删除本地记录
      */
     public void syncPatrolData(Context context) {
-Log.e("login", "syncPatrolData");
-Gson gson = new Gson();
+		Gson gson = new Gson();
 
 	    // 1, 同步巡查信息
 	    final PatrolViewDao pvDao = new PatrolViewDao();
 	    List<PatrolView> pvList = pvDao.getAll();
-Log.e("pv", gson.toJson(pvList));
 	    if (pvList != null && pvList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
 		    requestParams.put("data", gson.toJson(pvList));
@@ -144,7 +142,6 @@ Log.e("pv", gson.toJson(pvList));
 			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 				    try {
 					    String errorCode = jsonObject.getString("errorCode");
-Log.e("pvcode", errorCode);
 					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
 						    pvDao.deleteAll();
 					    }
@@ -159,7 +156,6 @@ Log.e("pvcode", errorCode);
 	    // 2, 同步巡更打卡信息
 	    final UserPatrolDao upDao = new UserPatrolDao();
 	    List<UserPatrol> upList = upDao.getAll();
-Log.e("up", gson.toJson(upList));
 	    if (upList != null && upList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
 		    requestParams.put("data", gson.toJson(upList));
@@ -168,7 +164,6 @@ Log.e("up", gson.toJson(upList));
 			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 				    try {
 					    String errorCode = jsonObject.getString("errorCode");
-Log.e("upcode", errorCode);
 					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
 						    upDao.deleteAll();
 						    PatrolRecordDao prDao = new PatrolRecordDao();
@@ -185,25 +180,23 @@ Log.e("upcode", errorCode);
 	    // 3, 同步交接班信息
 	    final ShiftRecordDao srDao = new ShiftRecordDao();
 	    List<ShiftRecord> srList = srDao.getAll();
-Log.e("sr", gson.toJson(srList));
 	    if (srList != null && srList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
 		    requestParams.put("data", gson.toJson(srList));
 		    httpClient.post(context, Constants.UPLOAD_SHIFT_INFO_URL, requestParams, new JsonHttpResponseHandler() {
 			    @Override
 			    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-				    try {
-					    String errorCode = jsonObject.getString("errorCode");
-Log.e("srcode", errorCode);
-					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-						    srDao.deleteAll();
-					    }
-				    } catch (JSONException e) {
-					    Log.e(TAG, e.toString());
-					    e.printStackTrace();
+			    try {
+				    String errorCode = jsonObject.getString("errorCode");
+				    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
+					    srDao.deleteAll();
 				    }
+			    } catch (JSONException e) {
+				    Log.e(TAG, e.toString());
+				    e.printStackTrace();
 			    }
-		    });
+		    }
+	    });
 	    }
     }
 }

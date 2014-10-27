@@ -1,5 +1,7 @@
 package com.joyi.xungeng.domain;
 
+import com.joyi.xungeng.activity.XunGengDaKaActivity;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +90,11 @@ public class PatrolLine implements Serializable {
 
 	@Override
 	public String toString() {
-		return lineName+"\n"+beginTime+"~"+endTime;
+		Integer integer = XunGengDaKaActivity.luXianLunCiMap.get(id);
+
+		if (integer == null || integer == 0) {
+			integer = 1;
+		}
+		return lineName+ "[第"+integer+"轮]\n"+beginTime+"~"+endTime;
 	}
 }

@@ -28,11 +28,6 @@ public class TestDate {
 		//		int i = Color.parseColor("#00AABBCC");
 		//		System.out.println("I:" + i);
 
-		String str = "fdsaf";
-		try {
-			dateFormat.parse(str);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+
 	}
 }

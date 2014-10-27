@@ -172,6 +172,7 @@ public class XunGengDaKaActivity extends BaseActivity {
      * @param view
      */
     public void endPatrol(final View view) {
+	    // 判断是否有漏巡
 	    String str = "确定要结束本轮巡查么？";
 	    Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
 	    try {
@@ -250,6 +251,13 @@ public class XunGengDaKaActivity extends BaseActivity {
 		        }
 		        if (!rightNode) {
 			        showToast("打卡失败, 该节点不属于该路线");
+			        return;
+		        }
+
+		        Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
+		        PatrolRecord record = map.get(lineNode.getId());
+		        if (record != null && record.getPatrolTime()!=null && record.getPatrolTime().length()>10) {
+			        showLongToast("该地点已经在 " + record.getPatrolTime().substring(11)+ "打过, 本次打卡无效");
 			        return;
 		        }
 		        long userPatrolId = luXianLunCiIdMap.get(lineId).get(lunCi);

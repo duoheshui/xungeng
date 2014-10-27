@@ -32,11 +32,20 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText("巡更路线");
 
+		freshList();
+	}
 
+
+	public void freshList() {
 		listView = (ListView) findViewById(R.id.line_list_view);
 		listView.setOnItemClickListener(this);
 		ArrayAdapter<PatrolLine> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, SystemVariables.PATROL_LINES);
 		listView.setAdapter(arrayAdapter);
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		freshList();
 	}
 
 	/**

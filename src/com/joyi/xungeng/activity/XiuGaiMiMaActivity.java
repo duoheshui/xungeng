@@ -2,6 +2,7 @@ package com.joyi.xungeng.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
+import com.joyi.xungeng.util.DateUtil;
 import com.joyi.xungeng.util.StringUtils;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -66,44 +68,44 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void changePassword(View view) {
-//		String path = Environment.getExternalStorageDirectory()+"/update/";
-//						String fileName = "/storage/sdcard/nfc.apk";
-//			xgService.openFile(this, new File(fileName));
+		//		String path = Environment.getExternalStorageDirectory()+"/update/";
+		//						String fileName = "/storage/sdcard/nfc.apk";
+		//			xgService.openFile(this, new File(fileName));
 
 
 		AsyncHttpClient httpClient = new AsyncHttpClient();
-//
-//		String[] mAllowedContentTypes = new String[] {"application/vnd.android.package-archive"};
-//		httpClient.get("http://192.16.8.176:8080/wuye/nfc.apk", new BinaryHttpResponseHandler(mAllowedContentTypes){
-//			@Override
-//			public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-//				Log.e(TAG, "onSuccess->" + Arrays.toString(binaryData));
-//				String path = Environment.getExternalStorageDirectory()+"/update/";
-//				String fileName = "wuye.apk";
-//				File file = XunGengService.getFileFromBytes(binaryData, path, fileName);
-//				Message message = new Message();
-//				message.what = 100;
-//				Bundle bundle = new Bundle();
-//				bundle.putSerializable("file", file);
-//				message.setData(bundle);
-//				message.setTarget(handler);
-//				message.sendToTarget();
-//			}
+		//
+		//		String[] mAllowedContentTypes = new String[] {"application/vnd.android.package-archive"};
+		//		httpClient.get("http://192.16.8.176:8080/wuye/nfc.apk", new BinaryHttpResponseHandler(mAllowedContentTypes){
+		//			@Override
+		//			public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
+		//				Log.e(TAG, "onSuccess->" + Arrays.toString(binaryData));
+		//				String path = Environment.getExternalStorageDirectory()+"/update/";
+		//				String fileName = "wuye.apk";
+		//				File file = XunGengService.getFileFromBytes(binaryData, path, fileName);
+		//				Message message = new Message();
+		//				message.what = 100;
+		//				Bundle bundle = new Bundle();
+		//				bundle.putSerializable("file", file);
+		//				message.setData(bundle);
+		//				message.setTarget(handler);
+		//				message.sendToTarget();
+		//			}
 
-//			@Override
-//			public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-//
-//			}
-//		});
+		//			@Override
+		//			public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+		//
+		//			}
+		//		});
 
-//		PatrolRecordDao prDao = new PatrolRecordDao();
-//		UserPatrolDao upDao = new UserPatrolDao();
-//		ShiftRecordDao srDao = new ShiftRecordDao();
-//		PatrolViewDao pvDao = new PatrolViewDao();
-//		upDao.deleteAll();
-//		srDao.deleteAll();
-//		pvDao.deleteAll();
-//		prDao.deleteAll();
+		//		PatrolRecordDao prDao = new PatrolRecordDao();
+		//		UserPatrolDao upDao = new UserPatrolDao();
+		//		ShiftRecordDao srDao = new ShiftRecordDao();
+		//		PatrolViewDao pvDao = new PatrolViewDao();
+		//		upDao.deleteAll();
+		//		srDao.deleteAll();
+		//		pvDao.deleteAll();
+		//		prDao.deleteAll();
 
 		String newPassword = newPwd.getText().toString();
 		String newPassword2 = newPwd2.getText().toString();
@@ -128,7 +130,7 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 		requestParams.put("userId", SystemVariables.user.getId());
 		requestParams.put("oldPassword", oldPwd.getText().toString());
 		requestParams.put("newPassword", newPassword);
-		httpClient.post(this, Constants.CHANGE_PASSWORD_URL, requestParams, new JsonHttpResponseHandler(){
+		httpClient.post(this, Constants.CHANGE_PASSWORD_URL, requestParams, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 				try {
@@ -136,7 +138,7 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 					if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
 						showToast("修改成功");
 						finish();
-					}else{
+					} else {
 						showToast("修改失败...");
 					}
 				} catch (JSONException e) {

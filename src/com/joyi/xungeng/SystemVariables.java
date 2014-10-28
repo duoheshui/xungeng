@@ -1,10 +1,8 @@
 package com.joyi.xungeng;
 
 import android.database.sqlite.SQLiteOpenHelper;
-import android.telephony.TelephonyManager;
 import com.joyi.xungeng.domain.*;
 
-import java.nio.channels.NonWritableChannelException;
 import java.util.*;
 
 /**
@@ -21,8 +19,8 @@ public class SystemVariables {
 	 * 所有节点数据
 	 */
 	public static final List<LineNode> ALL_LINE_NODES = new ArrayList<>();
-    public static final Map<String, LineNode> ALL_LINE_NODES_MAP = new HashMap<>();
-	public static final Map<String, LineNode> NODEID_NODE_MAP = new HashMap<>();
+    public static final Map<String, LineNode> ALL_LINE_NODES_MAP = new HashMap<>(); // nfcCode<->PatrolNode
+	public static final Map<String, LineNode> NODEID_NODE_MAP = new HashMap<>();    // nodeId<->PatrolNode
 	/**
      * 据数据库操作对象
      */

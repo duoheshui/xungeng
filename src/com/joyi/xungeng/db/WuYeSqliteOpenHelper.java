@@ -72,6 +72,7 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "sequence integer, " +
             "beginTime datetime," +
             "endTime datetime," +
+            "scheduleId integer, "+
             "beginPhoneTime datetime," +
 		    "scheduleTypeId char(20)," +
             "endPhoneTime datetime)";

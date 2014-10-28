@@ -20,8 +20,17 @@ public class PatrolLine implements Serializable {
 	private int exception;                              // 偏差(分钟)
 	private String beginTime;
 	private String endTime;
+	private String scheduleId;                          // 班次id
 	private List<LineNode> lineNodes = new ArrayList<>();// 路线上的节点
 
+
+	public String getScheduleId() {
+		return scheduleId;
+	}
+
+	public void setScheduleId(String scheduleId) {
+		this.scheduleId = scheduleId;
+	}
 
 	public List<LineNode> getLineNodes() {
 		return lineNodes;

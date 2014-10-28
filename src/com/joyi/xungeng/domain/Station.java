@@ -20,7 +20,16 @@ public class Station {
 	private String id;
 	private String name;
 	private List<KeyValuePair> lines = new ArrayList<KeyValuePair>();
+	private List<Schedule> schedules = new ArrayList<>();   // 班次
 
+
+	public List<Schedule> getSchedules() {
+		return schedules;
+	}
+
+	public void setSchedules(List<Schedule> schedules) {
+		this.schedules = schedules;
+	}
 
 	public String getId() {
 		return id;

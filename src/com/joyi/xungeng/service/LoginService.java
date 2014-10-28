@@ -3,6 +3,8 @@ package com.joyi.xungeng.service;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -19,12 +21,15 @@ import com.joyi.xungeng.domain.ShiftRecord;
 import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.util.Constants;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -64,9 +69,33 @@ public class LoginService {
 
 	/**
 	 * 获取新版请下载地下, 无新版本返回null
+	 *
 	 * @return
 	 */
-	public String getNewVersionUrl() {
+	public String autoUpdateApp(final Handler handler) {
+		RequestParams requestParams = new RequestParams();
+		requestParams.add("version", Constants.APP_VERSION);
+		httpClient.post(context, Constants.HAS_NEW_VERSION_URL, requestParams, new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				String url = null;
+				try {
+					url = response.getString("url");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				if (url == null || "".equals(url) ||url.indexOf("/")<0) {
+					return;
+				}
+				Message newVersionMessage = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putString("url", url);
+				newVersionMessage.setData(bundle);
+				newVersionMessage.setTarget(handler);
+				newVersionMessage.sendToTarget();
+			}
+		});
+
 		return null;
 	}
 
@@ -106,24 +135,6 @@ public class LoginService {
 		}, new Date(stopTime));
 	}
 
-
-	/**
-	 * 新版本弹出层
-	 */
-	public void showAlert(){
-		new AlertDialog.Builder(context).setTitle("").setMessage("检测到有新版本, 请升级...").setPositiveButton("升级", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-
-			}
-		}).setNegativeButton("退出", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				context.finish();
-				System.exit(1);
-			}
-		}).show();
-	}
 
     /**
      * 同步上次巡更信息, 同步成功删除本地记录

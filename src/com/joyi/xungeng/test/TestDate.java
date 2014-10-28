@@ -1,9 +1,6 @@
 package com.joyi.xungeng.test;
 
-import android.graphics.Color;
-
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -14,7 +11,7 @@ public class TestDate {
 		//		String datestr = "08:25:39";
 		//		DateFormat format = new SimpleDateFormat("HH:mm:ss");
 		//		Date date = format.parse(datestr);
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//		System.out.println(dateFormat.format(date));
 		//		Calendar calendar = Calendar.getInstance();
 		//
@@ -27,7 +24,9 @@ public class TestDate {
 
 		//		int i = Color.parseColor("#00AABBCC");
 		//		System.out.println("I:" + i);
-
+		String newAppUrl = "http://www.joyi.com/wuye/xungeng1.1.apk";
+		String name = newAppUrl.substring(newAppUrl.lastIndexOf("/"));
+		System.out.println(name);
 
 	}
 }

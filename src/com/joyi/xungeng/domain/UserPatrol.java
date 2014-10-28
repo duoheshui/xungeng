@@ -17,7 +17,7 @@ public class UserPatrol implements Serializable {
 	private String userId;              // 用户ID
 	private String lineId;              // 线路ID
 	private int sequence;               // 轮次
-	private String scheduleTypeId;      // 巡更班次ID
+	private String scheduleId;          // 巡更班次ID
 	private String beginTime;
 	private String endTime;
 	private String beginPhoneTime;
@@ -72,12 +72,12 @@ public class UserPatrol implements Serializable {
 		this.sequence = sequence;
 	}
 
-	public String getScheduleTypeId() {
-		return scheduleTypeId;
+	public String getScheduleId() {
+		return scheduleId;
 	}
 
-	public void setScheduleTypeId(String scheduleTypeId) {
-		this.scheduleTypeId = scheduleTypeId;
+	public void setScheduleId(String scheduleId) {
+		this.scheduleId = scheduleId;
 	}
 
 	public String getBeginTime() {

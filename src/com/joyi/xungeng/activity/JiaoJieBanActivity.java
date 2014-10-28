@@ -8,12 +8,10 @@ import android.widget.*;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.JiaoJieBanStatusDao;
 import com.joyi.xungeng.dao.ShiftRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
-import com.joyi.xungeng.domain.KeyValuePair;
-import com.joyi.xungeng.domain.ShiftRecord;
-import com.joyi.xungeng.domain.Station;
-import com.joyi.xungeng.domain.UserPatrol;
+import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
 import com.joyi.xungeng.util.StringUtils;
@@ -31,6 +29,7 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	private Spinner banCi;
 	private Spinner luXian;
     private ShiftRecordDao srDao = new ShiftRecordDao();
+	private JiaoJieBanStatusDao jjbDao = new JiaoJieBanStatusDao();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +66,12 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	 */
 	public void jiaoJieBan(View view) {
 		String name = ((Button) view).getText().toString();
-SharedPreferences.Editor edit = SystemVariables.JIAO_JIE_BAN_DATA.edit();
-edit.putString(name, DateUtil.getHumanReadStr(new Date()));
-edit.commit();
 
 		ShiftRecord shiftRecord = new ShiftRecord();
 		Date serverTime = new Date(SystemVariables.SERVER_TIME.getTime());
+		int type = -1;
 		if ("交班".equals(name)) {
+			type = JiaoJieBanStatus.TYPE_JIAO_BAN;
 			// 检查巡更是否有未结束的
 			UserPatrolDao upDao = new UserPatrolDao();
 			List<UserPatrol> upList = upDao.getAll();
@@ -91,9 +89,11 @@ edit.commit();
 			shiftRecord.setSubmitPhoneTime(DateUtil.getHumanReadStr(new Date()));
 			shiftRecord.setSubmitTime(DateUtil.getHumanReadStr(serverTime));
 		}else if ("接班".equals(name)) {
+			type = JiaoJieBanStatus.TYPE_JIE_BAN;
 			shiftRecord.setRecivePhoneTime(DateUtil.getHumanReadStr(new Date()));
 			shiftRecord.setReceiveTime(DateUtil.getHumanReadStr(serverTime));
 		}
+
 
 
 		Station selectedGangWei = (Station) gangWei.getSelectedItem();
@@ -112,7 +112,11 @@ edit.commit();
         shiftRecord.setLineId(selectedLuXian.getKey());
 		shiftRecord.setUserId(SystemVariables.user.getId());
 		srDao.add(shiftRecord);
-        showToast(name + "成功");
+
+		JiaoJieBanStatus status = new JiaoJieBanStatus(SystemVariables.user.getId(), DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME), type);
+		jjbDao.userJiaoJieBan(status);
+		showToast(name + "成功");
+
         finish();
     }
 

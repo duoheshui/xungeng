@@ -11,15 +11,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
-import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import com.joyi.xungeng.activity.MenuActivity;
 import com.joyi.xungeng.activity.XunGengDaKaActivity;
-import com.joyi.xungeng.dao.PatrolRecordDao;
-import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.LoginService;
@@ -30,7 +27,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
-import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,11 +58,6 @@ public class MainActivity extends BaseActivity {
 		// 手机imei号
 		SystemVariables.IMEI = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
 
-		SystemVariables.JIAO_JIE_BAN_DATA = this.getSharedPreferences("jiao_jie_ban_data", Context.MODE_PRIVATE);
-String jie = SystemVariables.JIAO_JIE_BAN_DATA.getString("接班", "");
-String jiao = SystemVariables.JIAO_JIE_BAN_DATA.getString("交班", "");
-Log.e("jie", jie);
-Log.e("jiao", jiao);
 		SystemVariables.STATION_LIST.clear();
 		SystemVariables.PATROL_LINES.clear();
 		SystemVariables.SHIFT_LIST.clear();
@@ -266,8 +257,10 @@ Log.e("jiao", jiao);
 										String scheduleId = banCiObj.getString("scheduleId");
 										schedule.setScheduleId(scheduleId);
 										schedule.setStationId(banCiObj.getString("stationId"));
-										schedule.setFrequency(banCiObj.getInt("frequency"));
-										schedule.setException(banCiObj.getInt("exception"));
+										int exception = banCiObj.getInt("exception");
+										int frequency = banCiObj.getInt("frequency");
+										schedule.setFrequency(frequency);
+										schedule.setException(exception);
 										String beginTime = banCiObj.getString("beginTime");
 										String endTime = banCiObj.getString("endTime");
 										schedule.setBeginTime(beginTime);
@@ -287,6 +280,8 @@ Log.e("jiao", jiao);
 												patrolLine.setBeginTime(beginTime);
 												patrolLine.setEndTime(endTime);
 												patrolLine.setScheduleId(scheduleId);
+												patrolLine.setFrequency(frequency);
+												patrolLine.setException(exception);
 												// 节点
 												JSONArray jieDianArray = luXianObj.getJSONArray("nodes");
 												if (jieDianArray != null && jieDianArray.length() > 0) {

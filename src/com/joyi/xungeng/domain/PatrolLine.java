@@ -104,6 +104,6 @@ public class PatrolLine implements Serializable {
 		if (integer == null || integer == 0) {
 			integer = 1;
 		}
-		return lineName+ "[第"+integer+"轮]\n"+beginTime+"~"+endTime;
+		return lineName+ "\t\t[第"+integer+"轮]\n"+beginTime+"~"+endTime;
 	}
 }

@@ -11,14 +11,6 @@ import com.joyi.xungeng.util.Constants;
  */
 public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
 
-    // 路线节点
-    private static final String Line_Node_Sql =
-            "create table line_node(" +
-            "id char(20)," +
-            "lineid char(20)," +
-            "nodeName varchar(50)," +
-            "nfcCode varchar(50))";
-
     // 巡查打卡
     private static final String Patrol_View_Sql =
             "create table partol_view(" +
@@ -28,16 +20,6 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "patrolTime datetime," +
 		    "nodeName varchar(50),"+
             "patrolPhoneTime datetime)";
-
-    // 路线
-    private static final String Patrol_Line_Sql =
-            "create table partol_line(" +
-            "id char(20)," +
-            "postid char(20)," +
-            "frequency integer," +
-            "offset integer," +
-            "beginTime datetime," +
-            "endTime datetime)";
 
     // 打卡记录
     private static final String Patrol_Record_Sql =
@@ -77,6 +59,26 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
 		    "scheduleTypeId char(20)," +
             "endPhoneTime datetime)";
 
+	// 交接班状态
+	private static final String Jiao_Jie_Ban_Status_Sql =
+			"create table jiao_jie_ban_status(" +
+			"userId char(20)," +
+			"type char(1)," +
+			"time varchar(20))";
+
+	// 路线轮次
+	private static final String Lu_Xian_Lun_Ci_Sql =
+					"create table lun_xian_lun_ci(" +
+					"userId char(20)," +
+					"lineId char(20)," +
+					"lunCi integer)";
+
+	private static final String Lu_Xian_Lun_Ci_Id_Sql =
+			"create table lu_xian_lun_ci_id(" +
+					"userId char(20)," +
+					"lineId char(20)," +
+					"lunCi integer," +
+					"lunId integer)";
 
     public WuYeSqliteOpenHelper(Context context) {
         super(context, Constants.DATA_BASE_NAME, null, Constants.DATA_BASE_VERSION);
@@ -87,12 +89,13 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
 
 	    try {
 		    db.beginTransaction();
-		    db.execSQL(Line_Node_Sql);
 		    db.execSQL(Patrol_View_Sql);
-		    db.execSQL(Patrol_Line_Sql);
 		    db.execSQL(Patrol_Record_Sql);
 		    db.execSQL(Shift_Patrol_Sql);
 		    db.execSQL(User_Patrol_Sql);
+		    db.execSQL(Jiao_Jie_Ban_Status_Sql);
+		    db.execSQL(Lu_Xian_Lun_Ci_Sql);
+		    db.execSQL(Lu_Xian_Lun_Ci_Id_Sql);
 		    db.setTransactionSuccessful();
 	    } finally {
 		    db.endTransaction();

@@ -15,11 +15,12 @@ import java.util.TimeZone;
 public class DateUtil {
 
 	private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 	static{
 		// 设置时区
 		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+		timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 	}
-	private static DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 	public static String getHumanReadStr(Date date) {
 		if (date == null) {
@@ -73,6 +74,28 @@ public class DateUtil {
 		return date;
 	}
 
+	/**
+	 * 根据HH:mm:ss格式的字符串返回Date对象, 该对象的年月日为当年当月当日
+	 * @param str
+	 * @return
+	 */
+	public static Date getDateFromTimeStr2(String str) {
+		Date date = null;
+		try {
+			date = timeFormat.parse(str);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			Calendar now = Calendar.getInstance();
+			calendar.set(Calendar.YEAR, now.get(Calendar.YEAR));
+			calendar.set(Calendar.MONTH, now.get(Calendar.MONTH));
+			calendar.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
+			date = calendar.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.e("DateUtil.getDateFromHumanReadStr", e.toString());
+		}
+		return date;
+	}
 	/**
 	 * 判断是否是时间 字符串
 	 * @param dateStr

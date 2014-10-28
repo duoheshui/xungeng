@@ -1,5 +1,9 @@
 package com.joyi.xungeng.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
@@ -17,10 +21,7 @@ import com.google.gson.Gson;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
-import com.joyi.xungeng.dao.PatrolRecordDao;
-import com.joyi.xungeng.dao.PatrolViewDao;
-import com.joyi.xungeng.dao.ShiftRecordDao;
-import com.joyi.xungeng.dao.UserPatrolDao;
+import com.joyi.xungeng.dao.*;
 import com.joyi.xungeng.domain.PatrolRecord;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.domain.ShiftRecord;
@@ -51,6 +52,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	private PatrolViewDao pvDao = new PatrolViewDao();
 	private ShiftRecordDao srDao = new ShiftRecordDao();
 	private UserPatrolDao upDao = new UserPatrolDao();
+	private JiaoJieBanStatusDao jjbDao = new JiaoJieBanStatusDao();
 	private Handler handler;
 
 	private boolean uploadedPR;     // 巡更记录
@@ -193,6 +195,23 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void uploadInfo(View view) {
+		String jiaoBan = jjbDao.getJiaoBanTime(SystemVariables.user.getId());
+		if (jiaoBan == null || "".equals(jiaoBan)) {
+			Dialog alertDialog = new AlertDialog.Builder(this).
+					setTitle("确定").
+					setMessage("您还没有接班, 现在就去接班么").
+					setPositiveButton("马上接班", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Intent intent = new Intent(XinXiShangChuanActivity.this, JiaoJieBanActivity.class);
+							startActivity(intent);
+						}
+					}).
+					setNegativeButton("取消", null).setCancelable(false).create();
+			alertDialog.show();
+			return;
+		}
+
 
 		// 判断网络是否可用
 		boolean networkConnected = PhoneUtils.isNetworkConnected(this);
@@ -201,7 +220,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			return;
 		}
 		// 禁用按钮
-		uploadButton = (Button)view;
+		uploadButton = (Button) view;
 		uploadButton.setClickable(false);
 		uploadButton.setText("请在上传, 请稍等");
 
@@ -221,7 +240,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("data", gson.toJson(patrolRecords));
 			sendAsyncHttpRequest(Constants.UPLOAD_PARTOL_RECORD_URL, requestParams, Constants.WHAT_PATROL_RECORED);
-		}else{
+		} else {
 			uploadedPR = true;
 		}
 
@@ -229,7 +248,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("data", gson.toJson(patrolViews));
 			sendAsyncHttpRequest(Constants.UPLOAD_PATROL_VIEW_URL, requestParams, Constants.WHAT_PATROL_VIEW);
-		}else{
+		} else {
 			uploadedPV = true;
 		}
 
@@ -237,7 +256,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("data", gson.toJson(shiftRecords));
 			sendAsyncHttpRequest(Constants.UPLOAD_SHIFT_INFO_URL, requestParams, Constants.WHAT_SHIFT_RECORD);
-		}else{
+		} else {
 			uploadedSR = true;
 		}
 	}

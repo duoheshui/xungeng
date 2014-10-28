@@ -1,6 +1,7 @@
 package com.joyi.xungeng.activity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.JiaoJieBanStatusDao;
 import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.*;
@@ -53,6 +55,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 	private List<LineNode> lineNodes;
     private UserPatrolDao upDao = new UserPatrolDao();
     private PatrolRecordDao prDao = new PatrolRecordDao();
+	private JiaoJieBanStatusDao jjbDao = new JiaoJieBanStatusDao();
 
 
 	@Override
@@ -140,25 +143,76 @@ public class XunGengDaKaActivity extends BaseActivity {
      * @param view
      */
     public void startPatrol(View view) {
+	    String jiaoBanTime = jjbDao.getJiaoBanTime(SystemVariables.user.getId());
+	    if (jiaoBanTime == null || "".equals(jiaoBanTime)) {
+		    Dialog alertDialog = new AlertDialog.Builder(this).
+				    setTitle("确定").
+				    setMessage("您还没有接班, 现在就去接班么").
+				    setPositiveButton("马上接班", new DialogInterface.OnClickListener() {
+					    @Override
+					    public void onClick(DialogInterface dialog, int which) {
+						    Intent intent = new Intent(XunGengDaKaActivity.this, JiaoJieBanActivity.class);
+						    startActivity(intent);
+					    }
+				    }).
+				    setNegativeButton("取消", null).setCancelable(false).create();
+		    alertDialog.show();
+		    return;
+	    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    // 判断是否到开始时间
+	    Date beginTime = DateUtil.getDateFromTimeStr2(patrolLine.getBeginTime());
+	    if (beginTime != null) {
+		    long now = SystemVariables.SERVER_TIME.getTime();
+		    long begin = beginTime.getTime();
+		    if (begin > (now + patrolLine.getException() * 60 * 1000)) {
+			    showToast("还没有到开始时间, 当前时间:" + DateUtil.getTimeStr(SystemVariables.SERVER_TIME));
+			    return;
+		    }
+	    }
 
 	    Integer lunCi = luXianLunCiMap.get(lineId);
-
-        Button startBtn = (Button)view;
-        startBtn.setEnabled(false);
+	    Button startBtn = (Button) view;
+	    startBtn.setEnabled(false);
 	    startBtn.setBackgroundResource(R.drawable.disable_round_button);
 	    endButton.setEnabled(true);
 	    endButton.setBackgroundResource(R.drawable.round_button);
 
 	    luXianLunCiMap.put(lineId, lunCi);
-        UserPatrol userPatrol = new UserPatrol();
-        userPatrol.setUserId(user.getId());
-        userPatrol.setLineId(lineId);
-        userPatrol.setBeginPhoneTime(DateUtil.getHumanReadStr(new Date()));
-        Date date = new Date(SystemVariables.SERVER_TIME.getTime());
-        userPatrol.setBeginTime(DateUtil.getHumanReadStr(date));
-        userPatrol.setSequence(lunCi);
+	    UserPatrol userPatrol = new UserPatrol();
+	    userPatrol.setUserId(user.getId());
+	    userPatrol.setLineId(lineId);
+	    userPatrol.setBeginPhoneTime(DateUtil.getHumanReadStr(new Date()));
+	    Date date = new Date(SystemVariables.SERVER_TIME.getTime());
+	    userPatrol.setBeginTime(DateUtil.getHumanReadStr(date));
+	    userPatrol.setSequence(lunCi);
 	    userPatrol.setScheduleId(patrolLine.getScheduleId());
-        long id = upDao.add(userPatrol);
+	    long id = upDao.add(userPatrol);
 	    Map<Integer, Long> lunciIDMap = luXianLunCiIdMap.get(patrolLine.getId());
 	    if (lunciIDMap == null) {
 		    lunciIDMap = new HashMap<>();

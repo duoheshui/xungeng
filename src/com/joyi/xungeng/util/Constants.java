@@ -40,16 +40,17 @@ public class Constants {
 
 
 	public static final String HTTP_SUCCESS_CODE = "200";                                               // http请求成功状态
-	public static final String HTTP_DOMAIN_NAME = "http://116.255.255.131:4901";                         // 域名
-	public static final String LOGIN_URL = HTTP_DOMAIN_NAME + "/api?act=login";                         // 登录地址
-	public static final String CHANGE_PASSWORD_URL = HTTP_DOMAIN_NAME+"/api?act=setpwd";                // 修改密码URL
-	public static final String HAS_NEW_VERSION_URL = HTTP_DOMAIN_NAME+"/api?act=getnewv";               // 获取是否有新的客户端版本URL
-	public static final String UPLOAD_PARTOL_RECORD_URL = HTTP_DOMAIN_NAME+"/api?act=uploadpatrol";     // 上传打卡信息URL
-	public static final String UPLOAD_SHIFT_INFO_URL = HTTP_DOMAIN_NAME+"/api?act=uploadschedule";      // 上传交接班信息URL
-	public static final String UPLOAD_PATROL_VIEW_URL = HTTP_DOMAIN_NAME+"/api?act=uploadpatrolview";   // 上传巡查信息
+	public static final String TEST_DOMAIN_NAME = "http://218.28.243.172:4900";                    // 测试地址
+	public static final String HTTP_DOMAIN_NAME = "http://116.255.255.131:4901";                   // 域名
+	public static final String DOMAIN_NAME = TEST_DOMAIN_NAME;
+	public static final String LOGIN_URL = DOMAIN_NAME + "/api?act=login";                         // 登录地址
+	public static final String CHANGE_PASSWORD_URL = DOMAIN_NAME+"/api?act=setpwd";                // 修改密码URL
+	public static final String HAS_NEW_VERSION_URL = DOMAIN_NAME+"/api?act=getnewv";               // 获取是否有新的客户端版本URL
+	public static final String UPLOAD_PARTOL_RECORD_URL = DOMAIN_NAME+"/api?act=uploadpatrol";     // 上传打卡信息URL
+	public static final String UPLOAD_SHIFT_INFO_URL = DOMAIN_NAME+"/api?act=uploadschedule";      // 上传交接班信息URL
+	public static final String UPLOAD_PATROL_VIEW_URL = DOMAIN_NAME+"/api?act=uploadpatrolview";   // 上传巡查信息
 
 	public static final int WHAT_PATROL_RECORED = 1;                            // 上传标识:巡更记录
 	public static final int WHAT_SHIFT_RECORD = 2;                              // 上传标识:交接班记录
 	public static final int WHAT_PATROL_VIEW = 3;                               // 上传标识:巡查记录
-
 }

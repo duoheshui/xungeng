@@ -43,6 +43,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xun_cha_da_ka);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		tableLayout = (TableLayout) findViewById(R.id.patrol_view_record_table);
 		textView.setText("巡查打卡");
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -60,37 +61,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 				}}).show();
 			return;
 		}
-
-		tableLayout = (TableLayout) findViewById(R.id.patrol_view_record_table);
-		List<PatrolView> patrolViewList = patrolViewDao.getAll();
-		int bgColor = Color.parseColor("#333333");
-		TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
-
-		if (patrolViewList != null) {
-			for (PatrolView pview : patrolViewList) {
-				TableRow tableRow = new TableRow(this);
-				tableRow.setBackgroundColor(Color.WHITE);
-
-				TextView dian = new TextView(this);
-				dian.setGravity(Gravity.CENTER);
-				dian.setText(pview.getNodeName());
-				dian.setBackgroundColor(bgColor);
-				dian.setTextSize(18);
-				layoutParams.setMargins(1, 0, 1, 1);
-				dian.setLayoutParams(layoutParams);
-
-				TextView time = new TextView(this);
-				time.setGravity(Gravity.CENTER);
-				time.setText(pview.getPatrolTime());
-				time.setBackgroundColor(bgColor);
-				time.setTextSize(18);
-				time.setLayoutParams(layoutParams);
-
-				tableRow.addView(dian);
-				tableRow.addView(time);
-				tableLayout.addView(tableRow);
-			}
-		}
+		freshPage();
 	}
 
     /**
@@ -122,7 +93,7 @@ public class XunchaDaKaActivity extends BaseActivity {
         }
         patrolViewDao.add(patrolView);
         showToast(lineNode.getNodeName()+"  打卡成功");
-	    finish();
+	    freshPage();
     }
 
     @Override
@@ -140,4 +111,39 @@ public class XunchaDaKaActivity extends BaseActivity {
             nfcAdapter.disableForegroundDispatch(this);
         }
     }
+
+	public void freshPage() {
+		int childCount = tableLayout.getChildCount();
+		tableLayout.removeViews(1, childCount-1);
+
+		List<PatrolView> patrolViewList = patrolViewDao.getAll();
+		int bgColor = Color.parseColor("#333333");
+		TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
+
+		if (patrolViewList != null) {
+			for (PatrolView pview : patrolViewList) {
+				TableRow tableRow = new TableRow(this);
+				tableRow.setBackgroundColor(Color.WHITE);
+
+				TextView dian = new TextView(this);
+				dian.setGravity(Gravity.CENTER);
+				dian.setText(pview.getNodeName());
+				dian.setBackgroundColor(bgColor);
+				dian.setTextSize(18);
+				layoutParams.setMargins(1, 0, 1, 1);
+				dian.setLayoutParams(layoutParams);
+
+				TextView time = new TextView(this);
+				time.setGravity(Gravity.CENTER);
+				time.setText(pview.getPatrolTime());
+				time.setBackgroundColor(bgColor);
+				time.setTextSize(18);
+				time.setLayoutParams(layoutParams);
+
+				tableRow.addView(dian);
+				tableRow.addView(time);
+				tableLayout.addView(tableRow);
+			}
+		}
+	}
 }

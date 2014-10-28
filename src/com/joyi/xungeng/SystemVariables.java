@@ -1,8 +1,10 @@
 package com.joyi.xungeng;
 
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.joyi.xungeng.domain.*;
 
+import java.security.spec.PSSParameterSpec;
 import java.util.*;
 
 /**
@@ -14,6 +16,7 @@ public class SystemVariables {
 	public static final User user = new User();
 	public static String USER_NAME = "";
 
+	public static SharedPreferences JIAO_JIE_BAN_DATA; // 交接班记录
 
 	/**
 	 * 所有节点数据

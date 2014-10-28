@@ -1,5 +1,6 @@
 package com.joyi.xungeng.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,7 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText("交接班");
 
+
 		// 三个Spinner
 		gangWei = (Spinner) findViewById(R.id.gang_wei_spinner);
 		gangWei.setOnItemSelectedListener(this);
@@ -65,6 +67,10 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	 */
 	public void jiaoJieBan(View view) {
 		String name = ((Button) view).getText().toString();
+SharedPreferences.Editor edit = SystemVariables.JIAO_JIE_BAN_DATA.edit();
+edit.putString(name, DateUtil.getHumanReadStr(new Date()));
+edit.commit();
+
 		ShiftRecord shiftRecord = new ShiftRecord();
 		Date serverTime = new Date(SystemVariables.SERVER_TIME.getTime());
 		if ("交班".equals(name)) {

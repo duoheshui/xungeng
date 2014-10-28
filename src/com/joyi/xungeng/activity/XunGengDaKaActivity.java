@@ -157,7 +157,7 @@ public class XunGengDaKaActivity extends BaseActivity {
         Date date = new Date(SystemVariables.SERVER_TIME.getTime());
         userPatrol.setBeginTime(DateUtil.getHumanReadStr(date));
         userPatrol.setSequence(lunCi);
-//        userPatrol.setScheduleTypeId(patrolLine.g);   // TODO 无处获取
+	    userPatrol.setScheduleId(patrolLine.getScheduleId());
         long id = upDao.add(userPatrol);
 	    Map<Integer, Long> lunciIDMap = luXianLunCiIdMap.get(patrolLine.getId());
 	    if (lunciIDMap == null) {
@@ -183,7 +183,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 				str = "您还有 "+(totalPatrol-hasPatrol) +" 处未打卡, 确定要结束本轮巡查么？";
 		    }
 	    } catch (Exception e) { }
-	    new AlertDialog.Builder(XunGengDaKaActivity.this)
+	    new AlertDialog.Builder(this)
 		    .setTitle("确认")
 		    .setIcon(android.R.drawable.ic_dialog_alert).setMessage(str)
 		    .setPositiveButton("确定", new DialogInterface.OnClickListener() {

@@ -1,6 +1,5 @@
 package com.joyi.xungeng;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,35 +11,32 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TabHost;
 import com.joyi.xungeng.activity.MenuActivity;
 import com.joyi.xungeng.activity.XunGengDaKaActivity;
+import com.joyi.xungeng.dao.PatrolRecordDao;
+import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.LoginService;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
-import com.joyi.xungeng.util.StringUtils;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
+import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.security.KeyStore;
-import java.util.Arrays;
 
 /**
  * 应用程序入口Activity
@@ -66,6 +62,11 @@ public class MainActivity extends BaseActivity {
 		// 手机imei号
 		SystemVariables.IMEI = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
 
+		SystemVariables.JIAO_JIE_BAN_DATA = this.getSharedPreferences("jiao_jie_ban_data", Context.MODE_PRIVATE);
+String jie = SystemVariables.JIAO_JIE_BAN_DATA.getString("接班", "");
+String jiao = SystemVariables.JIAO_JIE_BAN_DATA.getString("交班", "");
+Log.e("jie", jie);
+Log.e("jiao", jiao);
 		SystemVariables.STATION_LIST.clear();
 		SystemVariables.PATROL_LINES.clear();
 		SystemVariables.SHIFT_LIST.clear();
@@ -192,7 +193,6 @@ public class MainActivity extends BaseActivity {
 	public void login(View view) {
 		String inputUsername = username.getText().toString();
 		String inputPassword = password.getText().toString();
-
 		try {
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("loginName", inputUsername);
@@ -263,12 +263,15 @@ public class MainActivity extends BaseActivity {
 									for (int j = 0; j < banCiArray.length(); ++j) {
 										schedule = new Schedule();
 										JSONObject banCiObj = banCiArray.getJSONObject(j);
-										schedule.setScheduleId(banCiObj.getString("scheduleId"));
+										String scheduleId = banCiObj.getString("scheduleId");
+										schedule.setScheduleId(scheduleId);
 										schedule.setStationId(banCiObj.getString("stationId"));
 										schedule.setFrequency(banCiObj.getInt("frequency"));
 										schedule.setException(banCiObj.getInt("exception"));
-										schedule.setBeginTime(banCiObj.getString("beginTime"));
-										schedule.setEndTime(banCiObj.getString("endTime"));
+										String beginTime = banCiObj.getString("beginTime");
+										String endTime = banCiObj.getString("endTime");
+										schedule.setBeginTime(beginTime);
+										schedule.setEndTime(endTime);
 										schedule.setShouldPatrolTimes(banCiObj.getInt("shouldPatrolTimes"));
 										// 路线
 										JSONArray luXianArray = banCiObj.getJSONArray("patrolLines");
@@ -276,9 +279,14 @@ public class MainActivity extends BaseActivity {
 											PatrolLine patrolLine = null;
 											for (int k = 0; k < luXianArray.length(); ++k) {
 												patrolLine = new PatrolLine();
+
+
 												JSONObject luXianObj = luXianArray.getJSONObject(k);
 												patrolLine.setId(luXianObj.getString("lineId"));
 												patrolLine.setName(luXianObj.getString("lineName"));
+												patrolLine.setBeginTime(beginTime);
+												patrolLine.setEndTime(endTime);
+												patrolLine.setScheduleId(scheduleId);
 												// 节点
 												JSONArray jieDianArray = luXianObj.getJSONArray("nodes");
 												if (jieDianArray != null && jieDianArray.length() > 0) {
@@ -289,7 +297,7 @@ public class MainActivity extends BaseActivity {
 														String nodeId = jieDianObj.getString("nodeId");
 														String nfcCode = jieDianObj.getString("nfcCode");
 														lineNode.setId(nodeId);
-														lineNode.setNodeName(jieDianObj.getString("nodeName"));
+														lineNode.setNodeName(jieDianObj.getString("name"));
 														lineNode.setLineId(jieDianObj.getString("lineId"));
 														lineNode.setNfcCode(nfcCode);
 
@@ -299,7 +307,7 @@ public class MainActivity extends BaseActivity {
 														SystemVariables.NODEID_NODE_MAP.put(nodeId, lineNode);
 													}
 												}
-
+												station.getLines().add(new KeyValuePair(luXianObj.getString("lineId"), luXianObj.getString("lineName")));
 												schedule.getPatrolLines().add(patrolLine);
 												SystemVariables.PATROL_LINES.add(patrolLine);
 											}

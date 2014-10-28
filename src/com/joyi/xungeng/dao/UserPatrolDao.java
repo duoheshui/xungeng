@@ -36,6 +36,7 @@ public class UserPatrolDao {
 		contentValues.put("endTime", userPatrol.getEndTime());
 		contentValues.put("beginPhoneTime", userPatrol.getBeginPhoneTime());
 		contentValues.put("endPhoneTime", userPatrol.getEndPhoneTime());
+		contentValues.put("scheduleId", userPatrol.getScheduleId());
 
 		long id = writableDatabase.insert("user_patrol", "", contentValues);
 		return id;
@@ -64,6 +65,7 @@ public class UserPatrolDao {
 				userPatrol.setEndTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endTime")));
 				userPatrol.setBeginPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginPhoneTime")));
 				userPatrol.setEndPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endPhoneTime")));
+				userPatrol.setScheduleId(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("scheduleId")));
 
                 List<PatrolRecord> patrolRecords = userPatrol.getPatrolRecords();
                 Cursor cursor = readableDatabase.query("patrol_record", null, "userPatrolId = ?", new String[]{String.valueOf(id)}, null, null, null);
@@ -108,6 +110,7 @@ public class UserPatrolDao {
 			userPatrol.setEndTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endTime")));
 			userPatrol.setBeginPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("beginPhoneTime")));
 			userPatrol.setEndPhoneTime(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("endPhoneTime")));
+			userPatrol.setScheduleId(userPatrolCursor.getString(userPatrolCursor.getColumnIndex("scheduleId")));
 		}
 		return userPatrol;
 	}

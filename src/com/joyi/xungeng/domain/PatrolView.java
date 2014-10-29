@@ -17,6 +17,17 @@ public class PatrolView implements Serializable {
 	private String nodeName;
 	private String status;
 	private String imei = SystemVariables.IMEI;
+	private int sync;                   // 是否已同步到服务器
+
+
+	public int getSync() {
+		return sync;
+	}
+
+	public void setSync(int sync) {
+		this.sync = sync;
+	}
+
 
 
 	public String getPatrolPhoneTime() {

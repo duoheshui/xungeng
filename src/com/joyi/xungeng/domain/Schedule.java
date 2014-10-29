@@ -17,9 +17,25 @@ public class Schedule {
 	private String endTime;
 	private int shouldPatrolTimes;                              // 需要巡更的轮次,根据开始结束时间及频次动态计算的
 	private List<PatrolLine> patrolLines = new ArrayList<>();   // 巡更路线
+	private String name;                                        // 班次名称
+	private String scheduleTypeName;                            // '早班｜中班｜晚班'
 
 
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getScheduleTypeName() {
+		return scheduleTypeName;
+	}
+
+	public void setScheduleTypeName(String scheduleTypeName) {
+		this.scheduleTypeName = scheduleTypeName;
+	}
 
 	public String getScheduleId() {
 		return scheduleId;

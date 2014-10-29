@@ -1,10 +1,8 @@
 package com.joyi.xungeng.domain;
 
 import com.joyi.xungeng.SystemVariables;
-import com.joyi.xungeng.util.DateUtil;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by zhangyong on 2014/10/14.
@@ -21,6 +19,17 @@ public class PatrolRecord implements Serializable {
     private int sequence;              // 轮次
     private String lineId;
 	private String imei = SystemVariables.IMEI;
+	private int sync;                   // 是否已同步到服务器
+
+
+	public int getSync() {
+		return sync;
+	}
+
+	public void setSync(int sync) {
+		this.sync = sync;
+	}
+
 
 
 	public String getImei() {

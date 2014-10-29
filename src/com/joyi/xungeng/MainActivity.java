@@ -255,6 +255,10 @@ public class MainActivity extends BaseActivity {
 										schedule = new Schedule();
 										JSONObject banCiObj = banCiArray.getJSONObject(j);
 										String scheduleId = banCiObj.getString("scheduleId");
+										String name = banCiObj.getString("name");
+										String scheduleTypeName = banCiObj.getString("scheduleTypeName");
+										schedule.setName(name);
+										schedule.setScheduleTypeName(scheduleTypeName);
 										schedule.setScheduleId(scheduleId);
 										schedule.setStationId(banCiObj.getString("stationId"));
 										int exception = banCiObj.getInt("exception");
@@ -275,8 +279,10 @@ public class MainActivity extends BaseActivity {
 
 
 												JSONObject luXianObj = luXianArray.getJSONObject(k);
+												patrolLine.setName(name);
+												patrolLine.setScheduleTypeName(scheduleTypeName);
 												patrolLine.setId(luXianObj.getString("lineId"));
-												patrolLine.setName(luXianObj.getString("lineName"));
+												patrolLine.setLineName(luXianObj.getString("lineName"));
 												patrolLine.setBeginTime(beginTime);
 												patrolLine.setEndTime(endTime);
 												patrolLine.setScheduleId(scheduleId);

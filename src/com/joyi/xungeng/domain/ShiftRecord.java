@@ -19,6 +19,19 @@ public class ShiftRecord implements Serializable {
 	private String receiveTime;     // 接班时间
 	private String recivePhoneTime;     // 接班手机时间
 	private String imei = SystemVariables.IMEI;
+	private int sync;                   // 是否已同步到服务器
+
+
+	public int getSync() {
+		return sync;
+	}
+
+	public void setSync(int sync) {
+		this.sync = sync;
+	}
+
+
+
 
 	public String getImei() {
 		return imei;

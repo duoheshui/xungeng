@@ -199,8 +199,8 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		if (jiaoBan == null || "".equals(jiaoBan)) {
 			Dialog alertDialog = new AlertDialog.Builder(this).
 					setTitle("确定").
-					setMessage("您还没有接班, 现在就去接班么").
-					setPositiveButton("马上接班", new DialogInterface.OnClickListener() {
+					setMessage("您还没有交班, 现在就去交班么").
+					setPositiveButton("马上交班", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							Intent intent = new Intent(XinXiShangChuanActivity.this, JiaoJieBanActivity.class);
@@ -211,7 +211,6 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			alertDialog.show();
 			return;
 		}
-
 
 		// 判断网络是否可用
 		boolean networkConnected = PhoneUtils.isNetworkConnected(this);

@@ -22,6 +22,25 @@ public class PatrolLine implements Serializable {
 	private String endTime;
 	private String scheduleId;                          // 班次id
 	private List<LineNode> lineNodes = new ArrayList<>();// 路线上的节点
+	private String name;                                        // 班次名称
+	private String scheduleTypeName;                            // '早班｜中班｜晚班'
+
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getScheduleTypeName() {
+		return scheduleTypeName;
+	}
+
+	public void setScheduleTypeName(String scheduleTypeName) {
+		this.scheduleTypeName = scheduleTypeName;
+	}
 
 
 	public String getScheduleId() {
@@ -36,11 +55,11 @@ public class PatrolLine implements Serializable {
 		return lineNodes;
 	}
 
-	public String getName() {
+	public String getLineName() {
 		return lineName;
 	}
 
-	public void setName(String lineName) {
+	public void setLineName(String lineName) {
 		this.lineName = lineName;
 	}
 
@@ -104,6 +123,6 @@ public class PatrolLine implements Serializable {
 		if (integer == null || integer == 0) {
 			integer = 1;
 		}
-		return lineName+ "\t\t[第"+integer+"轮]\n"+beginTime+"~"+endTime;
+		return name+"["+scheduleTypeName+"]\n"+lineName+ "\t\t[第"+integer+"轮]\n"+beginTime+"~"+endTime;
 	}
 }

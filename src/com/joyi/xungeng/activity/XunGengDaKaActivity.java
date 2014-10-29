@@ -74,6 +74,17 @@ public class XunGengDaKaActivity extends BaseActivity {
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()), 0);
 		lineNodes = (List<LineNode>) getIntent().getSerializableExtra("lineNodes");
 
+		// 判断手机是否支持NFC
+		if (nfcAdapter == null) {
+			new AlertDialog.Builder(this)
+					.setTitle("")
+					.setMessage("您的手机不支持NFC功能").setNegativeButton("确定", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					XunGengDaKaActivity.this.finish();
+				}}).setCancelable(false).show();
+			return;
+		}
 		// 判断NFC是否已开启
 		if (!nfcAdapter.isEnabled()) {
 			new AlertDialog.Builder(this)
@@ -88,7 +99,6 @@ public class XunGengDaKaActivity extends BaseActivity {
 			return;
 		}
 
-
 		patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
 		if (patrolLine != null) {
 			textView.setText("巡更打卡:"+patrolLine.getName());
@@ -101,7 +111,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		yiXunLunCi.setText((luXianLunCiMap.get(lineId) - 1) + "次");
 
 
-		// 判断巡更次数是否达到系统配置
+		// 判断巡更次数是否达到系统配置 TODO
 		lunCi = luXianLunCiMap.get(lineId);
 //		int frequency = patrolLine.getFrequency();
 //		if (lunCi > frequency) {
@@ -143,7 +153,7 @@ public class XunGengDaKaActivity extends BaseActivity {
      * @param view
      */
     public void startPatrol(View view) {
-	    String jiaoBanTime = jjbDao.getJiaoBanTime(SystemVariables.user.getId());
+	    String jiaoBanTime = jjbDao.getJieBanTime(SystemVariables.user.getId());
 	    if (jiaoBanTime == null || "".equals(jiaoBanTime)) {
 		    Dialog alertDialog = new AlertDialog.Builder(this).
 				    setTitle("确定").
@@ -159,31 +169,6 @@ public class XunGengDaKaActivity extends BaseActivity {
 		    alertDialog.show();
 		    return;
 	    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	    // 判断是否到开始时间
 	    Date beginTime = DateUtil.getDateFromTimeStr2(patrolLine.getBeginTime());

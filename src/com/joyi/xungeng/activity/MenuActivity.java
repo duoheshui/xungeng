@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import com.joyi.xungeng.BaseActivity;
@@ -14,6 +15,7 @@ import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.util.Constants;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +42,19 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
 		// 如果没有继承TabActivity时，通过该种方法加载启动tabHost
 		tabHost.setup();
-		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("功能菜单").setContent(R.id.view1));
-		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("系统设置").setContent(R.id.view2));
+		LayoutInflater inflater = getLayoutInflater();
+		View view1 = inflater.inflate(R.layout.tag_widget, null);
+//		ImageView image1 = (ImageView) view1.findViewById(R.id.tag_image_view);
+		TextView text1 = (TextView) view1.findViewById(R.id.tag_label);
+		text1.setText("功能菜单");
+
+		View view2 = inflater.inflate(R.layout.tag_widget, null);
+//		ImageView image2 = (ImageView) view2.findViewById(R.id.tag_image_view);
+		TextView text2 = (TextView) view2.findViewById(R.id.tag_label);
+		text2.setText("系统菜单");
+
+		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator(view1).setContent(R.id.view1));
+		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator(view2).setContent(R.id.view2));
 
 		// 功能菜单
 		functionMenuGridView = (GridView) findViewById(R.id.functionMenuGridView);

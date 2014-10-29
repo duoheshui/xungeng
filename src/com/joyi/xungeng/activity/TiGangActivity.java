@@ -1,8 +1,12 @@
 package com.joyi.xungeng.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
@@ -24,6 +28,9 @@ public class TiGangActivity extends BaseActivity {
 
 		loginNameET = (EditText) findViewById(R.id.tg_login_name);
 		passwordET = (EditText) findViewById(R.id.tg_password);
+		TextView textView = (TextView) findViewById(R.id.username_edittext);
+		textView.setText("替岗【当前在岗人员:"+SystemVariables.tUser.getUserName()+"】");
+
 	}
 
 
@@ -38,7 +45,7 @@ public class TiGangActivity extends BaseActivity {
 			showToast("请输入用户名和密码");
 			return;
 		}
-		User user = SystemVariables.ALL_USERS_MAP.get(loginName);
+		final User user = SystemVariables.ALL_USERS_MAP.get(loginName);
 		if (user == null) {
 			showToast("用户不存在");
 			return;
@@ -48,17 +55,29 @@ public class TiGangActivity extends BaseActivity {
 			return;
 		}
 
-		SystemVariables.tUser.setHasPatrolViewPrivilege(user.isHasPatrolViewPrivilege());
-		SystemVariables.tUser.setPatrolStationTypeId(user.getPatrolStationTypeId());
-		SystemVariables.tUser.setPyShort(user.getPyShort());
-		SystemVariables.tUser.setId(user.getId());
-		SystemVariables.tUser.setLoginName(user.getLoginName());
-		SystemVariables.tUser.setUserName(user.getUserName());
-		SystemVariables.tUser.setPassword(user.getPassword());
 
-		SystemVariables.T_USER_ID = user.getId();
+		String tuserName = SystemVariables.tUser.getUserName();
+		Dialog alertDialog = new AlertDialog.Builder(this).
+			setTitle("确定").
+			setMessage("当前在岗人员为" + tuserName + ", 确定要替岗么？").
+			setPositiveButton("替岗", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					SystemVariables.tUser.setHasPatrolViewPrivilege(user.isHasPatrolViewPrivilege());
+					SystemVariables.tUser.setPatrolStationTypeId(user.getPatrolStationTypeId());
+					SystemVariables.tUser.setPyShort(user.getPyShort());
+					SystemVariables.tUser.setId(user.getId());
+					SystemVariables.tUser.setLoginName(user.getLoginName());
+					SystemVariables.tUser.setUserName(user.getUserName());
+					SystemVariables.tUser.setPassword(user.getPassword());
 
-		showToast("替岗成功");
+					SystemVariables.T_USER_ID = user.getId();
+
+					showToast("替岗成功");
+					finish();
+				}
+			}).
+			setNegativeButton("取消", null).create();
+		alertDialog.show();
 	}
-
 }

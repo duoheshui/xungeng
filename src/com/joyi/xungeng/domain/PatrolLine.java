@@ -1,10 +1,10 @@
 package com.joyi.xungeng.domain;
 
-import com.joyi.xungeng.activity.XunGengDaKaActivity;
+import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.LuXianLunCiDao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,7 +24,16 @@ public class PatrolLine implements Serializable {
 	private List<LineNode> lineNodes = new ArrayList<>();// 路线上的节点
 	private String name;                                        // 班次名称
 	private String scheduleTypeName;                            // '早班｜中班｜晚班'
+	private int shouldPatrolTimes;                          // 根据开始结束时间及频次动态计算的
 
+
+	public int getShouldPatrolTimes() {
+		return shouldPatrolTimes;
+	}
+
+	public void setShouldPatrolTimes(int shouldPatrolTimes) {
+		this.shouldPatrolTimes = shouldPatrolTimes;
+	}
 
 	public String getName() {
 		return name;
@@ -118,11 +127,9 @@ public class PatrolLine implements Serializable {
 
 	@Override
 	public String toString() {
-		Integer integer = XunGengDaKaActivity.luXianLunCiMap.get(id);
-
-		if (integer == null || integer == 0) {
-			integer = 1;
-		}
-		return name+"["+scheduleTypeName+"]\n"+lineName+ "\t\t[第"+integer+"轮]\n"+beginTime+"~"+endTime;
+		LuXianLunCiDao llDao = new LuXianLunCiDao();
+		int lunCi = llDao.getLunCi(SystemVariables.USER_ID, id);
+		lunCi = lunCi<0 ? 1 : lunCi;
+		return name+"["+scheduleTypeName+"]\n"+lineName+ "\t\t[第"+lunCi+"轮]\n"+beginTime+"~"+endTime;
 	}
 }

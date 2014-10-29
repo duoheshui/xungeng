@@ -31,7 +31,9 @@ public class PatrolRecordDao {
 		contentValues.put("patrolPhoneTime", patrolRecord.getPatrolPhoneTime());
 		contentValues.put("sequence", patrolRecord.getSequence());
 		contentValues.put("lineId", patrolRecord.getLineId());
-		contentValues.put("error", "");
+		contentValues.put("error", patrolRecord.getError());
+		contentValues.put("tuserId", patrolRecord.getTuserId());
+		contentValues.put("userId", patrolRecord.getUserId());
 
 		return writableDatabase.insert("patrol_record", null, contentValues);
 	}
@@ -57,6 +59,8 @@ public class PatrolRecordDao {
 				patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
 				patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
 				patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
+				patrolRecord.setTuserId(cursor.getString(cursor.getColumnIndex("tuserId")));
+				patrolRecord.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
 				patrolRecords.add(patrolRecord);
 			}
 		}
@@ -84,11 +88,14 @@ public class PatrolRecordDao {
 				patrolRecord.setNodeId(cursor.getString(cursor.getColumnIndex("nodeId")));
 				patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
 				patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
+				patrolRecord.setTuserId(cursor.getString(cursor.getColumnIndex("tuserId")));
+				patrolRecord.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
 				patrolRecords.add(patrolRecord);
 			}
 		}
 		return patrolRecords;
 	}
+
 
     public Map<String, PatrolRecord> getMap(String lineId, int sequence) {
         Map<String, PatrolRecord> map = new HashMap<>();
@@ -108,6 +115,8 @@ public class PatrolRecordDao {
                 patrolRecord.setSequence(cursor.getInt(cursor.getColumnIndex("sequence")));
                 patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
                 patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
+	            patrolRecord.setTuserId(cursor.getString(cursor.getColumnIndex("tuserId")));
+	            patrolRecord.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
                 map.put(nodeid, patrolRecord);
             }
         }
@@ -116,7 +125,6 @@ public class PatrolRecordDao {
 
 	public void deleteAll() {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
-		writableDatabase.delete("patrol_record", null, null);
+		writableDatabase.delete("patrol_record", "userId = ?", new String[]{SystemVariables.USER_ID});
 	}
-
 }

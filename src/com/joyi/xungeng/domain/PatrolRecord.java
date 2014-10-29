@@ -15,12 +15,30 @@ public class PatrolRecord implements Serializable {
 	private String userPatrolId;
 	private String patrolTime;
 	private String patrolPhoneTime;
-	private String error;
+	private String error = "";
     private int sequence;              // 轮次
     private String lineId;
 	private String imei = SystemVariables.IMEI;
 	private int sync;                   // 是否已同步到服务器
+	private String userId;              // 用户ID
+	private String tuserId;             // 替班用户ID
 
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getTuserId() {
+		return tuserId;
+	}
+
+	public void setTuserId(String tuserId) {
+		this.tuserId = tuserId;
+	}
 
 	public int getSync() {
 		return sync;

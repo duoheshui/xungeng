@@ -20,7 +20,7 @@ public class LuXianLunCiDao {
 	 * @return
 	 */
 	public int getLunCi(String userId, String lineId) {
-		int lunCi = 1;
+		int lunCi = -1;
 		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 		Cursor cursor = db.query("lun_xian_lun_ci", null, "userId = ? and lineId = ?", new String[]{userId, lineId}, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
@@ -42,6 +42,26 @@ public class LuXianLunCiDao {
 		values.put("userId", lunCi.getUserId());
 		values.put("lineId", lunCi.getLineId());
 		values.put("lunCi", lunCi.getLunCi());
+		db.insert("lun_xian_lun_ci", null, values);
+		db.setTransactionSuccessful();
+		db.endTransaction();
+	}
+
+	/**
+	 * 设置当前用户当前线路进行中的轮次
+	 * @param userId
+	 * @param lineId
+	 * @param lunCi
+	 */
+	public void setLunCi(String userId, String lineId, int lunCi) {
+		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
+
+		db.beginTransaction();
+		db.delete("lun_xian_lun_ci", "userId = ? and lineId = ?", new String[]{userId, lineId});
+		ContentValues values = new ContentValues(3);
+		values.put("userId", userId);
+		values.put("lineId", lineId);
+		values.put("lunCi", lunCi);
 		db.insert("lun_xian_lun_ci", null, values);
 		db.setTransactionSuccessful();
 		db.endTransaction();

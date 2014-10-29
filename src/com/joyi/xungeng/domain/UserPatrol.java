@@ -23,7 +23,16 @@ public class UserPatrol implements Serializable {
 	private String endPhoneTime;
 	private String imei = SystemVariables.IMEI;
 	private int sync;                   // 是否已同步到服务器
+	private String tuserId;             // 替班用户ID
 
+
+	public String getTuserId() {
+		return tuserId;
+	}
+
+	public void setTuserId(String tuserId) {
+		this.tuserId = tuserId;
+	}
 
 	public int getSync() {
 		return sync;

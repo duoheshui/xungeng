@@ -22,7 +22,9 @@ import com.joyi.xungeng.domain.LineNode;
 import com.joyi.xungeng.domain.PatrolView;
 import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.service.XunGengService;
+import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.DateUtil;
+import com.joyi.xungeng.util.VibratorUtil;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -80,6 +82,7 @@ public class XunchaDaKaActivity extends BaseActivity {
             String nfcCode = XunGengService.byteArray2HexString(arr);
             lineNode = SystemVariables.ALL_LINE_NODES_MAP.get(nfcCode);
             if (lineNode == null) {
+	            VibratorUtil.vibrate(this);
                 showToast("无效的NFC卡...");
                 return;
             }
@@ -116,7 +119,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 		int childCount = tableLayout.getChildCount();
 		tableLayout.removeViews(1, childCount-1);
 
-		List<PatrolView> patrolViewList = patrolViewDao.getAll();
+		List<PatrolView> patrolViewList = patrolViewDao.getAll(Constants.SYNC_ALL);
 		int bgColor = Color.parseColor("#333333");
 		TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
 

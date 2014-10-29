@@ -27,6 +27,7 @@
         <activity android:name=".activity.XiuGaiMiMaActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.XunGengLuXianActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.ChaXunDaKaActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.TiGangActivity" android:screenOrientation="portrait"/>
     </application>
 
     <uses-permission android:name="android.permission.NFC"/>

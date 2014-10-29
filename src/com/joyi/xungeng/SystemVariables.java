@@ -3,6 +3,7 @@ package com.joyi.xungeng;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.joyi.xungeng.domain.*;
 
+import java.security.spec.PSSParameterSpec;
 import java.util.*;
 
 /**
@@ -11,8 +12,16 @@ import java.util.*;
  * 用于保存从服务端读取到的数据, 如:用户下的路线, 岗位, 班次
  */
 public class SystemVariables {
+	// 登录用户
 	public static final User user = new User();
-	public static String USER_NAME = "";
+	public static String USER_ID = "";
+
+	// 替岗用户
+	public static final User tUser = new User();
+	public static String T_USER_ID = "";
+
+	public static final List<User> ALL_USERS = new ArrayList<>();                   // 所有用户
+	public static final Map<String, User> ALL_USERS_MAP = new HashMap<>();          // 所有用户 <loginName, User>映射关系
 
 	/**
 	 * 所有节点数据

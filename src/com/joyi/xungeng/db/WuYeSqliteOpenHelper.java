@@ -19,7 +19,8 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "userid char(20)," +
             "patrolTime datetime," +
 		    "nodeName varchar(50),"+
-            "patrolPhoneTime datetime)";
+            "patrolPhoneTime datetime," +
+            "sync integer)";
 
     // 打卡记录
     private static final String Patrol_Record_Sql =
@@ -31,7 +32,9 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "patrolPhoneTime datetime," +
             "sequence integer,"+
             "lineId char(20),"+
-            "error varchar(200))";
+            "error varchar(200)," +
+            "sync integer," +
+            "tuserId char(20))";
 
     // 交接班记录
     private static final String Shift_Patrol_Sql =
@@ -43,7 +46,9 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "submit_time datetime," +
             "submit_phone_time datetime," +
             "receive_time datetime," +
-            "receive_phone_time datetime)";
+            "receive_phone_time datetime," +
+            "sync integer," +
+            "tuserId char(20))";
 
     // 轮次记录
     private static final String User_Patrol_Sql =
@@ -57,7 +62,9 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "scheduleId char(20), "+
             "beginPhoneTime datetime," +
 		    "scheduleTypeId char(20)," +
-            "endPhoneTime datetime)";
+            "endPhoneTime datetime," +
+            "sync integer," +
+            "tuserId char(20))";
 
 	// 交接班状态
 	private static final String Jiao_Jie_Ban_Status_Sql =
@@ -66,13 +73,14 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
 			"type char(1)," +
 			"time varchar(20))";
 
-	// 路线轮次
+	// 路线-已进行到的轮次
 	private static final String Lu_Xian_Lun_Ci_Sql =
 					"create table lun_xian_lun_ci(" +
 					"userId char(20)," +
 					"lineId char(20)," +
 					"lunCi integer)";
 
+	// 路线-轮次-该轮id
 	private static final String Lu_Xian_Lun_Ci_Id_Sql =
 			"create table lu_xian_lun_ci_id(" +
 					"userId char(20)," +

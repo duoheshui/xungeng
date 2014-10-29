@@ -59,4 +59,24 @@ public class JiaoJieBanStatusDao {
 		db.endTransaction();
 
 	}
+
+	/**
+	 * 用户交/接班
+	 * @param userId
+	 * @param type
+	 * @param time
+	 */
+	public void userJiaoJieBan(String userId, int type, String time) {
+		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
+		db.beginTransaction();
+		db.delete("jiao_jie_ban_status", "userId = ? and type = ?", new String[]{userId, String.valueOf(type)});
+		ContentValues values = new ContentValues();
+		values.put("userId", userId);
+		values.put("type", type);
+		values.put("time", time);
+		db.insert("jiao_jie_ban_status", null, values);
+		db.setTransactionSuccessful();
+		db.endTransaction();
+
+	}
 }

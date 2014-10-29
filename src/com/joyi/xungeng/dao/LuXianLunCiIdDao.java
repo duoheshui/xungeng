@@ -31,20 +31,43 @@ public class LuXianLunCiIdDao {
 	}
 
 	/**
-	 * 设置指定用户, 指定线路, 指定轮次, 的轮id
-	 * @param lid
+	 * 获取指定用户, 指定线路, 指定轮次, 的轮id
+	 * @param userId
+	 * @param lineId
+	 * @param lunCi
 	 * @return
 	 */
-	public void setLunCiId(LuXianLunCiId lid) {
+	public long getLunCiId(String userId, String lineId, int lunCi) {
+		long id = -1;
+		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
+		Cursor cursor = db.query("lu_xian_lun_ci_id", null, "userId = ? and lineId = ? and lunCi = ?",
+				new String[]{userId, lineId, String.valueOf(lunCi)}, null, null, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			id = cursor.getLong(cursor.getColumnIndex("lunId"));
+		}
+
+		return id;
+	}
+
+
+	/**
+	 * 设置指定用户, 指定线路, 指定轮次, 的轮id
+	 * @param userId
+	 * @param lineId
+	 * @param lunCi
+	 * @param lunId
+	 */
+	public void setLunCiId(String userId, String lineId, int lunCi, long lunId) {
 		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		db.beginTransaction();
 
-		db.delete("lu_xian_lun_ci_id", "userId = ? and lineId = ? and lunCi = ?", new String[]{lid.getUserId(), lid.getLineId(), String.valueOf(lid.getLunCi())});
+		db.delete("lu_xian_lun_ci_id", "userId = ? and lineId = ? and lunCi = ?",
+				new String[]{userId, lineId, String.valueOf(lunCi)});
 		ContentValues values = new ContentValues(4);
-		values.put("userId", lid.getUserId());
-		values.put("lineId", lid.getLineId());
-		values.put("lunCi", lid.getLunCi());
-		values.put("lunId", lid.getLunId());
+		values.put("userId", userId);
+		values.put("lineId", lineId);
+		values.put("lunCi", lunCi);
+		values.put("lunId", lunId);
 		db.insert("lu_xian_lun_ci_id", null, values);
 		db.setTransactionSuccessful();
 		db.endTransaction();

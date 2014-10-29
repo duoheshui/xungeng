@@ -21,9 +21,7 @@ import com.google.gson.Gson;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
-import com.joyi.xungeng.dao.JiaoJieBanStatusDao;
-import com.joyi.xungeng.dao.PatrolRecordDao;
-import com.joyi.xungeng.dao.UserPatrolDao;
+import com.joyi.xungeng.dao.*;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.DateUtil;
@@ -47,15 +45,16 @@ public class XunGengDaKaActivity extends BaseActivity {
 	private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 
-    public static final Map<String, Integer> luXianLunCiMap = new HashMap<>();                   // 路线ID<->轮次映射表
-	public static final Map<String, Map<Integer, Long>> luXianLunCiIdMap = new HashMap<>();    // 路线ID<->轮次<->轮软记录ID
     private User user = SystemVariables.user;
 	private String lineId;
+	private int lunCi;
     private PatrolLine patrolLine;
 	private List<LineNode> lineNodes;
     private UserPatrolDao upDao = new UserPatrolDao();
     private PatrolRecordDao prDao = new PatrolRecordDao();
 	private JiaoJieBanStatusDao jjbDao = new JiaoJieBanStatusDao();
+	private LuXianLunCiDao llDao = new LuXianLunCiDao();
+	private LuXianLunCiIdDao lliDao = new LuXianLunCiIdDao();
 
 
 	@Override
@@ -100,39 +99,27 @@ public class XunGengDaKaActivity extends BaseActivity {
 		}
 
 		patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
-		if (patrolLine != null) {
-			textView.setText("巡更打卡:"+patrolLine.getName());
-		}
 		lineId = patrolLine.getId();
-		Integer lunCi = luXianLunCiMap.get(lineId);
-		if (lunCi==null || lunCi==0) {
-			luXianLunCiMap.put(lineId, 1);
+		if (patrolLine != null) {
+			textView.setText("巡更打卡:"+patrolLine.getLineName());
 		}
-		yiXunLunCi.setText((luXianLunCiMap.get(lineId) - 1) + "次");
+		lunCi = llDao.getLunCi(SystemVariables.USER_ID, lineId);
+		if (lunCi <= 0) {
+			llDao.setLunCi(SystemVariables.USER_ID, lineId, 1);
+			lunCi = 1;
+		}
+		yiXunLunCi.setText((llDao.getLunCi(SystemVariables.USER_ID, lineId) - 1) + "次");
 
-
-		// 判断巡更次数是否达到系统配置 TODO
-		lunCi = luXianLunCiMap.get(lineId);
-//		int frequency = patrolLine.getFrequency();
-//		if (lunCi > frequency) {
-//			showToast("共" + frequency + "轮已完部巡更完, 无法再继续巡更");
-//			finish();
-//			return;
-//		}
 
 		// 初始化 开始, 结束按钮状态
-		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
-		if (integerLongMap == null || integerLongMap.size() == 0) {
-		}else {
-			Long lunciId = integerLongMap.get(lunCi);
-			UserPatrol byId = upDao.getById(lunciId);
-			if (byId != null) {
-				// 本轮已开始
-				startButton.setEnabled(false);
-				startButton.setBackgroundResource(R.drawable.disable_round_button);
-				endButton.setEnabled(true);
-				endButton.setBackgroundResource(R.drawable.round_button);
-			}
+		long lunCiId = lliDao.getLunCiId(SystemVariables.USER_ID, lineId, lunCi);
+		UserPatrol byId = upDao.getById(lunCiId);
+		if (byId != null) {
+			// 本轮已开始
+			startButton.setEnabled(false);
+			startButton.setBackgroundResource(R.drawable.disable_round_button);
+			endButton.setEnabled(true);
+			endButton.setBackgroundResource(R.drawable.round_button);
 		}
 		// 漏巡情况
 		StringBuffer buffer = new StringBuffer();
@@ -152,7 +139,25 @@ public class XunGengDaKaActivity extends BaseActivity {
      * 开始(本轮)巡更
      * @param view
      */
+    boolean gogogo = true;
     public void startPatrol(View view) {
+	    int shouldPatrolTimes = patrolLine.getShouldPatrolTimes();
+	    if (lunCi > shouldPatrolTimes) {
+		    new AlertDialog.Builder(this)
+			    .setTitle("")
+			    .setMessage("共" + shouldPatrolTimes + "轮已完部巡更完,确定还要继续巡更么？")
+			    .setPositiveButton("取消",new DialogInterface.OnClickListener() {
+				    @Override
+				    public void onClick(DialogInterface dialogInterface, int i) {
+					    gogogo = true;
+				    }
+			    }).setNegativeButton("继续巡更", null).show();
+	    }
+	    if (!gogogo) {
+		    return;
+	    }
+
+
 	    String jiaoBanTime = jjbDao.getJieBanTime(SystemVariables.user.getId());
 	    if (jiaoBanTime == null || "".equals(jiaoBanTime)) {
 		    Dialog alertDialog = new AlertDialog.Builder(this).
@@ -181,14 +186,13 @@ public class XunGengDaKaActivity extends BaseActivity {
 		    }
 	    }
 
-	    Integer lunCi = luXianLunCiMap.get(lineId);
 	    Button startBtn = (Button) view;
 	    startBtn.setEnabled(false);
 	    startBtn.setBackgroundResource(R.drawable.disable_round_button);
 	    endButton.setEnabled(true);
 	    endButton.setBackgroundResource(R.drawable.round_button);
 
-	    luXianLunCiMap.put(lineId, lunCi);
+	    llDao.setLunCi(SystemVariables.USER_ID, lineId, lunCi);
 	    UserPatrol userPatrol = new UserPatrol();
 	    userPatrol.setUserId(user.getId());
 	    userPatrol.setLineId(lineId);
@@ -198,12 +202,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 	    userPatrol.setSequence(lunCi);
 	    userPatrol.setScheduleId(patrolLine.getScheduleId());
 	    long id = upDao.add(userPatrol);
-	    Map<Integer, Long> lunciIDMap = luXianLunCiIdMap.get(patrolLine.getId());
-	    if (lunciIDMap == null) {
-		    lunciIDMap = new HashMap<>();
-		    luXianLunCiIdMap.put(lineId, lunciIDMap);
-	    }
-	    luXianLunCiIdMap.get(lineId).put(lunCi, id);
+	    lliDao.setLunCiId(SystemVariables.USER_ID, lineId, lunCi, id);
     }
 
     /**
@@ -214,7 +213,7 @@ public class XunGengDaKaActivity extends BaseActivity {
     public void endPatrol(final View view) {
 	    // 判断是否有漏巡
 	    String str = "确定要结束本轮巡查么？";
-	    Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
+	    Map<String, PatrolRecord> map = prDao.getMap(lineId, lunCi);
 	    try {
 		    int hasPatrol = map.entrySet().size();
 		    int totalPatrol = lineNodes.size();
@@ -228,13 +227,11 @@ public class XunGengDaKaActivity extends BaseActivity {
 		    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 			    @Override
 			    public void onClick(DialogInterface dialogInterface, int i) {
-				    Integer lunCi = luXianLunCiMap.get(lineId);
-				    Long id = luXianLunCiIdMap.get(lineId).get(lunCi);
-				    Date serverDate = new Date(SystemVariables.SERVER_TIME.getTime());
-				    upDao.updateEndDate(serverDate, new Date(), id);
+				    Long id = lliDao.getLunCiId(SystemVariables.USER_ID, lineId, lunCi);
+				    upDao.updateEndDate(SystemVariables.SERVER_TIME, new Date(), id);
 
 				    lunCi++;
-				    luXianLunCiMap.put(lineId, lunCi);
+				    llDao.setLunCi(SystemVariables.USER_ID, lineId, lunCi);
 
 				    Button endBtn = (Button)view;
 				    endBtn.setEnabled(false);
@@ -254,22 +251,13 @@ public class XunGengDaKaActivity extends BaseActivity {
 	protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-		Integer lunCi = luXianLunCiMap.get(lineId);
 		// 初始化开始, 结束状态
-		Map<Integer, Long> integerLongMap = luXianLunCiIdMap.get(lineId);
-		if (integerLongMap == null || integerLongMap.size() == 0) {
-			// 还未开始第一轮
+		long lunciId = lliDao.getLunCiId(SystemVariables.USER_ID, lineId, lunCi);
+		UserPatrol byId = upDao.getById(lunciId);
+		if (byId == null) {
 			VibratorUtil.vibrate(this);
 			showToast("请先点击开始再打卡");
 			return;
-		}else {
-			Long lunciId = integerLongMap.get(lunCi);
-			UserPatrol byId = upDao.getById(lunciId);
-			if (byId == null) {
-				VibratorUtil.vibrate(this);
-				showToast("请先点击开始再打卡");
-				return;
-			}
 		}
 
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -298,15 +286,16 @@ public class XunGengDaKaActivity extends BaseActivity {
 			        return;
 		        }
 
-		        Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
+		        Map<String, PatrolRecord> map = prDao.getMap(lineId, lunCi);
 		        PatrolRecord record = map.get(lineNode.getId());
 		        if (record != null && record.getPatrolTime()!=null && record.getPatrolTime().length()>10) {
 			        VibratorUtil.vibrate(this);
 			        showLongToast("该地点已经在 " + record.getPatrolTime().substring(11)+ "打过, 本次打卡无效");
 			        return;
 		        }
-		        long userPatrolId = luXianLunCiIdMap.get(lineId).get(lunCi);
+		        long userPatrolId = lliDao.getLunCiId(SystemVariables.USER_ID, lineId, lunCi);
 		        PatrolRecord patrolRecord = new PatrolRecord();
+
 		        patrolRecord.setPatrolTime(DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME));
 		        patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
 		        if (lineNode != null) {
@@ -335,7 +324,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		int childCount = tableLayout.getChildCount();
 		tableLayout.removeViews(1, childCount-1);
 
-		Map<String, PatrolRecord> map = prDao.getMap(lineId, luXianLunCiMap.get(lineId));
+		Map<String, PatrolRecord> map = prDao.getMap(lineId, lunCi);
 		for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
 			tableRow.setBackgroundColor(Color.WHITE);

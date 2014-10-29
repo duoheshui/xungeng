@@ -5,12 +5,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.telephony.CellIdentityGsm;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +50,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 	private ShiftRecordDao srDao = new ShiftRecordDao();
 	private UserPatrolDao upDao = new UserPatrolDao();
 	private JiaoJieBanStatusDao jjbDao = new JiaoJieBanStatusDao();
-	private Handler handler;
+	private Handler uploadHandler;
 
 	private boolean uploadedPR;     // 巡更记录
 	private boolean uploadedPV;     // 巡查记录
@@ -68,7 +65,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		xinxiLayout = (TableLayout) findViewById(R.id.xin_xi_table_layout);
 
 		// 上传回调
-		handler = new Handler(){
+		uploadHandler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -86,8 +83,8 @@ public class XinXiShangChuanActivity extends BaseActivity {
 			}
 		};
 		List<PatrolRecord> prList = prDao.getAll();
-		List<PatrolView> pvList = pvDao.getAll();
-		List<ShiftRecord> srList = srDao.getAll();
+		List<PatrolView> pvList = pvDao.getAll(Constants.NOT_SYNC);
+		List<ShiftRecord> srList = srDao.getAll(Constants.NOT_SYNC);
 
 		TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
 		layoutParams.setMargins(0, 0, 1, 0);
@@ -224,12 +221,12 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		uploadButton.setText("请在上传, 请稍等");
 
 		// 1, 上传巡更
-		List<UserPatrol> patrolRecords = upDao.getAll();
+		List<UserPatrol> patrolRecords = upDao.getAll(Constants.NOT_SYNC);
 
 		// 2, 上传巡查
-		List<PatrolView> patrolViews = pvDao.getAll();
+		List<PatrolView> patrolViews = pvDao.getAll(Constants.NOT_SYNC);
 		// 3, 上传交接班
-		List<ShiftRecord> shiftRecords = srDao.getAll();
+		List<ShiftRecord> shiftRecords = srDao.getAll(Constants.NOT_SYNC);
 		if (XunGengService.isNullList(patrolRecords) && XunGengService.isNullList(patrolViews) && XunGengService.isNullList(shiftRecords)) {
 			showToast("没有需要上传的信息.");
 			uploadButton.setText("上传");
@@ -270,17 +267,17 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		httpClient.post(this, requestUrl, requestParams, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-				try {
-					String status = json.getString("errorCode");
-					if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
-						Message message = new Message();
-						message.what = what;
-						message.setTarget(handler);
-						message.sendToTarget();
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
+			try {
+				String status = json.getString("errorCode");
+				if (Constants.HTTP_SUCCESS_CODE.equals(status)) {
+					Message message = new Message();
+					message.what = what;
+					message.setTarget(uploadHandler);
+					message.sendToTarget();
 				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			}
 		});
 	}

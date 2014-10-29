@@ -8,11 +8,10 @@ import android.widget.*;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
-import com.joyi.xungeng.dao.JiaoJieBanStatusDao;
-import com.joyi.xungeng.dao.ShiftRecordDao;
-import com.joyi.xungeng.dao.UserPatrolDao;
+import com.joyi.xungeng.dao.*;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
+import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.DateUtil;
 import com.joyi.xungeng.util.StringUtils;
 
@@ -30,6 +29,8 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	private Spinner luXian;
     private ShiftRecordDao srDao = new ShiftRecordDao();
 	private JiaoJieBanStatusDao jjbDao = new JiaoJieBanStatusDao();
+	private LuXianLunCiDao llDao = new LuXianLunCiDao();
+	private LuXianLunCiIdDao lliDao = new LuXianLunCiIdDao();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 			type = JiaoJieBanStatus.TYPE_JIAO_BAN;
 			// 检查巡更是否有未结束的
 			UserPatrolDao upDao = new UserPatrolDao();
-			List<UserPatrol> upList = upDao.getAll();
+			List<UserPatrol> upList = upDao.getAll(Constants.SYNC_ALL);
 			if (upList != null && upList.size() > 0) {
 				for (UserPatrol patrol : upList) {
 					String endTime = patrol.getEndTime();
@@ -115,8 +116,15 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 
 		JiaoJieBanStatus status = new JiaoJieBanStatus(SystemVariables.user.getId(), DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME), type);
 		jjbDao.userJiaoJieBan(status);
+		type = type == JiaoJieBanStatus.TYPE_JIE_BAN ? JiaoJieBanStatus.TYPE_JIAO_BAN : JiaoJieBanStatus.TYPE_JIE_BAN;
+		jjbDao.userJiaoJieBan(SystemVariables.user.getId(), type, "");
+		if (type == JiaoJieBanStatus.TYPE_JIAO_BAN) {
+			List<PatrolLine> patrolLines = SystemVariables.PATROL_LINES;
+			for (PatrolLine line : patrolLines) {
+				llDao.setLunCi(SystemVariables.USER_ID, line.getId(), 1);
+			}
+		}
 		showToast(name + "成功");
-
         finish();
     }
 

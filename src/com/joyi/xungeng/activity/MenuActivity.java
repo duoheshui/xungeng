@@ -23,7 +23,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 	private GridView functionMenuGridView;
 	private GridView systemMenuGridView;
 
-	private int[] functionMenuImages = {R.drawable.icon_1, R.drawable.icon_2, R.drawable.icon_3, R.drawable.icon_4};
+	private int[] functionMenuImages = {R.drawable.icon_1, R.drawable.icon_2, R.drawable.icon_3, R.drawable.icon_4, R.drawable.icon_8};
 	private int[] systemMenuImages = {R.drawable.icon_5, R.drawable.icon_6, R.drawable.icon_7};
 
 	private static final String[] functionMenuNames = Constants.FUNCTION_MENU_NAME;

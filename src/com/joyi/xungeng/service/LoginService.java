@@ -54,10 +54,7 @@ public class LoginService {
 		}
 	};
 
-
 	private AsyncHttpClient httpClient = new AsyncHttpClient();
-
-
 	private LoginService(MainActivity context) {this.context = context;}
 
 	public static LoginService getInstance(MainActivity context) {
@@ -144,7 +141,7 @@ public class LoginService {
 
 	    // 1, 同步巡查信息
 	    final PatrolViewDao pvDao = new PatrolViewDao();
-	    List<PatrolView> pvList = pvDao.getAll();
+	    List<PatrolView> pvList = pvDao.getAllNotSync();
 	    if (pvList != null && pvList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
 		    requestParams.put("data", gson.toJson(pvList));
@@ -154,7 +151,7 @@ public class LoginService {
 				    try {
 					    String errorCode = jsonObject.getString("errorCode");
 					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-						    pvDao.deleteAll();
+						    pvDao.sync();
 					    }
 				    } catch (JSONException e) {
 					    Log.e(TAG, e.toString());
@@ -166,7 +163,7 @@ public class LoginService {
 
 	    // 2, 同步巡更打卡信息
 	    final UserPatrolDao upDao = new UserPatrolDao();
-	    List<UserPatrol> upList = upDao.getAll();
+	    List<UserPatrol> upList = upDao.getAllNotSync();
 	    if (upList != null && upList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
 		    requestParams.put("data", gson.toJson(upList));
@@ -176,9 +173,9 @@ public class LoginService {
 				    try {
 					    String errorCode = jsonObject.getString("errorCode");
 					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-						    upDao.deleteAll();
-						    PatrolRecordDao prDao = new PatrolRecordDao();
-						    prDao.deleteAll();
+						    upDao.sync();
+//						    PatrolRecordDao prDao = new PatrolRecordDao();
+//						    prDao.deleteAll();  TODO
 					    }
 				    } catch (JSONException e) {
 					    Log.e(TAG, e.toString());
@@ -190,7 +187,7 @@ public class LoginService {
 
 	    // 3, 同步交接班信息
 	    final ShiftRecordDao srDao = new ShiftRecordDao();
-	    List<ShiftRecord> srList = srDao.getAll();
+	    List<ShiftRecord> srList = srDao.getAllNotSync();
 	    if (srList != null && srList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
 		    requestParams.put("data", gson.toJson(srList));
@@ -200,7 +197,7 @@ public class LoginService {
 			    try {
 				    String errorCode = jsonObject.getString("errorCode");
 				    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
-					    srDao.deleteAll();
+					    srDao.sync();
 				    }
 			    } catch (JSONException e) {
 				    Log.e(TAG, e.toString());

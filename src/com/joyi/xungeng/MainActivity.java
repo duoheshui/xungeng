@@ -64,8 +64,6 @@ public class MainActivity extends BaseActivity {
 		SystemVariables.ALL_LINE_NODES.clear();
 		SystemVariables.ALL_LINE_NODES_MAP.clear();
 		SystemVariables.NODEID_NODE_MAP.clear();
-		XunGengDaKaActivity.luXianLunCiMap.clear();
-		XunGengDaKaActivity.luXianLunCiIdMap.clear();
 
 		loginButton = (Button) findViewById(R.id.login_button);
 		username = (EditText) findViewById(R.id.username_edittext);
@@ -119,55 +117,55 @@ public class MainActivity extends BaseActivity {
 		autoUpdateHandler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				Bundle bundle = msg.getData();
-				final String newAppUrl = bundle.getString("url");
-				if (newAppUrl != null && !"".equals(newAppUrl) && newAppUrl.indexOf("/") > 0) {
-					new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("检测到有新版本, 请升级...").setPositiveButton("升级", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							//显示ProgressDialog
-							ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Loading...", "正在下载, 请稍等...",true, false);
-							progressDialog.show();
-							client.post(MainActivity.this, newAppUrl, null, new AsyncHttpResponseHandler() {
-								@Override
-								public void onSuccess(int i, Header[] headers, byte[] bytes) {
-									String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/app_package/";
-									File pathFile = new File(path);
-									if (!pathFile.exists()) {
-										pathFile.mkdir();
-									}
-									String name = newAppUrl.substring(newAppUrl.lastIndexOf("/"));
-									String fileName = path + name;
-									File file = new File(fileName);
-									try {
-										FileOutputStream fos = new FileOutputStream(file);
-										fos.write(bytes);
-										fos.close();
-									} catch (Exception e) {
-									}
-
-									Message message = new Message();
-									Bundle bundle = new Bundle();
-									bundle.putSerializable("file", file);
-									message.setData(bundle);
-									message.setTarget(installHandler);
-									message.sendToTarget();
+			Bundle bundle = msg.getData();
+			final String newAppUrl = bundle.getString("url");
+			if (newAppUrl != null && !"".equals(newAppUrl) && newAppUrl.indexOf("/") > 0) {
+				new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("检测到有新版本, 请升级...").setPositiveButton("升级", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						//显示ProgressDialog
+						ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Loading...", "正在下载, 请稍等...",true, false);
+						progressDialog.show();
+						client.post(MainActivity.this, newAppUrl, null, new AsyncHttpResponseHandler() {
+							@Override
+							public void onSuccess(int i, Header[] headers, byte[] bytes) {
+								String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/app_package/";
+								File pathFile = new File(path);
+								if (!pathFile.exists()) {
+									pathFile.mkdir();
+								}
+								String name = newAppUrl.substring(newAppUrl.lastIndexOf("/"));
+								String fileName = path + name;
+								File file = new File(fileName);
+								try {
+									FileOutputStream fos = new FileOutputStream(file);
+									fos.write(bytes);
+									fos.close();
+								} catch (Exception e) {
 								}
 
-								@Override
-								public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+								Message message = new Message();
+								Bundle bundle = new Bundle();
+								bundle.putSerializable("file", file);
+								message.setData(bundle);
+								message.setTarget(installHandler);
+								message.sendToTarget();
+							}
 
-								}
-							});
-						}
-					}).setNegativeButton("退出", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							MainActivity.this.finish();
-							System.exit(1);
-						}
-					}).setCancelable(false).show();
-				}
+							@Override
+							public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+							}
+						});
+					}
+				}).setNegativeButton("退出", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						MainActivity.this.finish();
+						System.exit(1);
+					}
+				}).setCancelable(false).show();
+			}
 			}
 		};
 
@@ -230,15 +228,24 @@ public class MainActivity extends BaseActivity {
 						loginService.loginTimeCounter();
 
 					    /* 2, 解析返回数据 */
-						User user = SystemVariables.user;
 						JSONObject userJson = jsonObject.getJSONObject("userInfo");
-						user.setId(userJson.getString("userId"));
-						user.setUserName(userJson.getString("userName"));
-						SystemVariables.USER_NAME = userJson.getString("userName");
-						user.setLoginName(userJson.getString("loginName"));
-						user.setPyShort(userJson.getString("pyShort"));
-						user.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));
-						user.setHasPatrolViewPrivilege(userJson.getBoolean("hasPatrolViewPrivilege"));
+						String userId = userJson.getString("userId");
+						SystemVariables.user.setId(userId);
+						SystemVariables.user.setUserName(userJson.getString("userName"));
+						SystemVariables.user.setLoginName(userJson.getString("loginName"));
+						SystemVariables.user.setPyShort(userJson.getString("pyShort"));
+						SystemVariables.user.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));
+						SystemVariables.user.setHasPatrolViewPrivilege(userJson.getBoolean("hasPatrolViewPrivilege"));
+
+						SystemVariables.tUser.setId(userId);
+						SystemVariables.tUser.setUserName(userJson.getString("userName"));
+						SystemVariables.tUser.setLoginName(userJson.getString("loginName"));
+						SystemVariables.tUser.setPyShort(userJson.getString("pyShort"));
+						SystemVariables.tUser.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));
+						SystemVariables.tUser.setHasPatrolViewPrivilege(userJson.getBoolean("hasPatrolViewPrivilege"));
+
+						SystemVariables.USER_ID = userId;
+						SystemVariables.T_USER_ID = userId;
 
 						// 岗位
 						JSONArray gangWeiArray = jsonObject.getJSONArray("stationList");
@@ -269,7 +276,8 @@ public class MainActivity extends BaseActivity {
 										String endTime = banCiObj.getString("endTime");
 										schedule.setBeginTime(beginTime);
 										schedule.setEndTime(endTime);
-										schedule.setShouldPatrolTimes(banCiObj.getInt("shouldPatrolTimes"));
+										int shouldPatrolTimes = banCiObj.getInt("shouldPatrolTimes");
+										schedule.setShouldPatrolTimes(shouldPatrolTimes);
 										// 路线
 										JSONArray luXianArray = banCiObj.getJSONArray("patrolLines");
 										if (luXianArray != null && luXianArray.length() > 0) {
@@ -288,6 +296,7 @@ public class MainActivity extends BaseActivity {
 												patrolLine.setScheduleId(scheduleId);
 												patrolLine.setFrequency(frequency);
 												patrolLine.setException(exception);
+												patrolLine.setShouldPatrolTimes(shouldPatrolTimes);
 												// 节点
 												JSONArray jieDianArray = luXianObj.getJSONArray("nodes");
 												if (jieDianArray != null && jieDianArray.length() > 0) {
@@ -343,7 +352,26 @@ public class MainActivity extends BaseActivity {
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-					showToast("系统异常, 请稍后再试");
+					showToast("服务器异常, 请稍后再试");
+					Message message = new Message();
+					message.what = 2;
+					message.setTarget(loginHandler);
+					message.sendToTarget();
+					Log.e("onFailure,responseString:", String.valueOf(responseString));
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+					showToast("登录超时, 请稍后再试");
+					Message message = new Message();
+					message.what = 2;
+					message.setTarget(loginHandler);
+					message.sendToTarget();
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+					showToast("登录超时, 请重试");
 					Message message = new Message();
 					message.what = 2;
 					message.setTarget(loginHandler);

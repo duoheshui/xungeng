@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
+import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -49,11 +50,6 @@ public class TiGangActivity extends BaseActivity {
 		db.delete("jiao_jie_ban_status",null, null);
 		db.delete("lun_xian_lun_ci",null, null);
 		db.delete("lu_xian_lun_ci_id", null, null);
-//		if (2 > 1) {
-//			return;
-//		}
-
-
 
 
 		String loginName = loginNameET.getText().toString();
@@ -67,7 +63,8 @@ public class TiGangActivity extends BaseActivity {
 			showToast("用户不存在");
 			return;
 		}
-		if (!password.equals(user.getPassword())) {
+
+		if (!StringUtils.compareMd5(password, user.getPassword())) {
 			showToast("用户名或密码错误");
 			return;
 		}
@@ -89,7 +86,6 @@ public class TiGangActivity extends BaseActivity {
 					SystemVariables.tUser.setPassword(user.getPassword());
 
 					SystemVariables.T_USER_ID = user.getId();
-
 					showToast("替岗成功");
 					finish();
 				}

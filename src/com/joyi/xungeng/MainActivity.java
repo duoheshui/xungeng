@@ -200,7 +200,6 @@ public class MainActivity extends BaseActivity {
 			// 发起请求前的时间戳
 			final long beforeHttp = System.currentTimeMillis();
 			client.post(MainActivity.this, Constants.LOGIN_URL, requestParams, new JsonHttpResponseHandler() {
-
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 					// 请求响应时的时间戳
@@ -228,137 +227,9 @@ public class MainActivity extends BaseActivity {
 						loginService.loginTimeCounter();
 
 					    /* 2, 解析返回数据 */
-						JSONObject userJson = jsonObject.getJSONObject("userInfo");
-						String userId = userJson.getString("userId");
-						SystemVariables.user.setId(userId);
-						SystemVariables.user.setUserName(userJson.getString("userName"));
-						SystemVariables.user.setLoginName(userJson.getString("loginName"));
-						SystemVariables.user.setPyShort(userJson.getString("pyShort"));
-						SystemVariables.user.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));
-						SystemVariables.user.setHasPatrolViewPrivilege(userJson.getBoolean("hasPatrolViewPrivilege"));
+						loginService.parseData(jsonObject);
 
-						SystemVariables.tUser.setId(userId);
-						SystemVariables.tUser.setUserName(userJson.getString("userName"));
-						SystemVariables.tUser.setLoginName(userJson.getString("loginName"));
-						SystemVariables.tUser.setPyShort(userJson.getString("pyShort"));
-						SystemVariables.tUser.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));
-						SystemVariables.tUser.setHasPatrolViewPrivilege(userJson.getBoolean("hasPatrolViewPrivilege"));
-
-						SystemVariables.USER_ID = userId;
-						SystemVariables.T_USER_ID = userId;
-
-						// 所有用户
-						JSONArray userList = jsonObject.getJSONArray("userList");
-						if (userList != null && userList.length() > 0) {
-							User user = null;
-							for (int i = 0; i < userList.length(); ++i) {
-								JSONObject userObj = userList.getJSONObject(i);
-								user = new User();
-								user.setId(userObj.getString("userId"));
-								String loginName = userObj.getString("loginName");
-								user.setLoginName(loginName);
-								user.setUserName(userObj.getString("userName"));
-								user.setPatrolStationTypeId(userObj.getString("patrolStationTypeId"));
-								user.setPassword(userObj.getString("password"));
-
-								SystemVariables.ALL_USERS.add(user);
-								SystemVariables.ALL_USERS_MAP.put(loginName, user);
-							}
-						}
-
-						// 岗位
-						JSONArray gangWeiArray = jsonObject.getJSONArray("stationList");
-						if (gangWeiArray != null && gangWeiArray.length() > 0) {
-							Station station = null;
-							for (int i = 0; i < gangWeiArray.length(); ++i) {
-								JSONObject gangWeiObj = gangWeiArray.getJSONObject(i);
-								station = new Station(gangWeiObj.getString("stationId"), gangWeiObj.getString("stationName"));
-								// 班次
-								JSONArray banCiArray = gangWeiObj.getJSONArray("scheduleList");
-								if (banCiArray != null && banCiArray.length() > 0) {
-									Schedule schedule = null;
-									for (int j = 0; j < banCiArray.length(); ++j) {
-										schedule = new Schedule();
-										JSONObject banCiObj = banCiArray.getJSONObject(j);
-										String scheduleId = banCiObj.getString("scheduleId");
-										String name = banCiObj.getString("name");
-										String scheduleTypeName = banCiObj.getString("scheduleTypeName");
-										schedule.setName(name);
-										schedule.setScheduleTypeName(scheduleTypeName);
-										schedule.setScheduleId(scheduleId);
-										schedule.setStationId(banCiObj.getString("stationId"));
-										int exception = banCiObj.getInt("exception");
-										int frequency = banCiObj.getInt("frequency");
-										schedule.setFrequency(frequency);
-										schedule.setException(exception);
-										String beginTime = banCiObj.getString("beginTime");
-										String endTime = banCiObj.getString("endTime");
-										schedule.setBeginTime(beginTime);
-										schedule.setEndTime(endTime);
-										int shouldPatrolTimes = banCiObj.getInt("shouldPatrolTimes");
-										schedule.setShouldPatrolTimes(shouldPatrolTimes);
-										// 路线
-										JSONArray luXianArray = banCiObj.getJSONArray("patrolLines");
-										if (luXianArray != null && luXianArray.length() > 0) {
-											PatrolLine patrolLine = null;
-											for (int k = 0; k < luXianArray.length(); ++k) {
-												patrolLine = new PatrolLine();
-
-
-												JSONObject luXianObj = luXianArray.getJSONObject(k);
-												patrolLine.setName(name);
-												patrolLine.setScheduleTypeName(scheduleTypeName);
-												patrolLine.setId(luXianObj.getString("lineId"));
-												patrolLine.setLineName(luXianObj.getString("lineName"));
-												patrolLine.setBeginTime(beginTime);
-												patrolLine.setEndTime(endTime);
-												patrolLine.setScheduleId(scheduleId);
-												patrolLine.setFrequency(frequency);
-												patrolLine.setException(exception);
-												patrolLine.setShouldPatrolTimes(shouldPatrolTimes);
-												// 节点
-												JSONArray jieDianArray = luXianObj.getJSONArray("nodes");
-												if (jieDianArray != null && jieDianArray.length() > 0) {
-													LineNode lineNode = null;
-													for (int m = 0; m < jieDianArray.length(); ++m) {
-														lineNode = new LineNode();
-														JSONObject jieDianObj = jieDianArray.getJSONObject(m);
-														String nodeId = jieDianObj.getString("nodeId");
-														String nfcCode = jieDianObj.getString("nfcCode");
-														lineNode.setId(nodeId);
-														lineNode.setNodeName(jieDianObj.getString("name"));
-														lineNode.setLineId(jieDianObj.getString("lineId"));
-														lineNode.setNfcCode(nfcCode);
-
-														patrolLine.getLineNodes().add(lineNode);
-														SystemVariables.ALL_LINE_NODES.add(lineNode);
-														SystemVariables.ALL_LINE_NODES_MAP.put(nfcCode, lineNode);
-														SystemVariables.NODEID_NODE_MAP.put(nodeId, lineNode);
-													}
-												}
-												station.getLines().add(new KeyValuePair(luXianObj.getString("lineId"), luXianObj.getString("lineName")));
-												schedule.getPatrolLines().add(patrolLine);
-												SystemVariables.PATROL_LINES.add(patrolLine);
-											}
-										}
-
-										station.getSchedules().add(schedule);
-									}
-								}
-								SystemVariables.STATION_LIST.add(station);
-							}
-						}
-
-						// 班次
-						JSONArray scheduleList = jsonObject.getJSONArray("scheduleDictList");
-						if (scheduleList != null && scheduleList.length() > 0) {
-							KeyValuePair shift = null;
-							for (int i = 0; i < scheduleList.length(); ++i) {
-								JSONObject shiftJson = scheduleList.getJSONObject(i);
-								shift = new KeyValuePair(shiftJson.getString("scheduleId"), shiftJson.get("scheduleName"));
-								SystemVariables.SHIFT_LIST.add(shift);
-							}
-						}
+						/* 3, 登录成功, 通知主线程跳转至菜单目录页面 */
 						Message message = new Message();
 						message.what = 1;
 						message.setTarget(loginHandler);
@@ -371,6 +242,7 @@ public class MainActivity extends BaseActivity {
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+					Log.e("onFailure1,"+statusCode, String.valueOf(responseString)+","+throwable);
 					showToast("服务器异常, 请稍后再试");
 					Message message = new Message();
 					message.what = 2;
@@ -381,7 +253,8 @@ public class MainActivity extends BaseActivity {
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-					showToast("登录超时, 请稍后再试");
+					Log.e("onFailure2,"+statusCode, String.valueOf(errorResponse)+","+throwable);
+					showToast("登录异常, 请稍后再试");
 					Message message = new Message();
 					message.what = 2;
 					message.setTarget(loginHandler);
@@ -390,6 +263,7 @@ public class MainActivity extends BaseActivity {
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+					Log.e("onFailure3,"+statusCode, String.valueOf(errorResponse)+","+throwable);
 					showToast("登录超时, 请重试");
 					Message message = new Message();
 					message.what = 2;

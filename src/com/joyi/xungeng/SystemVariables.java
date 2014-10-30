@@ -20,7 +20,6 @@ public class SystemVariables {
 	public static final User tUser = new User();
 	public static String T_USER_ID = "";
 
-	public static final List<User> ALL_USERS = new ArrayList<>();                   // 所有用户
 	public static final Map<String, User> ALL_USERS_MAP = new HashMap<>();          // 所有用户 <loginName, User>映射关系
 
 	/**

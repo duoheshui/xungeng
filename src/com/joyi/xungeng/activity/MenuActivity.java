@@ -126,7 +126,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		}
 		// 巡查打卡
 		if (Constants.FUNCTION_MENU_NAME[1].equals(name)) {
-			User user = SystemVariables.user;
+			User user = SystemVariables.tUser;
 			if (user == null || !user.isHasPatrolViewPrivilege()) {
 				new AlertDialog.Builder(this).setTitle("").setMessage("您没有巡查权限").show();
 				return;

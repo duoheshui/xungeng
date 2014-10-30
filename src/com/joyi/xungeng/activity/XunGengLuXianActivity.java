@@ -34,7 +34,6 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
 		freshList();
 	}
 
@@ -48,6 +47,9 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (nfcAdapter != null) {
+			nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+		}
 		freshList();
 	}
 
@@ -60,7 +62,6 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
 		PatrolLine patrolLine = (PatrolLine) adapterView.getAdapter().getItem(i);
 		Intent intent = new Intent(this, XunGengDaKaActivity.class);
 		Bundle bundle = new Bundle();
@@ -68,15 +69,6 @@ public class XunGengLuXianActivity extends BaseActivity implements AdapterView.O
         bundle.putSerializable("lineNodes", (Serializable) patrolLine.getLineNodes());
 		intent.putExtras(bundle);
 		startActivity(intent);
-	}
-
-
-	@Override
-	protected void onPostResume() {
-		super.onPostResume();
-		if (nfcAdapter != null) {
-			nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
-		}
 	}
 
 	@Override

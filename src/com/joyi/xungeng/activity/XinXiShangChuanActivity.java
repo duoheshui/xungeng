@@ -85,8 +85,13 @@ public class XinXiShangChuanActivity extends BaseActivity {
 				}
 			}
 		};
-
 		freshPage();
+List<UserPatrol> patrolRecords = upDao.getAll(Constants.SYNC_ALL);
+List<PatrolView> patrolViews = pvDao.getAll(Constants.SYNC_ALL);
+List<ShiftRecord> shiftRecords = srDao.getAll(Constants.SYNC_ALL);
+Log.e("pr", gson.toJson(patrolRecords));
+Log.e("pv", gson.toJson(patrolViews));
+Log.e("sr", gson.toJson(shiftRecords));
 	}
 
 	/**
@@ -107,6 +112,7 @@ public class XinXiShangChuanActivity extends BaseActivity {
 						}
 					}).
 					setNegativeButton("取消", null).setCancelable(false).create();
+
 			alertDialog.show();
 			return;
 		}
@@ -123,18 +129,21 @@ public class XinXiShangChuanActivity extends BaseActivity {
 		uploadButton.setText("请在上传, 请稍等");
 
 		// 1, 上传巡更
-		List<UserPatrol> patrolRecords = upDao.getAll(Constants.SYNC_ALL);
+		List<UserPatrol> patrolRecords = upDao.getAll(Constants.NOT_SYNC);
 
 		// 2, 上传巡查
-		List<PatrolView> patrolViews = pvDao.getAll(Constants.SYNC_ALL);
+		List<PatrolView> patrolViews = pvDao.getAll(Constants.NOT_SYNC);
 		// 3, 上传交接班
-		List<ShiftRecord> shiftRecords = srDao.getAll(Constants.SYNC_ALL);
-Log.e("pr", gson.toJson(patrolRecords));
-Log.e("pv", gson.toJson(patrolViews));
-Log.e("sr", gson.toJson(shiftRecords));
+		List<ShiftRecord> shiftRecords = srDao.getAll(Constants.NOT_SYNC);
 		if (XunGengService.isNullList(patrolRecords) && XunGengService.isNullList(patrolViews) && XunGengService.isNullList(shiftRecords)) {
+			upDao.deleteAll();
+			prDao.deleteAll();
+			pvDao.deleteAll();
+			srDao.deleteAll();
+
 			showToast("上传完成.");
 			uploadButton.setText("上传");
+			finish();
 		}
 
 		if (patrolRecords != null && patrolRecords.size() > 0) {
@@ -199,10 +208,11 @@ Log.e("sr", gson.toJson(shiftRecords));
 	 */
 	public void freshPage() {
 		List<UserPatrol> upList = upDao.getAll(Constants.SYNC_ALL);
-		List<PatrolRecord> prList = prDao.getAll();
+		List<PatrolRecord> prList = prDao.getAll(Constants.SYNC_ALL);
 		List<PatrolView> pvList = pvDao.getAll(Constants.SYNC_ALL);
 		List<ShiftRecord> srList = srDao.getAll(Constants.SYNC_ALL);
 
+		xinxiLayout.removeAllViews();
 		TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
 		layoutParams.setMargins(0, 0, 1, 0);
 		int bgColor = Color.parseColor("#333333");

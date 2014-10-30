@@ -54,11 +54,10 @@ public class UserPatrolDao {
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 
 		String where = "userid = ?";
-		String[] whereArgs = new String[]{SystemVariables.user.getId()};
+		String[] whereArgs = new String[]{SystemVariables.USER_ID};
 		if (sync != Constants.SYNC_ALL) {
 			where = "userid = ? and sync = ?";
-			whereArgs = new String[]{SystemVariables.user.getId(), String.valueOf(sync)};
-
+			whereArgs = new String[]{SystemVariables.USER_ID, String.valueOf(sync)};
 		}
 		Cursor userPatrolCursor = readableDatabase.query(Table_Name, null, where, whereArgs, null, null, null);
 		if (userPatrolCursor != null) {
@@ -95,6 +94,9 @@ public class UserPatrolDao {
                         patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
                         patrolRecord.setPatrolTime(cursor.getString(cursor.getColumnIndex("patrolTime")));
                         patrolRecord.setPatrolPhoneTime(cursor.getString(cursor.getColumnIndex("patrolPhoneTime")));
+	                    patrolRecord.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
+	                    patrolRecord.setTuserId(cursor.getString(cursor.getColumnIndex("tuserId")));
+	                    patrolRecord.setSync(cursor.getInt(cursor.getColumnIndex("sync")));
                         patrolRecords.add(patrolRecord);
                     }
                 }

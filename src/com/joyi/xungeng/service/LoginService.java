@@ -1,10 +1,7 @@
 package com.joyi.xungeng.service;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -18,7 +15,6 @@ import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.util.Constants;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
@@ -26,13 +22,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by zhangyong on 2014/10/14.
@@ -42,6 +35,11 @@ public class LoginService {
 	private static LoginService loginService;
 	private MainActivity context;
 	private boolean hasSyncServerTime;
+
+	private PatrolViewDao pvDao = new PatrolViewDao();
+	private UserPatrolDao upDao = new UserPatrolDao();
+	private PatrolRecordDao prDao = new PatrolRecordDao();
+	private ShiftRecordDao srDao = new ShiftRecordDao();
 
 	private Handler handler = new Handler(){
 		@Override
@@ -138,7 +136,7 @@ public class LoginService {
 		Gson gson = new Gson();
 
 	    // 1, 同步巡查信息
-	    final PatrolViewDao pvDao = new PatrolViewDao();
+
 	    List<PatrolView> pvList = pvDao.getAllNotSync();
 	    if (pvList != null && pvList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
@@ -160,7 +158,6 @@ public class LoginService {
 	    }
 
 	    // 2, 同步巡更打卡信息
-	    final UserPatrolDao upDao = new UserPatrolDao();
 	    List<UserPatrol> upList = upDao.getAllNotSync();
 	    if (upList != null && upList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();
@@ -172,6 +169,7 @@ public class LoginService {
 					    String errorCode = jsonObject.getString("errorCode");
 					    if (Constants.HTTP_SUCCESS_CODE.equals(errorCode)) {
 						    upDao.sync();
+							prDao.sync();
 					    }
 				    } catch (JSONException e) {
 					    Log.e(TAG, e.toString());
@@ -182,7 +180,6 @@ public class LoginService {
 	    }
 
 	    // 3, 同步交接班信息
-	    final ShiftRecordDao srDao = new ShiftRecordDao();
 	    List<ShiftRecord> srList = srDao.getAllNotSync();
 	    if (srList != null && srList.size() > 0) {
 		    RequestParams requestParams = new RequestParams();

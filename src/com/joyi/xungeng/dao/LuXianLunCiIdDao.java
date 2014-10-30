@@ -3,8 +3,12 @@ package com.joyi.xungeng.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.LuXianLunCiId;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhangyong on 2014/10/28.
@@ -44,14 +48,13 @@ public class LuXianLunCiIdDao {
 		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		db.beginTransaction();
 
-		db.delete(Table_Name, "userId = ? and lineId = ? and lunCi = ?",
-				new String[]{userId, lineId, String.valueOf(lunCi)});
+		db.delete(Table_Name, "userId = ? and lineId = ? and lunCi = ?", new String[]{userId, lineId, String.valueOf(lunCi)});
 		ContentValues values = new ContentValues(4);
 		values.put("userId", userId);
 		values.put("lineId", lineId);
 		values.put("lunCi", lunCi);
 		values.put("lunId", lunId);
-		db.insert("lu_xian_lun_ci_id", null, values);
+		db.insert(Table_Name, null, values);
 		db.setTransactionSuccessful();
 		db.endTransaction();
 	}
@@ -63,8 +66,26 @@ public class LuXianLunCiIdDao {
 	public void clear(String userId) {
 		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		ContentValues values = new ContentValues(1);
-		values.put("lunId", -1);
+		values.put("lunId", "-1");
 
 		db.update(Table_Name, values, "userId = ?", new String[]{userId});
+	}
+
+	public List<LuXianLunCiId> getAll() {
+		List<LuXianLunCiId> list = new ArrayList<>();
+		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
+		Cursor cursor = db.query(Table_Name, null, "userId = ?", new String[]{SystemVariables.USER_ID}, null, null, null);
+		if (cursor != null) {
+Log.e("lli count", cursor.getCount() + ", coumnCount:" + cursor.getColumnCount());
+//			while (cursor.moveToFirst()) {
+//				LuXianLunCiId lli = new LuXianLunCiId();
+//				lli.setLineId(cursor.getString(cursor.getColumnIndex("lineId")));
+//				lli.setLunCi(cursor.getInt(cursor.getColumnIndex("lunCi")));
+//				lli.setLunId(cursor.getLong(cursor.getColumnIndex("lunId")));
+//				lli.setUserId(SystemVariables.USER_ID);
+//				list.add(lli);
+//			}
+		}
+		return list;
 	}
 }

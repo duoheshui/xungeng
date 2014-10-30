@@ -24,6 +24,7 @@ import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.dao.*;
 import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.XunGengService;
+import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.DateUtil;
 import com.joyi.xungeng.util.VibratorUtil;
 
@@ -60,7 +61,6 @@ public class XunGengDaKaActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.xun_geng_da_ka);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		textView.setText("巡更打卡");
@@ -104,11 +104,12 @@ public class XunGengDaKaActivity extends BaseActivity {
 			textView.setText("巡更打卡:"+patrolLine.getLineName());
 		}
 		lunCi = llDao.getLunCi(SystemVariables.USER_ID, lineId);
+
 		if (lunCi <= 0) {
 			llDao.setLunCi(SystemVariables.USER_ID, lineId, 1);
 			lunCi = 1;
 		}
-		yiXunLunCi.setText((llDao.getLunCi(SystemVariables.USER_ID, lineId) - 1) + "次");
+		yiXunLunCi.setText((lunCi - 1) + "次");
 
 
 		// 初始化 开始, 结束按钮状态
@@ -194,6 +195,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 
 	    llDao.setLunCi(SystemVariables.USER_ID, lineId, lunCi);
 	    UserPatrol userPatrol = new UserPatrol();
+	    userPatrol.setTuserId(SystemVariables.T_USER_ID);
 	    userPatrol.setUserId(user.getId());
 	    userPatrol.setLineId(lineId);
 	    userPatrol.setBeginPhoneTime(DateUtil.getHumanReadStr(new Date()));

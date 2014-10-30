@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.PatrolRecord;
+import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.DateUtil;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class PatrolRecordDao {
 		contentValues.put("error", patrolRecord.getError());
 		contentValues.put("tuserId", patrolRecord.getTuserId());
 		contentValues.put("userId", patrolRecord.getUserId());
+		contentValues.put("sync", patrolRecord.getSync());
 
 		return writableDatabase.insert(Table_Name, null, contentValues);
 	}
@@ -44,10 +46,17 @@ public class PatrolRecordDao {
 	 * 获取所有巡更记录
 	 * @return
 	 */
-	public List<PatrolRecord> getAll() {
+	public List<PatrolRecord> getAll(int sync) {
 		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
-		Cursor cursor = readableDatabase.query(Table_Name, null, null, null, null, null, null);
+
+		String where = "userId = ?";
+		String[] whereArgs = new String[]{SystemVariables.USER_ID};
+		if (sync != Constants.SYNC_ALL) {
+			where = "userId = ? and sync = ?";
+			whereArgs = new String[]{SystemVariables.USER_ID, String.valueOf(sync)};
+		}
+		Cursor cursor = readableDatabase.query(Table_Name, null, where, whereArgs, null, null, null);
 		if (cursor != null) {
 			PatrolRecord patrolRecord = null;
 			while (cursor.moveToNext()) {
@@ -62,6 +71,7 @@ public class PatrolRecordDao {
 				patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
 				patrolRecord.setTuserId(cursor.getString(cursor.getColumnIndex("tuserId")));
 				patrolRecord.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
+				patrolRecord.setSync(cursor.getInt(cursor.getColumnIndex("sync")));
 				patrolRecords.add(patrolRecord);
 			}
 		}
@@ -76,7 +86,7 @@ public class PatrolRecordDao {
 	public List<PatrolRecord> getBySequence(int sequence) {
 		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
-		Cursor cursor = readableDatabase.query(Table_Name, null, "sequence = ?", new String[]{String.valueOf(sequence)}, null, null, null);
+		Cursor cursor = readableDatabase.query(Table_Name, null, "sequence = ? and userId = ?", new String[]{String.valueOf(sequence), SystemVariables.USER_ID}, null, null, null);
 		if (cursor != null) {
 			PatrolRecord patrolRecord = null;
 			while (cursor.moveToNext()) {
@@ -91,6 +101,7 @@ public class PatrolRecordDao {
 				patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
 				patrolRecord.setTuserId(cursor.getString(cursor.getColumnIndex("tuserId")));
 				patrolRecord.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
+				patrolRecord.setSync(cursor.getInt(cursor.getColumnIndex("sync")));
 				patrolRecords.add(patrolRecord);
 			}
 		}
@@ -124,6 +135,7 @@ public class PatrolRecordDao {
                 patrolRecord.setUserPatrolId(cursor.getString(cursor.getColumnIndex("userPatrolId")));
 	            patrolRecord.setTuserId(cursor.getString(cursor.getColumnIndex("tuserId")));
 	            patrolRecord.setUserId(cursor.getString(cursor.getColumnIndex("userId")));
+	            patrolRecord.setSync(cursor.getInt(cursor.getColumnIndex("sync")));
                 map.put(nodeid, patrolRecord);
             }
         }
@@ -133,5 +145,15 @@ public class PatrolRecordDao {
 	public void deleteAll() {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		writableDatabase.delete(Table_Name, "userId = ?", new String[]{SystemVariables.USER_ID});
+	}
+
+	/**
+	 * 将已上传的记录做标记
+	 */
+	public void sync() {
+		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
+		ContentValues values = new ContentValues(1);
+		values.put("sync", Constants.HAS_SYNC);
+		db.update(Table_Name, values, null, null);
 	}
 }

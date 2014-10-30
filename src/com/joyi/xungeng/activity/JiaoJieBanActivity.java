@@ -110,7 +110,8 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 		shiftRecord.setStationId(selectedGangWei.getId());
         shiftRecord.setScheduleTypeId(selectedBanCi.getKey());
         shiftRecord.setLineId(selectedLuXian.getKey());
-		shiftRecord.setUserId(SystemVariables.user.getId());
+		shiftRecord.setUserId(SystemVariables.USER_ID);
+		shiftRecord.setTuserId(SystemVariables.T_USER_ID);
 		srDao.add(shiftRecord);
 
 		JiaoJieBanStatus status = new JiaoJieBanStatus(SystemVariables.user.getId(), DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME), type);
@@ -120,6 +121,7 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 		lliDao.clear(SystemVariables.USER_ID);
 		if (type == JiaoJieBanStatus.TYPE_JIAO_BAN) {
 			List<PatrolLine> patrolLines = SystemVariables.PATROL_LINES;
+			int i=0;
 			for (PatrolLine line : patrolLines) {
 				llDao.setLunCi(SystemVariables.USER_ID, line.getId(), -1);
 			}

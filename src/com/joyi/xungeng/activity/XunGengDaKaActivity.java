@@ -294,8 +294,10 @@ public class XunGengDaKaActivity extends BaseActivity {
 			        return;
 		        }
 		        long userPatrolId = lliDao.getLunCiId(SystemVariables.USER_ID, lineId, lunCi);
-		        PatrolRecord patrolRecord = new PatrolRecord();
 
+		        PatrolRecord patrolRecord = new PatrolRecord();
+		        patrolRecord.setUserId(SystemVariables.USER_ID);
+		        patrolRecord.setTuserId(SystemVariables.T_USER_ID);
 		        patrolRecord.setPatrolTime(DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME));
 		        patrolRecord.setUserPatrolId(String.valueOf(userPatrolId));
 		        if (lineNode != null) {

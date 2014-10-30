@@ -12,23 +12,7 @@ import com.joyi.xungeng.domain.LuXianLunCiId;
  * 表名：lu_xian_lun_ci_id
  */
 public class LuXianLunCiIdDao {
-
-	/**
-	 * 获取指定用户, 指定线路, 指定轮次, 的轮id
-	 * @param lid
-	 * @return
-	 */
-	public long getLunCiId(LuXianLunCiId lid) {
-		long id = -1;
-		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
-		Cursor cursor = db.query("lu_xian_lun_ci_id", null, "userId = ? and lineId = ? and lunCi = ?",
-				new String[]{lid.getUserId(), lid.getLineId(), String.valueOf(lid.getLunCi())}, null, null, null);
-		if (cursor != null && cursor.moveToFirst()) {
-			id = cursor.getLong(cursor.getColumnIndex("lunId"));
-		}
-
-		return id;
-	}
+	private static String Table_Name = "lu_xian_lun_ci_id";
 
 	/**
 	 * 获取指定用户, 指定线路, 指定轮次, 的轮id
@@ -40,7 +24,7 @@ public class LuXianLunCiIdDao {
 	public long getLunCiId(String userId, String lineId, int lunCi) {
 		long id = -1;
 		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
-		Cursor cursor = db.query("lu_xian_lun_ci_id", null, "userId = ? and lineId = ? and lunCi = ?",
+		Cursor cursor = db.query(Table_Name, null, "userId = ? and lineId = ? and lunCi = ?",
 				new String[]{userId, lineId, String.valueOf(lunCi)}, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			id = cursor.getLong(cursor.getColumnIndex("lunId"));
@@ -48,7 +32,6 @@ public class LuXianLunCiIdDao {
 
 		return id;
 	}
-
 
 	/**
 	 * 设置指定用户, 指定线路, 指定轮次, 的轮id
@@ -61,7 +44,7 @@ public class LuXianLunCiIdDao {
 		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
 		db.beginTransaction();
 
-		db.delete("lu_xian_lun_ci_id", "userId = ? and lineId = ? and lunCi = ?",
+		db.delete(Table_Name, "userId = ? and lineId = ? and lunCi = ?",
 				new String[]{userId, lineId, String.valueOf(lunCi)});
 		ContentValues values = new ContentValues(4);
 		values.put("userId", userId);
@@ -71,5 +54,17 @@ public class LuXianLunCiIdDao {
 		db.insert("lu_xian_lun_ci_id", null, values);
 		db.setTransactionSuccessful();
 		db.endTransaction();
+	}
+
+	/**
+	 * 清除用户记录
+	 * @param userId
+	 */
+	public void clear(String userId) {
+		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
+		ContentValues values = new ContentValues(1);
+		values.put("lunId", -1);
+
+		db.update(Table_Name, values, "userId = ?", new String[]{userId});
 	}
 }

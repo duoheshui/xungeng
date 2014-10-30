@@ -2,5 +2,6 @@
 <resources>
     <color name="tab_widght_green">#336633</color>
     <color name="tab_widght_red">#990000</color>
-    <color name="tag_widght_yellow">#CCCC00</color>
+    <color name="tag_widght_yellow">#00000000</color>
+    <color name="menu_back_ground">#333333</color>
 </resources>

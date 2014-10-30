@@ -34,7 +34,8 @@ public class WuYeSqliteOpenHelper extends SQLiteOpenHelper {
             "lineId char(20),"+
             "error varchar(200)," +
             "sync integer," +
-            "tuserId char(20))";
+            "tuserId char(20)," +
+            "userId char(20))";
 
     // 交接班记录
     private static final String Shift_Patrol_Sql =

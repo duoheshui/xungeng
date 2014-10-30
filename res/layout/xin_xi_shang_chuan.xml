@@ -37,22 +37,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:stretchColumns="*">
-            <TableRow android:background="#FFF">
-                <TextView
-                        android:gravity="center_horizontal"
-                        android:text="巡更点"
-                        android:textColor="#FFF"
-                        android:textSize="18dip"
-                        android:background="#333333"
-                        android:layout_margin="1px"/>
-                <TextView
-                        android:gravity="center_horizontal"
-                        android:text="巡更时间"
-                        android:textColor="#FFF"
-                        android:textSize="18dip"
-                        android:background="#333333"
-                        android:layout_margin="1px"/>
-            </TableRow>
         </TableLayout>
     </ScrollView>
 

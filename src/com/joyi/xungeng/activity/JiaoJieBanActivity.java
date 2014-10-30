@@ -1,6 +1,5 @@
 package com.joyi.xungeng.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -116,12 +115,13 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 
 		JiaoJieBanStatus status = new JiaoJieBanStatus(SystemVariables.user.getId(), DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME), type);
 		jjbDao.userJiaoJieBan(status);
-		type = type == JiaoJieBanStatus.TYPE_JIE_BAN ? JiaoJieBanStatus.TYPE_JIAO_BAN : JiaoJieBanStatus.TYPE_JIE_BAN;
-		jjbDao.userJiaoJieBan(SystemVariables.user.getId(), type, "");
+		int type2 = type == JiaoJieBanStatus.TYPE_JIE_BAN ? JiaoJieBanStatus.TYPE_JIAO_BAN : JiaoJieBanStatus.TYPE_JIE_BAN;
+		jjbDao.userJiaoJieBan(SystemVariables.user.getId(), type2, "");
+		lliDao.clear(SystemVariables.USER_ID);
 		if (type == JiaoJieBanStatus.TYPE_JIAO_BAN) {
 			List<PatrolLine> patrolLines = SystemVariables.PATROL_LINES;
 			for (PatrolLine line : patrolLines) {
-				llDao.setLunCi(SystemVariables.USER_ID, line.getId(), 1);
+				llDao.setLunCi(SystemVariables.USER_ID, line.getId(), -1);
 			}
 		}
 		showToast(name + "成功");

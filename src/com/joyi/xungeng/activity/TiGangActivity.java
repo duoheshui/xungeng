@@ -3,6 +3,7 @@ package com.joyi.xungeng.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.joyi.xungeng.BaseActivity;
 import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
+import com.joyi.xungeng.dao.UserPatrolDao;
 import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.util.StringUtils;
 
@@ -39,6 +41,21 @@ public class TiGangActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void tiGang(View view) {
+		SQLiteDatabase db = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
+		db.delete("partol_view", null, null);
+		db.delete("patrol_record",null,null);
+		db.delete("shift_record",null,null);
+		db.delete("user_patrol", null, null);
+		db.delete("jiao_jie_ban_status",null, null);
+		db.delete("lun_xian_lun_ci",null, null);
+		db.delete("lu_xian_lun_ci_id", null, null);
+//		if (2 > 1) {
+//			return;
+//		}
+
+
+
+
 		String loginName = loginNameET.getText().toString();
 		String password = passwordET.getText().toString();
 		if (StringUtils.isNullOrEmpty(loginName) || StringUtils.isNullOrEmpty(password)) {

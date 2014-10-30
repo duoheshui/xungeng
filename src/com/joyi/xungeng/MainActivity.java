@@ -247,6 +247,25 @@ public class MainActivity extends BaseActivity {
 						SystemVariables.USER_ID = userId;
 						SystemVariables.T_USER_ID = userId;
 
+						// 所有用户
+						JSONArray userList = jsonObject.getJSONArray("userList");
+						if (userList != null && userList.length() > 0) {
+							User user = null;
+							for (int i = 0; i < userList.length(); ++i) {
+								JSONObject userObj = userList.getJSONObject(i);
+								user = new User();
+								user.setId(userObj.getString("userId"));
+								String loginName = userObj.getString("loginName");
+								user.setLoginName(loginName);
+								user.setUserName(userObj.getString("userName"));
+								user.setPatrolStationTypeId(userObj.getString("patrolStationTypeId"));
+								user.setPassword(userObj.getString("password"));
+
+								SystemVariables.ALL_USERS.add(user);
+								SystemVariables.ALL_USERS_MAP.put(loginName, user);
+							}
+						}
+
 						// 岗位
 						JSONArray gangWeiArray = jsonObject.getJSONArray("stationList");
 						if (gangWeiArray != null && gangWeiArray.length() > 0) {

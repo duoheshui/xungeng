@@ -12,7 +12,7 @@ import java.util.List;
  * 【巡更路线】 实体类
  */
 public class PatrolLine implements Serializable {
-
+	private transient LuXianLunCiDao llDao = new LuXianLunCiDao();
 	private String id;
 	private String lineName;
 	private String stationId;                           // 岗位ID
@@ -127,7 +127,6 @@ public class PatrolLine implements Serializable {
 
 	@Override
 	public String toString() {
-		LuXianLunCiDao llDao = new LuXianLunCiDao();
 		int lunCi = llDao.getLunCi(SystemVariables.USER_ID, id);
 		lunCi = lunCi<0 ? 1 : lunCi;
 		return name+"["+scheduleTypeName+"]\n"+lineName+ "\t\t[第"+lunCi+"轮]\n"+beginTime+"~"+endTime;

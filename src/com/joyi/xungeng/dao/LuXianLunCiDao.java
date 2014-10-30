@@ -11,7 +11,7 @@ import com.joyi.xungeng.domain.LuXianLunCi;
  * 路线，当前路线进行到第几轮 持久层
  * 表名：lun_xian_lun_ci
  */
-public class LuXianLunCiDao {
+public class LuXianLunCiDao{
 
 	/**
 	 * 获取当前用户, 当前路线的进行到的轮次

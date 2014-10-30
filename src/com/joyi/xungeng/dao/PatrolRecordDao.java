@@ -18,6 +18,7 @@ import java.util.Map;
  */
 public class PatrolRecordDao {
 
+	private static final String Table_Name = "patrol_record";
 	/**
 	 * 添加记录
 	 * @param patrolRecord
@@ -35,7 +36,7 @@ public class PatrolRecordDao {
 		contentValues.put("tuserId", patrolRecord.getTuserId());
 		contentValues.put("userId", patrolRecord.getUserId());
 
-		return writableDatabase.insert("patrol_record", null, contentValues);
+		return writableDatabase.insert(Table_Name, null, contentValues);
 	}
 
 
@@ -46,7 +47,7 @@ public class PatrolRecordDao {
 	public List<PatrolRecord> getAll() {
 		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
-		Cursor cursor = readableDatabase.query("patrol_record", null, null, null, null, null, null);
+		Cursor cursor = readableDatabase.query(Table_Name, null, null, null, null, null, null);
 		if (cursor != null) {
 			PatrolRecord patrolRecord = null;
 			while (cursor.moveToNext()) {
@@ -75,7 +76,7 @@ public class PatrolRecordDao {
 	public List<PatrolRecord> getBySequence(int sequence) {
 		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
-		Cursor cursor = readableDatabase.query("patrol_record", null, "sequence = ?", new String[]{String.valueOf(sequence)}, null, null, null);
+		Cursor cursor = readableDatabase.query(Table_Name, null, "sequence = ?", new String[]{String.valueOf(sequence)}, null, null, null);
 		if (cursor != null) {
 			PatrolRecord patrolRecord = null;
 			while (cursor.moveToNext()) {
@@ -97,11 +98,17 @@ public class PatrolRecordDao {
 	}
 
 
+	/**
+	 * 根据线路和轮次,获取该用户在该轮次所有的打卡记录 nodeId<->PatrolRecord 对应关系
+	 * @param lineId
+	 * @param sequence
+	 * @return
+	 */
     public Map<String, PatrolRecord> getMap(String lineId, int sequence) {
         Map<String, PatrolRecord> map = new HashMap<>();
         SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
 
-        Cursor cursor = readableDatabase.query("patrol_record", null, "lineId = ? and sequence = ?", new String[]{lineId, String.valueOf(sequence)}, null, null, null);
+        Cursor cursor = readableDatabase.query(Table_Name, null, "lineId = ? and sequence = ? and userId= ?", new String[]{lineId, String.valueOf(sequence), SystemVariables.USER_ID}, null, null, null);
         if (cursor != null) {
             PatrolRecord patrolRecord = null;
             while (cursor.moveToNext()) {
@@ -125,6 +132,6 @@ public class PatrolRecordDao {
 
 	public void deleteAll() {
 		SQLiteDatabase writableDatabase = SystemVariables.sqLiteOpenHelper.getWritableDatabase();
-		writableDatabase.delete("patrol_record", "userId = ?", new String[]{SystemVariables.USER_ID});
+		writableDatabase.delete(Table_Name, "userId = ?", new String[]{SystemVariables.USER_ID});
 	}
 }

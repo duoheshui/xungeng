@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -36,19 +37,23 @@ import java.util.*;
  * 【巡更打卡】 Activity
  */
 public class XunGengDaKaActivity extends BaseActivity {
+
+	private static final int TextView_Width1 = 20;      // 表格中的第一列宽度
+	private static final int TextView_Width2 = 20;      // 表格中的第二列宽度
+	private static final int TextView_Width3 = 40;      // 表格中的第三列宽度
 	private TableLayout tableLayout;
     private Button startButton;
     private Button endButton;
 	private TextView yiXunLunCi;            // 已巡轮次
 	private TextView louXunQingKuang;       // 漏巡情况
-
+	private TextView leftNodes;
 
 	private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 
-    private User user = SystemVariables.user;
 	private String lineId;
 	private int lunCi;
+	private int leftNode;                   // 没打卡的节点数量
     private PatrolLine patrolLine;
 	private List<LineNode> lineNodes;
     private UserPatrolDao upDao = new UserPatrolDao();
@@ -67,6 +72,9 @@ public class XunGengDaKaActivity extends BaseActivity {
 		startButton = (Button) findViewById(R.id.start_button);
 		endButton = (Button) findViewById(R.id.end_button);
 		tableLayout = (TableLayout) findViewById(R.id.patrol_record_table);
+		leftNodes = (TextView) findViewById(R.id.left_nodes_count);
+
+
 		yiXunLunCi = (TextView) findViewById(R.id.yi_xun_lun_ci_tv);
 		louXunQingKuang = (TextView) findViewById(R.id.lou_xun_qing_kuang_tv);
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -101,7 +109,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		patrolLine = (PatrolLine) getIntent().getSerializableExtra("patrolLine");
 		lineId = patrolLine.getId();
 		if (patrolLine != null) {
-			textView.setText("巡更打卡:"+patrolLine.getLineName());
+			textView.setText("巡更打卡:"+patrolLine.getLineName()+"("+SystemVariables.tUser.getUserName()+")");
 		}
 		lunCi = llDao.getLunCi(SystemVariables.USER_ID, lineId);
 
@@ -109,7 +117,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 			llDao.setLunCi(SystemVariables.USER_ID, lineId, 1);
 			lunCi = 1;
 		}
-		yiXunLunCi.setText((lunCi - 1) + "次");
+
 
 
 		// 初始化 开始, 结束按钮状态
@@ -122,16 +130,6 @@ public class XunGengDaKaActivity extends BaseActivity {
 			endButton.setEnabled(true);
 			endButton.setBackgroundResource(R.drawable.round_button);
 		}
-		// 漏巡情况
-		StringBuffer buffer = new StringBuffer();
-		if (lunCi > 1) {
-			for (int i = 1; i < lunCi; ++i) {
-				List<PatrolRecord> hasPatrol = prDao.getBySequence(i);
-				XunGengService.getLouXunList(patrolLine.getLineNodes(), hasPatrol, i, buffer);
-			}
-		}
-
-		louXunQingKuang.setText(buffer.toString());
 		freshPage();
 	}
 
@@ -196,7 +194,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 	    llDao.setLunCi(SystemVariables.USER_ID, lineId, lunCi);
 	    UserPatrol userPatrol = new UserPatrol();
 	    userPatrol.setTuserId(SystemVariables.T_USER_ID);
-	    userPatrol.setUserId(user.getId());
+	    userPatrol.setUserId(SystemVariables.USER_ID);
 	    userPatrol.setLineId(lineId);
 	    userPatrol.setBeginPhoneTime(DateUtil.getHumanReadStr(new Date()));
 	    Date date = new Date(SystemVariables.SERVER_TIME.getTime());
@@ -240,7 +238,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 				    endButton.setBackgroundResource(R.drawable.disable_round_button);
 				    startButton.setBackgroundResource(R.drawable.round_green_shape);
 				    startButton.setEnabled(true);
-				    finish();
+				    freshPage();
 			    }
 		    }).setNegativeButton("取消", null).show();
     }
@@ -324,10 +322,32 @@ public class XunGengDaKaActivity extends BaseActivity {
 	 * 刷新页面
 	 */
 	private void freshPage() {
+		// 剩余节点数量
+		List<PatrolRecord> lunCihasPatrol = prDao.getBySequence(lineId,lunCi);
+		leftNode = patrolLine.getLineNodes().size() - lunCihasPatrol.size();
+		if (leftNode == 0) {
+			leftNodes.setText("已全部打卡");
+			leftNodes.setTextColor(Color.GREEN);
+		}else{
+			leftNodes.setText("还有"+leftNode+"处未打");
+			leftNodes.setTextColor(Color.RED);
+		}
 
-		int childCount = tableLayout.getChildCount();
-		tableLayout.removeViews(1, childCount-1);
+		// 漏巡情况
+		StringBuffer buffer = new StringBuffer();
+		if (lunCi > 1) {
+			for (int i = 1; i < lunCi; ++i) {
+				List<PatrolRecord> hasPatrol = prDao.getBySequence(lineId,i);
+				XunGengService.getLouXunList(patrolLine.getLineNodes(), hasPatrol, i, buffer);
+			}
+		}
+		louXunQingKuang.setText(buffer.toString());
 
+		// 已巡轮次
+		yiXunLunCi.setText((lunCi - 1) + "次/共"+patrolLine.getShouldPatrolTimes()+"次");
+
+		tableLayout.removeAllViews();
+		int bgColor = Color.parseColor("#333333");
 		Map<String, PatrolRecord> map = prDao.getMap(lineId, lunCi);
 		for (LineNode node : lineNodes) {
 			TableRow tableRow = new TableRow(this);
@@ -346,26 +366,29 @@ public class XunGengDaKaActivity extends BaseActivity {
 			dian.setGravity(Gravity.CENTER);
 			dian.setText(node.getNodeName());
 			dian.setTextColor(Color.WHITE);
-			dian.setBackgroundColor(Color.parseColor("#333333"));
-			dian.setTextSize(18);
-			TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
+			dian.setBackgroundColor(bgColor);
+			dian.setTextSize(15);
+			TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
 			layoutParams.setMargins(0, 0, 1, 0);
+			layoutParams.span = 1;
 			dian.setLayoutParams(layoutParams);
 
 			TextView status = new TextView(this);
+			status.setWidth(20);
 			status.setGravity(Gravity.CENTER);
 			status.setText(statusText);
 			status.setTextColor(Color.WHITE);
-			status.setBackgroundColor(Color.parseColor("#333333"));
-			status.setTextSize(18);
+			status.setBackgroundColor(bgColor);
+			status.setTextSize(15);
 			status.setLayoutParams(layoutParams);
 
 			TextView time = new TextView(this);
+			time.setWidth(40);
 			time.setGravity(Gravity.CENTER);
 			time.setText(timeText);
 			time.setTextColor(Color.WHITE);
-			time.setBackgroundColor(Color.parseColor("#333333"));
-			time.setTextSize(18);
+			time.setBackgroundColor(bgColor);
+			time.setTextSize(15);
 			time.setLayoutParams(layoutParams);
 
 			tableRow.addView(dian);

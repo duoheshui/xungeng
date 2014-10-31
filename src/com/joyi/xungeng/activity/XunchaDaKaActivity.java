@@ -46,7 +46,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 		setContentView(R.layout.xun_cha_da_ka);
 		TextView textView = (TextView) findViewById(R.id.username_edittext);
 		tableLayout = (TableLayout) findViewById(R.id.patrol_view_record_table);
-		textView.setText("巡查打卡");
+		textView.setText("巡查打卡("+SystemVariables.tUser.getUserName()+")");
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
@@ -141,7 +141,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 				dian.setGravity(Gravity.CENTER);
 				dian.setText(pview.getNodeName());
 				dian.setBackgroundColor(bgColor);
-				dian.setTextSize(18);
+				dian.setTextSize(15);
 				layoutParams.setMargins(1, 0, 1, 1);
 				dian.setLayoutParams(layoutParams);
 
@@ -149,7 +149,7 @@ public class XunchaDaKaActivity extends BaseActivity {
 				time.setGravity(Gravity.CENTER);
 				time.setText(pview.getPatrolTime());
 				time.setBackgroundColor(bgColor);
-				time.setTextSize(18);
+				time.setTextSize(15);
 				time.setLayoutParams(layoutParams);
 
 				tableRow.addView(dian);

@@ -83,10 +83,10 @@ public class PatrolRecordDao {
 	 * @param sequence
 	 * @return
 	 */
-	public List<PatrolRecord> getBySequence(int sequence) {
+	public List<PatrolRecord> getBySequence(String lineId, int sequence) {
 		List<PatrolRecord> patrolRecords = new ArrayList<PatrolRecord>();
 		SQLiteDatabase readableDatabase = SystemVariables.sqLiteOpenHelper.getReadableDatabase();
-		Cursor cursor = readableDatabase.query(Table_Name, null, "sequence = ? and userId = ?", new String[]{String.valueOf(sequence), SystemVariables.USER_ID}, null, null, null);
+		Cursor cursor = readableDatabase.query(Table_Name, null, "sequence = ? and userId = ? and lineId = ?", new String[]{String.valueOf(sequence), SystemVariables.USER_ID, lineId}, null, null, null);
 		if (cursor != null) {
 			PatrolRecord patrolRecord = null;
 			while (cursor.moveToNext()) {

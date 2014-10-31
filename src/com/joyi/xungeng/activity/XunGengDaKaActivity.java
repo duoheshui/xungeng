@@ -368,7 +368,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 			dian.setTextColor(Color.WHITE);
 			dian.setBackgroundColor(bgColor);
 			dian.setTextSize(15);
-			TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+			TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(1, TableRow.LayoutParams.MATCH_PARENT);
 			layoutParams.setMargins(0, 0, 1, 0);
 			layoutParams.span = 1;
 			dian.setLayoutParams(layoutParams);

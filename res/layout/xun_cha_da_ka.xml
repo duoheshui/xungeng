@@ -34,24 +34,25 @@
 
         <TableLayout
                 android:id="@+id/patrol_view_record_table"
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:stretchColumns="*">
-            <TableRow android:background="#FFF" android:padding="1dp">
+            <TableRow android:background="#FFF" android:padding="1px">
                 <TextView
                         android:gravity="center"
                         android:layout_marginRight="1px"
                         android:text="巡更点"
                         android:textColor="#FFF"
-                        android:textSize="20dip"
+                        android:textSize="18dp"
+                        android:layout_height="match_parent"
                         android:background="#333333"/>
                 <TextView
                         android:layout_marginRight="1px"
                         android:gravity="center"
                         android:text="巡更时间"
                         android:textColor="#FFF"
-                        android:textSize="20dip"
+                        android:textSize="18dp"
+                        android:layout_height="match_parent"
                         android:background="#333333"/>
             </TableRow>
         </TableLayout>

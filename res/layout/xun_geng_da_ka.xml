@@ -101,7 +101,7 @@
               android:layout_height="wrap_content">
         <TextView
                 android:layout_span="1"
-                android:layout_width="20dp"
+                android:layout_width="1dp"
                 android:gravity="center"
                 android:layout_marginRight="1px"
                 android:text="巡更点"
@@ -111,7 +111,7 @@
                 android:background="#333333"/>
         <TextView
                 android:layout_span="1"
-                android:layout_width="20dp"
+                android:layout_width="1dp"
                 android:gravity="center"
                 android:layout_marginRight="1px"
                 android:textColor="#FFF"
@@ -121,7 +121,7 @@
                 android:background="#333333"/>
         <TextView
                 android:layout_span="1"
-                android:layout_width="40dp"
+                android:layout_width="1dp"
                 android:layout_marginRight="1px"
                 android:gravity="center"
                 android:text="巡更时间"

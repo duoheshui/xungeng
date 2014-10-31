@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/menu_back_ground"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout
+            android:background="#336633"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+        <ImageView
+                android:onClick="retreat"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <TextView
+            android:layout_marginTop="20dp"
+            android:id="@+id/version"
+            android:textSize="20dp"
+            android:textColor="#FFF"
+            android:gravity="center"
+            android:text="当前版本："
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#FFF"
+            android:text="发布日期："
+            android:id="@+id/release_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#FFF"
+            android:text="联系方式：0371-68619236"
+            android:id="@+id/developer_mail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+
+
+
+</LinearLayout>

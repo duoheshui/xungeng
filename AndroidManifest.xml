@@ -28,6 +28,8 @@
         <activity android:name=".activity.XunGengLuXianActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.ChaXunDaKaActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.TiGangActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.WoActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.GuanYuActivity" android:screenOrientation="portrait"/>
     </application>
 
     <uses-permission android:name="android.permission.NFC"/>

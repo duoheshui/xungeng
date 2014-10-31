@@ -13,10 +13,12 @@ import com.joyi.xungeng.dao.PatrolRecordDao;
 import com.joyi.xungeng.dao.PatrolViewDao;
 import com.joyi.xungeng.dao.ShiftRecordDao;
 import com.joyi.xungeng.dao.UserPatrolDao;
+import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.domain.UserPatrol;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
 import com.joyi.xungeng.util.DateUtil;
+import com.joyi.xungeng.util.PhoneUtils;
 import com.joyi.xungeng.util.StringUtils;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -34,8 +36,7 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	private EditText oldPwd;
 	private EditText newPwd;
 	private EditText newPwd2;
-    private Handler handler;
-	XunGengService xgService = new XunGengService();
+	private AsyncHttpClient httpClient = new AsyncHttpClient();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +50,6 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 		newPwd = (EditText) findViewById(R.id.new_pwd);
 		newPwd2 = (EditText) findViewById(R.id.new_pwd2);
 
-		// 安装apk文件
-//		handler = new Handler(){
-//			@Override
-//			public void handleMessage(Message msg) {
-//				super.handleMessage(msg);
-//				File file = (File) msg.getData().get("file");
-//				Log.e("file", file == null ? "null" : file.getAbsolutePath());
-//				xgService.openFile(XiuGaiMiMaActivity.this, file);
-//			}
-//		};
-
 	}
 
 
@@ -68,44 +58,18 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void changePassword(View view) {
-		//		String path = Environment.getExternalStorageDirectory()+"/update/";
-		//						String fileName = "/storage/sdcard/nfc.apk";
-		//			xgService.openFile(this, new File(fileName));
-
-
-		AsyncHttpClient httpClient = new AsyncHttpClient();
-		//
-		//		String[] mAllowedContentTypes = new String[] {"application/vnd.android.package-archive"};
-		//		httpClient.get("http://192.16.8.176:8080/wuye/nfc.apk", new BinaryHttpResponseHandler(mAllowedContentTypes){
-		//			@Override
-		//			public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-		//				Log.e(TAG, "onSuccess->" + Arrays.toString(binaryData));
-		//				String path = Environment.getExternalStorageDirectory()+"/update/";
-		//				String fileName = "wuye.apk";
-		//				File file = XunGengService.getFileFromBytes(binaryData, path, fileName);
-		//				Message message = new Message();
-		//				message.what = 100;
-		//				Bundle bundle = new Bundle();
-		//				bundle.putSerializable("file", file);
-		//				message.setData(bundle);
-		//				message.setTarget(handler);
-		//				message.sendToTarget();
-		//			}
-
-		//			@Override
-		//			public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-		//
-		//			}
-		//		});
-
-		//		PatrolRecordDao prDao = new PatrolRecordDao();
-		//		UserPatrolDao upDao = new UserPatrolDao();
-		//		ShiftRecordDao srDao = new ShiftRecordDao();
-		//		PatrolViewDao pvDao = new PatrolViewDao();
-		//		upDao.deleteAll();
-		//		srDao.deleteAll();
-		//		pvDao.deleteAll();
-		//		prDao.deleteAll();
+		// 判断网络是否可用
+		boolean networkConnected = PhoneUtils.isNetworkConnected(this);
+		if (!networkConnected) {
+			showToast("网络未连接....");
+			return;
+		}
+		if (!SystemVariables.USER_ID.equals(SystemVariables.T_USER_ID)) {
+			String userName = SystemVariables.user.getUserName();
+			String toast = userName == null ? "您无法修改别人的密码" : "您无法修改" + userName + "的密码";
+			showToast(toast);
+			return;
+		}
 
 		String newPassword = newPwd.getText().toString();
 		String newPassword2 = newPwd2.getText().toString();
@@ -121,6 +85,15 @@ public class XiuGaiMiMaActivity extends BaseActivity {
 			showToast("新密码过短");
 			return;
 		}
+
+		// 判断原密码
+		User user = SystemVariables.ALL_USERS_MAP.get(SystemVariables.user.getLoginName());
+		if (!StringUtils.compareMd5(oldPwd.getText().toString(), user.getPassword())) {
+			showToast("原密码错误");
+			return;
+		}
+
+
 		if (!newPassword.equals(newPassword2)) {
 			showToast("两次密码输入不一致");
 			return;

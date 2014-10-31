@@ -25,8 +25,8 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 	private GridView functionMenuGridView;
 	private GridView systemMenuGridView;
 
-	private int[] functionMenuImages = {R.drawable.icon_1, R.drawable.icon_2, R.drawable.icon_3, R.drawable.icon_4, R.drawable.icon_8};
-	private int[] systemMenuImages = {R.drawable.icon_5, R.drawable.icon_6, R.drawable.icon_7};
+	private int[] functionMenuImages = {R.drawable.icon_1, R.drawable.icon_2, R.drawable.icon_3, R.drawable.icon_4, R.drawable.icon_10};
+	private int[] systemMenuImages = {R.drawable.icon_5, R.drawable.icon_6, R.drawable.icon_8, R.drawable.icon_9,R.drawable.icon_7};
 
 	private static final String[] functionMenuNames = Constants.FUNCTION_MENU_NAME;
 	private static final String[] systemMenuNames = Constants.SYSTEM_MENU_NAME;
@@ -97,7 +97,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		String name = ((TextView) view.findViewById(R.id.ItemTextView)).getText().toString();
 
 		// 退出系统
-		if (Constants.SYSTEM_MENU_NAME[2].equals(name)) {
+		if ("退出".equals(name)) {
 			new AlertDialog.Builder(this).setTitle("").setMessage("确定要退出系统么？").setPositiveButton("退出", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialogInterface, int i) {
@@ -110,7 +110,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 			return;
 		}
 		// 切换帐号
-		if (Constants.SYSTEM_MENU_NAME[1].equals(name)) {
+		if ("切换帐号".equals(name)) {
 			new AlertDialog.Builder(this).setTitle("").setMessage("确定要切换帐号么？").setPositiveButton("切换", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialogInterface, int i) {
@@ -126,7 +126,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		}
 		// 巡查打卡
 		if (Constants.FUNCTION_MENU_NAME[1].equals(name)) {
-			User user = SystemVariables.tUser;
+			User user = SystemVariables.user;
 			if (user == null || !user.isHasPatrolViewPrivilege()) {
 				new AlertDialog.Builder(this).setTitle("").setMessage("您没有巡查权限").show();
 				return;

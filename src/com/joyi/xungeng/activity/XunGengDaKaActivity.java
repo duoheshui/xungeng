@@ -390,4 +390,9 @@ public class XunGengDaKaActivity extends BaseActivity {
             nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
         }
     }
+
+	@Override
+	public void onBackPressed() {
+		// 屏蔽后退键, 只能通过左上角的后退按钮来触发后退
+	}
 }

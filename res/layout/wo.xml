@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/menu_back_ground"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout
+            android:background="#336633"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+    <ImageView
+            android:onClick="retreat"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <TableLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TableRow android:gravity="center">
+            <TextView android:text="登录名：" android:textColor="#FFF" android:textSize="20dp"/>
+            <TextView android:id="@+id/loginName" android:textSize="20dp" android:textColor="#FFF"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <TextView android:text="用户名：" android:textColor="#FFF" android:textSize="20dp"/>
+            <TextView android:id="@+id/userName" android:textColor="#FFF" android:textSize="20dp"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <TextView android:text="拼音简写：" android:textColor="#FFF" android:textSize="20dp"/>
+            <TextView android:id="@+id/pyShort" android:textColor="#FFF" android:textSize="20dp"/>
+        </TableRow>
+    </TableLayout>
+
+
+
+    <!-- 替岗人员 -->
+
+    <TableLayout
+            android:layout_marginTop="20dp"
+            android:id="@+id/ti_gang_layout"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TableRow android:gravity="center">
+            <TextView android:text="-------替岗人员信息-----" android:textColor="#336633"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <TextView android:text="登录名:" android:textColor="#FFF" android:textSize="20dp"/>
+            <TextView android:id="@+id/tloginName" android:textColor="#FFF" android:textSize="20dp"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <TextView android:text="用户名:" android:textColor="#FFF" android:textSize="20dp"/>
+            <TextView android:id="@+id/tuserName" android:textColor="#FFF" android:textSize="20dp"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <TextView android:text="拼音简写:" android:textColor="#FFF" android:textSize="20dp"/>
+            <TextView android:id="@+id/tpyShort" android:textColor="#FFF" android:textSize="20dp"/>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

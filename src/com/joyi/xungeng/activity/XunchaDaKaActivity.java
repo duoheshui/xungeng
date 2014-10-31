@@ -119,6 +119,11 @@ public class XunchaDaKaActivity extends BaseActivity {
         }
     }
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+	}
+
 	public void freshPage() {
 		int childCount = tableLayout.getChildCount();
 		tableLayout.removeViews(1, childCount-1);

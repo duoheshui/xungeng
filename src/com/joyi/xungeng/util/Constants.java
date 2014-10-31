@@ -18,7 +18,7 @@ public class Constants {
 	 * 菜单名称
 	 */
 	public static final String[] FUNCTION_MENU_NAME = {"巡更路线", "巡查打卡", "交接班", "信息上传", "替岗"};
-	public static final String[] SYSTEM_MENU_NAME = {"修改密码", "切换帐号", "退出"};
+	public static final String[] SYSTEM_MENU_NAME = {"修改密码", "切换帐号","我", "关于","退出"};
 
 	/**
 	 * 菜单名称与Activity类对应关系
@@ -31,11 +31,15 @@ public class Constants {
 		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[3], XinXiShangChuanActivity.class);
 		NAME_ACTIVITY_MAP.put(FUNCTION_MENU_NAME[4], TiGangActivity.class);
 		NAME_ACTIVITY_MAP.put(SYSTEM_MENU_NAME[0], XiuGaiMiMaActivity.class);
+		NAME_ACTIVITY_MAP.put(SYSTEM_MENU_NAME[2], WoActivity.class);
+		NAME_ACTIVITY_MAP.put(SYSTEM_MENU_NAME[3], GuanYuActivity.class);
+
 	}
 
 	public static final String DATA_BASE_NAME = "xinshiji_wuye_xungeng.db";     // 数据库名
 	public static final int DATA_BASE_VERSION = 1;                              // 数据库版本号
 	public static final String APP_VERSION = "v1.0";                            //  当前客户端版本号
+	public static final String RELEASE_TIME = "2014-10-31 11:13:55";            // 发布日期
 
 
 	public static final String HTTP_SUCCESS_CODE = "200";                                          // http请求成功状态

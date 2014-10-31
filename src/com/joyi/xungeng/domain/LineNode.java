@@ -42,6 +42,10 @@ public class LineNode implements Serializable {
 	}
 
 	public void setNfcCode(String nfcCode) {
+		if (nfcCode != null) {
+			this.nfcCode = nfcCode.toUpperCase();
+			return;
+		}
 		this.nfcCode = nfcCode;
 	}
 

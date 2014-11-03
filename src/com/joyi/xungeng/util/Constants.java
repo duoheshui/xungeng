@@ -40,7 +40,7 @@ public class Constants {
 
 	public static final String DATA_BASE_NAME = "xinshiji_wuye_xungeng.db";     // 数据库名
 	public static final int DATA_BASE_VERSION = 1;                              // 数据库版本号
-	public static final String APP_VERSION = "v2.0";                            //  当前客户端版本号
+	public static final String APP_VERSION = "v2.1";                            //  当前客户端版本号
 	public static final String RELEASE_TIME = "2014-10-31 11:13:55";            // 发布日期
 
 

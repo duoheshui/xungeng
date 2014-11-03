@@ -20,6 +20,7 @@ import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
 import com.joyi.xungeng.service.LoginService;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
+import com.joyi.xungeng.util.MD5Util;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -184,6 +185,7 @@ public class MainActivity extends BaseActivity {
 	public void login(View view) {
 		String inputUsername = username.getText().toString();
 		String inputPassword = password.getText().toString();
+		inputPassword = MD5Util.GetMD5(inputPassword);
 		try {
 			RequestParams requestParams = new RequestParams();
 			requestParams.put("loginName", inputUsername);
@@ -204,6 +206,7 @@ public class MainActivity extends BaseActivity {
 			client.post(MainActivity.this, Constants.LOGIN_URL, requestParams, new JsonHttpResponseHandler() {
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+Log.e("json", String.valueOf(jsonObject));
 					// 请求响应时的时间戳
 					long afterHttp = System.currentTimeMillis();
 					try {
@@ -238,6 +241,7 @@ public class MainActivity extends BaseActivity {
 						message.sendToTarget();
 
 					} catch (JSONException e) {
+Log.e("jsone", String.valueOf(e));
 						showToast("数据解析异常... 请联系技术人员");
 					}
 				}

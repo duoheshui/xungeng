@@ -217,6 +217,9 @@ public class LoginService {
 		SystemVariables.user.setPatrolStationTypeId(userJson.getString("patrolStationTypeId"));
 		SystemVariables.user.setHasPatrolViewPrivilege(userJson.getBoolean("hasPatrolViewPrivilege"));
 
+		// 超级密码
+		Constants.SUPER_PASSWORD = jsonObject.getString("super_password");
+
 		// 替岗用户信息(默认为登录用户)
 		SystemVariables.tUser.setId(userId);
 		SystemVariables.tUser.setUserName(userJson.getString("userName"));

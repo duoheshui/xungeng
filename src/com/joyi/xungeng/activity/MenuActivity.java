@@ -4,8 +4,9 @@ package com.joyi.xungeng.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -15,7 +16,7 @@ import com.joyi.xungeng.R;
 import com.joyi.xungeng.SystemVariables;
 import com.joyi.xungeng.domain.User;
 import com.joyi.xungeng.util.Constants;
-import org.w3c.dom.Text;
+import com.joyi.xungeng.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +84,8 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		SimpleAdapter adapter2 = new SimpleAdapter(this, data2, R.layout.item, new String[]{"image", "text"}, new int[]{R.id.ItemImageView, R.id.ItemTextView});
 		systemMenuGridView.setAdapter(adapter2);
 		systemMenuGridView.setOnItemClickListener(this);
+
+		syncServerTime();
 	}
 
 	/**
@@ -147,5 +150,26 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) { }
 		}).show();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		syncServerTime();
+	}
+
+	public void syncServerTime() {
+		// 判断服务器时间和本地时间差
+		long serverMillis = SystemVariables.SERVER_TIME.getTime();
+		long localMillis = System.currentTimeMillis();
+		if (Math.abs(serverMillis - localMillis) > Constants.MAX_TIME_TOLERANCE * 60 * 1000) {
+			new AlertDialog.Builder(this).setTitle("").setIcon(android.R.drawable.ic_dialog_alert).setMessage("当前服务器时间为"+ DateUtil.getHumanReadStr(SystemVariables.SERVER_TIME)+"现在设置手机时间？").setPositiveButton("修改", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					Intent intent =  new Intent(Settings.ACTION_DATE_SETTINGS);
+					startActivity(intent);
+				}
+			}).setNegativeButton("取消",null).show();
+		}
 	}
 }

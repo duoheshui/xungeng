@@ -28,7 +28,6 @@
 
 <!-- TODO 删除用户名 -->
             <EditText
-android:text="cgl"
                     android:maxLength="20"
                     android:id="@+id/username_edittext"
                     android:layout_weight="0.6"
@@ -47,7 +46,6 @@ android:text="cgl"
 
 <!-- TODO 删除密码 -->
             <EditText
-android:text="123456"
                     android:maxLength="20"
                     android:id="@+id/password_edittext"
                     android:inputType="textPassword"
@@ -68,4 +66,9 @@ android:text="123456"
             android:layout_gravity="center_horizontal"
             android:layout_width="200dp"
             android:layout_height="70dp"/>
+    <TextView
+            android:gravity="center_horizontal"
+            android:id="@+id/app_version_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 </LinearLayout>

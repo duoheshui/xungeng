@@ -2,7 +2,6 @@ package com.joyi.xungeng;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,10 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.joyi.xungeng.activity.MenuActivity;
-import com.joyi.xungeng.activity.XunGengDaKaActivity;
 import com.joyi.xungeng.db.WuYeSqliteOpenHelper;
-import com.joyi.xungeng.domain.*;
 import com.joyi.xungeng.service.LoginService;
 import com.joyi.xungeng.service.XunGengService;
 import com.joyi.xungeng.util.Constants;
@@ -75,6 +73,8 @@ public class MainActivity extends BaseActivity {
 
 		/* 检查上次打卡记录是否已上传 */
 		loginService.syncPatrolData(MainActivity.this);
+		TextView appVersion = (TextView) findViewById(R.id.app_version_textview);
+		appVersion.setText("当前版本:"+Constants.APP_VERSION);
 
 		/**
 		 * 登录成功触发

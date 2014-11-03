@@ -38,9 +38,6 @@ import java.util.*;
  */
 public class XunGengDaKaActivity extends BaseActivity {
 
-	private static final int TextView_Width1 = 20;      // 表格中的第一列宽度
-	private static final int TextView_Width2 = 20;      // 表格中的第二列宽度
-	private static final int TextView_Width3 = 40;      // 表格中的第三列宽度
 	private TableLayout tableLayout;
     private Button startButton;
     private Button endButton;
@@ -344,7 +341,7 @@ public class XunGengDaKaActivity extends BaseActivity {
 		louXunQingKuang.setText(buffer.toString());
 
 		// 已巡轮次
-		yiXunLunCi.setText((lunCi - 1) + "次/共"+patrolLine.getShouldPatrolTimes()+"次");
+		yiXunLunCi.setText((lunCi - 1) + "轮/共"+patrolLine.getShouldPatrolTimes()+"轮");
 
 		tableLayout.removeAllViews();
 		int bgColor = Color.parseColor("#333333");

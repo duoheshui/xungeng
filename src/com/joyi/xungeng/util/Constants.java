@@ -13,6 +13,7 @@ import java.util.Map;
 public class Constants {
 
 	public static final int MIN_PASSWORD_LENGTH = 6;                        // 密码最小长度
+	public static final int MAX_TIME_TOLERANCE = 2;                         // 本地时间和服务器时间的最大容差 (分钟)
 
 	/**
 	 * 菜单名称
@@ -44,7 +45,7 @@ public class Constants {
 
 	public static final String HTTP_SUCCESS_CODE = "200";                                          // http请求成功状态
 	public static final String TEST_DOMAIN_NAME = "http://eps.joyiwy.cn:4903";                     // 测试地址
-	public static final String HTTP_DOMAIN_NAME = "http://116.255.255.131:4901";                   // 正式地址
+	public static final String HTTP_DOMAIN_NAME = "http://eps.joyiwy.cn:4901";                      // 正式地址
 	public static final String DOMAIN_NAME = TEST_DOMAIN_NAME;
 	public static final String LOGIN_URL = DOMAIN_NAME + "/api?act=login";                         // 登录地址
 	public static final String CHANGE_PASSWORD_URL = DOMAIN_NAME+"/api?act=setpwd";                // 修改密码URL

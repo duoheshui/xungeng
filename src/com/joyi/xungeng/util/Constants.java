@@ -39,14 +39,14 @@ public class Constants {
 
 	public static final String DATA_BASE_NAME = "xinshiji_wuye_xungeng.db";     // 数据库名
 	public static final int DATA_BASE_VERSION = 1;                              // 数据库版本号
-	public static final String APP_VERSION = "v1.0";                            //  当前客户端版本号
+	public static final String APP_VERSION = "v2.0";                            //  当前客户端版本号
 	public static final String RELEASE_TIME = "2014-10-31 11:13:55";            // 发布日期
 
 
 	public static final String HTTP_SUCCESS_CODE = "200";                                          // http请求成功状态
 	public static final String TEST_DOMAIN_NAME = "http://eps.joyiwy.cn:4903";                     // 测试地址
 	public static final String HTTP_DOMAIN_NAME = "http://eps.joyiwy.cn:4901";                      // 正式地址
-	public static final String DOMAIN_NAME = TEST_DOMAIN_NAME;
+	public static final String DOMAIN_NAME = HTTP_DOMAIN_NAME;
 	public static final String LOGIN_URL = DOMAIN_NAME + "/api?act=login";                         // 登录地址
 	public static final String CHANGE_PASSWORD_URL = DOMAIN_NAME+"/api?act=setpwd";                // 修改密码URL
 	public static final String HAS_NEW_VERSION_URL = DOMAIN_NAME+"/api?act=getnewv";               // 获取是否有新的客户端版本URL

@@ -63,6 +63,8 @@ public class MainActivity extends BaseActivity {
 		SystemVariables.ALL_LINE_NODES_MAP.clear();
 		SystemVariables.NODEID_NODE_MAP.clear();
 
+		MenuActivity.SYNC_SERVER_TIME_FLAG = 0;
+
 		loginButton = (Button) findViewById(R.id.login_button);
 		username = (EditText) findViewById(R.id.username_edittext);
 		password = (EditText) findViewById(R.id.password_edittext);

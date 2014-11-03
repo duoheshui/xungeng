@@ -28,6 +28,7 @@
 
 <!-- TODO 删除用户名 -->
             <EditText
+                    android:text="cgl"
                     android:maxLength="20"
                     android:id="@+id/username_edittext"
                     android:layout_weight="0.6"
@@ -46,6 +47,7 @@
 
 <!-- TODO 删除密码 -->
             <EditText
+                    android:text="111111"
                     android:maxLength="20"
                     android:id="@+id/password_edittext"
                     android:inputType="textPassword"

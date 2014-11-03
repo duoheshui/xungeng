@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MenuActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+	public static int SYNC_SERVER_TIME_FLAG = 0;
 	private GridView functionMenuGridView;
 	private GridView systemMenuGridView;
 
@@ -85,7 +86,10 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 		systemMenuGridView.setAdapter(adapter2);
 		systemMenuGridView.setOnItemClickListener(this);
 
-		syncServerTime();
+		if (SYNC_SERVER_TIME_FLAG == 0) {
+			syncServerTime();
+			SYNC_SERVER_TIME_FLAG = 1;
+		}
 	}
 
 	/**
@@ -141,21 +145,7 @@ public class MenuActivity extends BaseActivity implements AdapterView.OnItemClic
 
 	@Override
 	public void onBackPressed() {
-		new AlertDialog.Builder(this).setTitle("").setIcon(android.R.drawable.ic_dialog_alert).setMessage("确定要退出么？\n退出系统后需要重新登录").setPositiveButton("退出", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				MenuActivity.this.finish();
-			}
-		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) { }
-		}).show();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		syncServerTime();
+		// 禁用手机返回键
 	}
 
 	public void syncServerTime() {

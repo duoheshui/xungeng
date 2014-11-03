@@ -140,7 +140,7 @@ public class JiaoJieBanActivity extends BaseActivity implements AdapterView.OnIt
 	@Override
 	public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 		Station station = (Station) adapterView.getAdapter().getItem(i);
-		ArrayAdapter<KeyValuePair> luXianAdapter = new ArrayAdapter<KeyValuePair>(this, android.R.layout.simple_list_item_1, station.getLines());
+		ArrayAdapter<KeyValuePair> luXianAdapter = new ArrayAdapter<KeyValuePair>(this, android.R.layout.select_dialog_item, station.getLines());
 		luXian.setAdapter(luXianAdapter);
 	}
 
